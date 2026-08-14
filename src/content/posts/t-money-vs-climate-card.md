@@ -98,6 +98,12 @@ also include Incheon Airport and the Myeong-dong Tourist Information
 Center. It can't be pre-purchased online, and validity starts the
 moment you first use it, not when you buy it.
 
+<img src="/images/posts/climate-card-in-hand.webp" alt="Two pink monster-character Climate Cards, held up at a Seoul subway station gate" class="not-prose my-8 w-full max-w-md mx-auto rounded-xl object-cover" />
+
+That's ours, picked up right at the gate line before heading in — one
+each, so we could both tap through separately rather than sharing a
+single card back and forth.
+
 **One important 2026 change:** the 30-day pass for Seoul residents is
 being phased out in favor of "Climate Card Plus" / K-Pass. If you're a
 short-term visitor, this doesn't affect you — the 1–7 day tourist
