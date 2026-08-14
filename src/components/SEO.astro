@@ -1,0 +1,38 @@
+---
+// SEO.astro
+// Renders everything that goes inside <head> for search engines and for
+// link previews on social media / KakaoTalk / Discord (Open Graph tags).
+// Every page includes this once, via BaseLayout, with page-specific props.
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string; // absolute or root-relative path to a preview image
+}
+
+const { title, description, image = "/og-default.png" } = Astro.props;
+
+// Astro.site comes from the `site` value in astro.config.mjs. We use it to
+// build an absolute URL, which Open Graph/Twitter require (relative paths
+// don't work for link-preview crawlers).
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const absoluteImageURL = new URL(image, Astro.site);
+---
+
+<title>{title} | K-Decoded</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Open Graph tags: control how the page looks when shared on social apps -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:image" content={absoluteImageURL} />
+<meta property="og:site_name" content="K-Decoded" />
+
+<!-- Twitter/X card tags -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={absoluteImageURL} />

@@ -1,0 +1,31 @@
+---
+// src/pages/blog/index.astro
+// Lists every published post. Served at "/blog".
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { getCollection } from "astro:content";
+
+const allPosts = await getCollection("posts", ({ data }) => data.draft !== true);
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout
+  title="Blog"
+  description="All K-Decoded posts: K-beauty and K-fashion guides, product reviews, and the Korean vocab behind them."
+>
+  <section class="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+    <h1 class="text-3xl font-bold text-gray-900">Blog</h1>
+    <p class="mt-2 text-gray-600">
+      Every post, newest first. Filter by topic on the
+      <a href="/vocab" class="text-brand-600 underline">vocab glossary</a>
+      or tag pages.
+    </p>
+
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {sortedPosts.map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

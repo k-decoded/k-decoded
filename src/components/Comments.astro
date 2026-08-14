@@ -1,0 +1,43 @@
+---
+// Comments.astro
+// Embeds Giscus (https://giscus.app) — a free comment widget backed by
+// GitHub Discussions on your own repo. It's the standard no-backend
+// comment solution for static sites: no database, no server, no
+// recurring cost, and it keeps this site fully static.
+//
+// ONE-TIME SETUP (see README.md "Turning on comments" for full steps):
+// 1. Push this project to a PUBLIC GitHub repo.
+// 2. In that repo: Settings → General → Features → enable "Discussions".
+// 3. Install the giscus app on the repo: https://github.com/apps/giscus
+// 4. Go to https://giscus.app, fill in your repo, and it generates the
+//    four values below for you — paste them in here.
+//
+// Until you do that, this section renders an empty box (Giscus fails
+// silently without a real repo) — nothing breaks, comments just don't
+// show up yet.
+
+const GISCUS_REPO = "your-github-username/k-decoded"; // "owner/repo" — replace with your real repo
+const GISCUS_REPO_ID = "REPLACE_WITH_REPO_ID"; // from giscus.app
+const GISCUS_CATEGORY = "General"; // the Discussions category to post comments into
+const GISCUS_CATEGORY_ID = "REPLACE_WITH_CATEGORY_ID"; // from giscus.app
+---
+
+<section class="mt-12 border-t border-gray-100 pt-8">
+  <h2 class="mb-4 text-xl font-bold text-gray-900">Discussion</h2>
+  <script
+    src="https://giscus.app/client.js"
+    data-repo={GISCUS_REPO}
+    data-repo-id={GISCUS_REPO_ID}
+    data-category={GISCUS_CATEGORY}
+    data-category-id={GISCUS_CATEGORY_ID}
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    crossorigin="anonymous"
+    async
+  ></script>
+</section>

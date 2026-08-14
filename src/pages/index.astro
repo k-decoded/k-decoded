@@ -1,0 +1,98 @@
+---
+// src/pages/index.astro
+// The homepage. In Astro, any .astro file under src/pages/ automatically
+// becomes a route — this file is served at "/".
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostCard from "../components/PostCard.astro";
+import Sketch from "../components/Sketch.astro";
+import { getCollection } from "astro:content";
+
+// getCollection reads every file in src/content/posts/, validates it
+// against the schema in src/content/config.ts, and returns it as data.
+const allPosts = await getCollection("posts", ({ data }) => {
+  // Hide drafts from the live site while still letting you preview them
+  // locally by visiting their URL directly.
+  return data.draft !== true;
+});
+
+// Sort newest-first, then take the top 3 for the homepage — one clean
+// row in the 3-column grid used below.
+const featuredPosts = allPosts
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title="Home"
+  description="K-Decoded translates Korean beauty, fashion, and makeup for people who can't read Korean — and teaches you the language along the way."
+>
+  <!-- Hero section. relative + overflow-hidden so the decorative blobs
+       and sparkles below can be absolutely positioned and clipped to the
+       section instead of spilling into the rest of the page. -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-brand-50 via-orange-50 to-brand-100 py-10 sm:py-14">
+    <!-- Soft blurred color blobs, slowly drifting — the "cosmetic swatch"
+         feel. pointer-events-none so they never intercept clicks/taps. -->
+    <div class="pointer-events-none absolute -left-16 -top-16 h-64 w-64 animate-float rounded-full bg-brand-200 opacity-40 blur-3xl" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -right-10 top-10 h-72 w-72 animate-float rounded-full bg-orange-200 opacity-40 blur-3xl" style="animation-delay: 2s" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute bottom-0 left-1/3 h-56 w-56 animate-float rounded-full bg-teal-200 opacity-30 blur-3xl" style="animation-delay: 4s" aria-hidden="true"></div>
+
+    <!-- Line-sketch accents scattered around the headline — literal
+         K-beauty/Korea cues (lipstick, food, the flag) instead of
+         abstract stars, with a gentle idle wiggle. -->
+    <Sketch type="lipstick" class="pointer-events-none absolute left-[10%] top-12 h-8 w-8" color="text-brand-400" delay={0} />
+    <Sketch type="food" class="pointer-events-none absolute right-[13%] top-20 h-9 w-9" color="text-orange-400" delay={0.8} />
+    <Sketch type="flag" class="pointer-events-none absolute bottom-24 left-[18%] h-8 w-11" color="text-teal-500" delay={1.5} />
+    <Sketch type="lipstick" class="pointer-events-none absolute bottom-12 right-[9%] h-7 w-7" color="text-brand-300" delay={2.2} />
+
+    <div class="relative z-10 mx-auto max-w-5xl animate-fade-in-up px-4 text-center sm:px-6">
+      <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        K-Decoded
+      </h1>
+      <p class="mx-auto mt-3 max-w-xl text-lg text-gray-600">
+        Korea, translated — beauty, fashion, and the language behind them.
+      </p>
+      <p class="mx-auto mt-3 max-w-2xl text-sm text-gray-500">
+        Can't read a Korean product label or shop a Korean site directly?
+        We decode K-beauty and K-fashion for you, and teach you the Korean
+        words behind it as we go.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-4">
+        <a
+          href="/blog"
+          class="rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg"
+        >
+          Read the blog
+        </a>
+        <a
+          href="/vocab"
+          class="rounded-full border-2 border-brand-300 bg-white/70 px-6 py-3 text-sm font-semibold text-brand-700 backdrop-blur transition-all duration-200 hover:scale-105 hover:bg-white"
+        >
+          Browse the vocab glossary
+        </a>
+        <a
+          href="/flashcards"
+          class="rounded-full border-2 border-brand-300 bg-white/70 px-6 py-3 text-sm font-semibold text-brand-700 backdrop-blur transition-all duration-200 hover:scale-105 hover:bg-white"
+        >
+          Try the Hangul flashcards
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured posts -->
+  <section class="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+    <h2 class="flex items-center gap-2 text-2xl font-bold text-gray-900">
+      <span class="h-6 w-1.5 rounded-full bg-gradient-to-b from-brand-500 to-orange-400" aria-hidden="true"></span>
+      Latest posts
+    </h2>
+    <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {featuredPosts.map((post) => <PostCard post={post} />)}
+    </div>
+    {featuredPosts.length === 0 && (
+      <p class="mt-6 text-gray-500">
+        No posts yet — add a Markdown file to <code>src/content/posts/</code> to get started.
+      </p>
+    )}
+  </section>
+</BaseLayout>

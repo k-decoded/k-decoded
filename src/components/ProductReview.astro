@@ -1,0 +1,85 @@
+---
+// ProductReview.astro
+// Renders the structured product info from a review post's frontmatter
+// (post.data.product) as a summary box: name, brand, price, rating,
+// affiliate link, and pros/cons. Only used on posts with isReview: true.
+
+interface Product {
+  name: string;
+  brand: string;
+  price?: {
+    usd: string;
+    gbp: string;
+    jpy: string;
+    krw: string;
+  };
+  affiliateLink?: string;
+  rating: number; // 0–5, can be a decimal like 4.5
+  pros: string[];
+  cons: string[];
+}
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+
+// Builds a "★★★★☆" style string from a 0–5 rating.
+const fullStars = Math.round(product.rating);
+const starDisplay = "★".repeat(fullStars) + "☆".repeat(5 - fullStars);
+---
+
+<section class="not-prose my-8 rounded-xl border border-gray-200 bg-gray-50 p-6">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <p class="text-xs uppercase tracking-wide text-gray-400">{product.brand}</p>
+      <h2 class="text-xl font-bold text-gray-900">{product.name}</h2>
+    </div>
+    <div class="text-right">
+      <p class="text-lg text-amber-400" aria-label={`Rating: ${product.rating} out of 5`}>
+        {starDisplay}
+      </p>
+      <!-- price is optional — some posts skip it rather than guess at a
+           figure that can't be confirmed. KRW first when present: it's
+           the actual price on the Korean site, then the converted
+           reference prices readers are more likely to budget in. -->
+      {product.price && (
+        <p class="text-sm font-semibold text-gray-700">
+          {product.price.krw} &middot; {product.price.usd} &middot; {product.price.gbp} &middot; {product.price.jpy}
+        </p>
+      )}
+    </div>
+  </div>
+
+  <div class="mt-5 grid gap-4 sm:grid-cols-2">
+    <div>
+      <h3 class="text-sm font-semibold text-green-700">Pros</h3>
+      <ul class="mt-1 list-inside list-disc text-sm text-gray-700">
+        {product.pros.map((pro) => <li>{pro}</li>)}
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-sm font-semibold text-red-700">Cons</h3>
+      <ul class="mt-1 list-inside list-disc text-sm text-gray-700">
+        {product.cons.map((con) => <li>{con}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  {product.affiliateLink && (
+    <>
+      <a
+        href={product.affiliateLink}
+        target="_blank"
+        rel="noopener noreferrer sponsored"
+        class="mt-5 inline-block rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+      >
+        Check price →
+      </a>
+      <p class="mt-2 text-xs text-gray-400">
+        Affiliate link — we may earn a small commission at no extra cost to you.
+      </p>
+    </>
+  )}
+</section>

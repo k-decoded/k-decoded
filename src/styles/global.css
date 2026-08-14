@@ -1,0 +1,124 @@
+/* Pulls in Tailwind's base reset, component classes, and utility classes.
+   Every .astro file imports this once (via BaseLayout) to get Tailwind. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* A couple of small global tweaks that are easier to set once here than
+   to repeat as Tailwind classes on every page. */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-gray-800 antialiased font-body;
+}
+
+/* Every heading site-wide uses the heading font automatically, instead of
+   adding font-heading to each h1/h2/h3 by hand in every component. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading;
+}
+
+/* Small animation library for the "bring it alive" decorative touches:
+   floating background blobs, twinkling sparkles, and a fade-in-up
+   entrance for hero content. Defined once here and reused via the
+   .animate-* utility classes wherever they're needed. */
+@layer utilities {
+  @keyframes float {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(8px, -16px);
+    }
+  }
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(0.85) rotate(0deg);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.1) rotate(15deg);
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-float {
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .animate-twinkle {
+    animation: twinkle 2.5s ease-in-out infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out both;
+  }
+}
+
+/* Respect users who've asked their OS for less motion — turn every
+   decorative animation off rather than just shortening it. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-twinkle,
+  .animate-fade-in-up {
+    animation: none;
+  }
+}
+
+/* 3D flip-card used by the Hangul flashcards (/flashcards). The card has
+   a front and back face stacked on top of each other; flipping rotates
+   the whole "inner" wrapper 180deg, and backface-visibility hides
+   whichever face is currently facing away from the viewer. */
+.flashcard-scene {
+  perspective: 1200px;
+}
+
+.flashcard-inner {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.flashcard-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.flashcard-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flashcard-face.flashcard-back {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flashcard-inner {
+    transition: none;
+  }
+}

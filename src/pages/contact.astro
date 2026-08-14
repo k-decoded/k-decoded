@@ -1,0 +1,39 @@
+---
+// src/pages/contact.astro
+// A simple contact page: a mailto link, no backend or form service
+// needed, so it works immediately with zero setup. If you'd rather have
+// a real embedded form later, see the note in README.md about swapping
+// this for a free service like Formspree.
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Replace with your real inbox before launch.
+const CONTACT_EMAIL = "hello@k-decoded.example";
+---
+
+<BaseLayout
+  title="Contact"
+  description="Get in touch with K-Decoded — questions, corrections, or collab pitches welcome."
+>
+  <section class="mx-auto max-w-2xl px-4 py-16 sm:px-6">
+    <h1 class="text-3xl font-bold text-gray-900">Get in touch</h1>
+    <p class="mt-4 text-gray-600">
+      Spotted a mistranslation? Want a specific product or brand decoded?
+      Have a collab or partnership pitch? All of it's welcome — a real
+      person reads every message.
+    </p>
+
+    <a
+      href={`mailto:${CONTACT_EMAIL}`}
+      class="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg"
+    >
+      Email {CONTACT_EMAIL}
+    </a>
+
+    <p class="mt-6 text-sm text-gray-500">
+      Prefer to keep it public? Every post has a comment section at the
+      bottom — questions there are visible to other readers too, in case
+      someone else has the same one.
+    </p>
+  </section>
+</BaseLayout>

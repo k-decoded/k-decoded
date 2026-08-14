@@ -1,0 +1,202 @@
+---
+// src/pages/flashcards.astro
+// Interactive Hangul flashcards — the 14 basic consonants and 10 basic
+// vowels (from src/lib/hangulAlphabet.ts), flippable one at a time.
+// Fully client-side: the deck is embedded once as JSON and a small
+// vanilla-JS script handles flipping/shuffling/navigation, no framework
+// or backend involved (same approach as the vocab glossary's search).
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Sketch from "../components/Sketch.astro";
+import { HANGUL_ALPHABET } from "../lib/hangulAlphabet";
+---
+
+<BaseLayout
+  title="Hangul Flashcards"
+  description="Learn to read Hangul — flip through the 14 basic consonants and 10 basic vowels of the Korean alphabet."
+>
+  <section class="relative overflow-hidden bg-gradient-to-br from-brand-50 via-orange-50 to-brand-100 py-12 sm:py-16">
+    <Sketch type="flag" class="pointer-events-none absolute left-[8%] top-8 h-8 w-11" color="text-teal-500" delay={0} />
+    <Sketch type="lipstick" class="pointer-events-none absolute bottom-8 right-[10%] h-7 w-7" color="text-brand-300" delay={1.2} />
+
+    <div class="relative z-10 mx-auto max-w-2xl px-4 text-center sm:px-6">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        Hangul Flashcards
+      </h1>
+      <p class="mx-auto mt-3 max-w-lg text-sm text-gray-600">
+        The 24 basic letters of the Korean alphabet — 14 consonants and
+        10 vowels. Tap a card to flip it, then shuffle and go again.
+      </p>
+      <p class="mx-auto mt-2 max-w-lg text-sm font-semibold text-brand-600">
+        Think you know your Hangul? Shuffle the deck and put yourself to
+        the test — no peeking before you guess!
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-2xl px-4 py-12 sm:px-6">
+    <!-- Filter chips: All / Consonants / Vowels -->
+    <div class="flex justify-center gap-2" id="deck-filters">
+      <button type="button" data-filter="all" class="filter-btn rounded-full bg-brand-600 px-4 py-1.5 text-sm font-medium text-white">
+        All
+      </button>
+      <button type="button" data-filter="consonant" class="filter-btn rounded-full bg-gray-100 px-4 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-200">
+        Consonants
+      </button>
+      <button type="button" data-filter="vowel" class="filter-btn rounded-full bg-gray-100 px-4 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-200">
+        Vowels
+      </button>
+    </div>
+
+    <!-- The flashcard. flashcard-scene/inner/face classes come from
+         global.css and handle the 3D flip; everything else here is
+         just Tailwind for the cute cosmetic-brand look. -->
+    <div class="mt-8 flex flex-col items-center">
+      <button
+        type="button"
+        id="flashcard-button"
+        aria-label="Flip flashcard"
+        class="flashcard-scene h-56 w-56 sm:h-64 sm:w-64"
+      >
+        <div class="flashcard-inner" id="flashcard-inner">
+          <div class="flashcard-face flex flex-col items-center justify-center rounded-2xl border-2 border-brand-200 bg-gradient-to-br from-white to-brand-50 shadow-md">
+            <span id="card-char" class="font-korean text-7xl font-bold text-brand-700"></span>
+            <span class="mt-3 text-xs uppercase tracking-wide text-gray-400">Tap to flip</span>
+          </div>
+          <div class="flashcard-face flashcard-back flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-orange-200 bg-gradient-to-br from-white to-orange-50 p-4 text-center shadow-md">
+            <div>
+              <span id="card-name" class="font-korean text-3xl font-bold text-orange-600"></span>
+              <span id="card-romanization" class="mt-1 block text-base text-gray-700"></span>
+            </div>
+            <div class="w-full border-t border-orange-200 pt-3">
+              <p class="text-xs uppercase tracking-wide text-gray-400">Example word</p>
+              <span id="card-example-word" class="font-korean mt-1 block text-2xl font-bold text-brand-700"></span>
+              <span id="card-example-romanization" class="text-sm italic text-brand-600"></span>
+              <span id="card-example-meaning" class="mt-0.5 block text-sm text-gray-600"></span>
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <p class="mt-4 text-sm text-gray-500" id="card-counter" aria-live="polite"></p>
+
+      <div class="mt-4 flex items-center gap-3">
+        <button type="button" id="prev-btn" aria-label="Previous card" class="rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-semibold text-brand-700 transition-transform duration-150 hover:scale-105 hover:bg-brand-50">
+          ← Prev
+        </button>
+        <button type="button" id="shuffle-btn" class="rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-transform duration-150 hover:scale-105 hover:shadow-md">
+          Shuffle
+        </button>
+        <button type="button" id="next-btn" aria-label="Next card" class="rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-semibold text-brand-700 transition-transform duration-150 hover:scale-105 hover:bg-brand-50">
+          Next →
+        </button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script type="application/json" id="hangul-data" set:html={JSON.stringify(HANGUL_ALPHABET)} />
+
+<script>
+  // Vanilla JS flashcard deck: no framework, just DOM + a small amount
+  // of state (current filter, shuffled order, position, flipped).
+  interface HangulLetter {
+    char: string;
+    name: string;
+    romanization: string;
+    type: "consonant" | "vowel";
+    exampleWord: string;
+    exampleRomanization: string;
+    exampleMeaning: string;
+  }
+
+  const dataEl = document.getElementById("hangul-data");
+  const allLetters: HangulLetter[] = JSON.parse(dataEl?.textContent ?? "[]");
+
+  const flashcardButton = document.getElementById("flashcard-button") as HTMLButtonElement;
+  const flashcardInner = document.getElementById("flashcard-inner") as HTMLDivElement;
+  const cardChar = document.getElementById("card-char") as HTMLSpanElement;
+  const cardName = document.getElementById("card-name") as HTMLSpanElement;
+  const cardRomanization = document.getElementById("card-romanization") as HTMLSpanElement;
+  const cardExampleWord = document.getElementById("card-example-word") as HTMLSpanElement;
+  const cardExampleRomanization = document.getElementById("card-example-romanization") as HTMLSpanElement;
+  const cardExampleMeaning = document.getElementById("card-example-meaning") as HTMLSpanElement;
+  const cardCounter = document.getElementById("card-counter") as HTMLParagraphElement;
+  const filterButtons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+
+  let deck: HangulLetter[] = allLetters.slice();
+  let position = 0;
+  let isFlipped = false;
+
+  function shuffle(list: HangulLetter[]) {
+    const copy = list.slice();
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function render() {
+    const entry = deck[position];
+    cardChar.textContent = entry.char;
+    cardName.textContent = entry.name;
+    cardRomanization.textContent = entry.romanization;
+    cardExampleWord.textContent = entry.exampleWord;
+    cardExampleRomanization.textContent = entry.exampleRomanization;
+    cardExampleMeaning.textContent = entry.exampleMeaning;
+    cardCounter.textContent = `${position + 1} / ${deck.length} — ${entry.type === "consonant" ? "consonant" : "vowel"}`;
+  }
+
+  function setFlipped(flipped: boolean) {
+    isFlipped = flipped;
+    flashcardInner.classList.toggle("is-flipped", isFlipped);
+  }
+
+  function goTo(newPosition: number) {
+    position = ((newPosition % deck.length) + deck.length) % deck.length;
+    setFlipped(false);
+    render();
+  }
+
+  flashcardButton.addEventListener("click", () => setFlipped(!isFlipped));
+
+  document.getElementById("prev-btn")?.addEventListener("click", () => goTo(position - 1));
+  document.getElementById("next-btn")?.addEventListener("click", () => goTo(position + 1));
+  document.getElementById("shuffle-btn")?.addEventListener("click", () => {
+    deck = shuffle(deck);
+    goTo(0);
+  });
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const filter = button.dataset.filter ?? "all";
+
+      filterButtons.forEach((btn) => {
+        btn.classList.remove("bg-brand-600", "text-white");
+        btn.classList.add("bg-gray-100", "text-gray-600");
+      });
+      button.classList.remove("bg-gray-100", "text-gray-600");
+      button.classList.add("bg-brand-600", "text-white");
+
+      deck = filter === "all" ? allLetters.slice() : allLetters.filter((l) => l.type === filter);
+      goTo(0);
+    });
+  });
+
+  // Keyboard support: left/right to navigate, space/enter to flip.
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") goTo(position - 1);
+    if (event.key === "ArrowRight") goTo(position + 1);
+    if (event.key === " " || event.key === "Enter") {
+      // Only hijack space/enter when focus isn't on a button that
+      // already handles it natively (avoids double-triggering).
+      if (document.activeElement?.tagName !== "BUTTON") {
+        event.preventDefault();
+        setFlipped(!isFlipped);
+      }
+    }
+  });
+
+  render();
+</script>

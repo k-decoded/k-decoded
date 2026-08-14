@@ -1,0 +1,113 @@
+---
+// Nav.astro
+// Site-wide navigation bar. Uses Astro.url.pathname to highlight whichever
+// link matches the current page.
+
+import { CATEGORIES } from "../lib/categories";
+import { getTagColor } from "../lib/tagColors";
+
+// "Home" isn't listed separately — the logo itself links to "/".
+const navItems = [
+  { label: "Blog", href: "/blog" },
+  { label: "Vocab Glossary", href: "/vocab" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-brand-50">
+  <nav class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
+    <a href="/" class="group flex items-center gap-2 font-heading text-xl font-bold tracking-tight">
+      <!-- Original swirl mark, loosely inspired by the taegeuk motif from
+           Korean visual culture — rendered in our own brand pinks (not
+           the flag's actual red/blue) so it reads as an original mark
+           rather than a copy of a national symbol. Spins playfully on
+           hover. aria-hidden because the wordmark text right next to it
+           already announces "K-Decoded" to screen readers. -->
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 32 32"
+        class="h-7 w-7 flex-shrink-0 transition-transform duration-500 group-hover:rotate-180"
+      >
+        <circle cx="16" cy="16" r="16" fill="#eeb3c3" />
+        <path
+          d="M16,0 A16,16 0 0,1 16,32 A8,8 0 0,1 16,16 A8,8 0 0,0 16,0 Z"
+          fill="#b3536e"
+        />
+      </svg>
+      <span>
+        <span class="text-brand-600">K</span><span class="text-gray-900">-Decoded</span>
+      </span>
+    </a>
+
+    <!-- A plain checkbox-driven mobile menu keeps this dependency-free —
+         no JS framework needed for something this simple. -->
+    <input type="checkbox" id="nav-toggle" class="peer hidden" />
+    <label
+      for="nav-toggle"
+      class="cursor-pointer text-2xl sm:hidden"
+      aria-label="Toggle navigation menu"
+    >
+      ☰
+    </label>
+
+    <ul
+      class="hidden flex-col gap-4 sm:flex sm:flex-row sm:items-center sm:gap-6
+             peer-checked:absolute peer-checked:left-0 peer-checked:top-full
+             peer-checked:flex peer-checked:w-full peer-checked:flex-col
+             peer-checked:border-t peer-checked:border-brand-100 peer-checked:bg-brand-50
+             peer-checked:px-4 peer-checked:py-4"
+    >
+      {navItems.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class:list={[
+              "text-sm font-medium transition-colors hover:text-brand-600",
+              currentPath === item.href ? "text-brand-600" : "text-gray-600",
+            ]}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <!-- Second row: category links + site search. Kept as its own row
+       instead of cramming into the main nav so neither gets crowded —
+       categories wrap onto a second line on narrow screens rather than
+       scrolling. -->
+  <div class="border-t border-brand-100">
+    <div class="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <ul class="flex flex-wrap gap-2">
+        {CATEGORIES.map((category) => (
+          <li class="flex-shrink-0">
+            <a
+              href={`/tags/${category.slug}`}
+              class:list={[
+                "rounded-full px-3 py-1 text-xs font-medium transition-opacity hover:opacity-80",
+                getTagColor(category.slug),
+              ]}
+            >
+              {category.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <form action="/search" method="get" class="flex-shrink-0 sm:w-56">
+        <label for="nav-search" class="sr-only">Search posts</label>
+        <input
+          id="nav-search"
+          type="search"
+          name="q"
+          placeholder="Search posts…"
+          class="w-full rounded-full border border-brand-200 bg-white px-3 py-1.5 text-xs focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+        />
+      </form>
+    </div>
+  </div>
+</header>

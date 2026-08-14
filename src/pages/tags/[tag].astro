@@ -1,0 +1,56 @@
+---
+// src/pages/tags/[tag].astro
+// One page per tag (e.g. /tags/skincare), listing every post that uses it.
+
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { CATEGORIES } from "../../lib/categories";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => data.draft !== true);
+
+  // Union of every tag actually used on a post AND every canonical
+  // top-level category from categories.ts. The union matters: it means
+  // a category link in the header (e.g. "Snacks") always has a working
+  // page to land on, even before any post has that tag yet — and any
+  // ad-hoc tag a post uses (e.g. "language") still gets its own page too.
+  const allTags = new Set<string>();
+  posts.forEach((post) => post.data.tags.forEach((tag) => allTags.add(tag)));
+  CATEGORIES.forEach((category) => allTags.add(category.slug));
+
+  return Array.from(allTags).map((tag) => {
+    const matchingPosts = posts.filter((post) => post.data.tags.includes(tag));
+    return {
+      params: { tag },
+      props: { tag, posts: matchingPosts },
+    };
+  });
+}
+
+const { tag, posts } = Astro.props;
+const sortedPosts = posts.sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout
+  title={`Posts tagged "${tag}"`}
+  description={`Every K-Decoded post tagged ${tag}.`}
+>
+  <section class="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+    <p class="text-sm font-medium uppercase tracking-wide text-brand-600">Tag</p>
+    <h1 class="mt-1 text-3xl font-bold capitalize text-gray-900">{tag}</h1>
+
+    {sortedPosts.length > 0 ? (
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {sortedPosts.map((post) => <PostCard post={post} />)}
+      </div>
+    ) : (
+      <p class="mt-8 text-gray-500">
+        No posts here yet — check back soon, or browse
+        {" "}<a href="/blog" class="text-brand-600 underline">all posts</a> instead.
+      </p>
+    )}
+  </section>
+</BaseLayout>

@@ -1,0 +1,186 @@
+---
+// src/pages/vocab.astro
+// Auto-aggregates every vocab entry used across every post into one
+// searchable, filterable glossary. You never edit this page directly —
+// add a `vocab` entry to any post's frontmatter and it shows up here
+// automatically on the next build.
+
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const posts = await getCollection("posts", ({ data }) => data.draft !== true);
+
+// De-duplicate vocab entries by hangul: if the same word appears in
+// multiple posts, show it once with links to every post that uses it.
+type GlossaryEntry = {
+  hangul: string;
+  romanization: string;
+  meaning: string;
+  tags: Set<string>;
+  sources: { title: string; slug: string }[];
+};
+
+const glossaryMap = new Map<string, GlossaryEntry>();
+
+for (const post of posts) {
+  for (const entry of post.data.vocab) {
+    const existing = glossaryMap.get(entry.hangul);
+    if (existing) {
+      existing.sources.push({ title: post.data.title, slug: post.slug });
+      post.data.tags.forEach((tag) => existing.tags.add(tag));
+    } else {
+      glossaryMap.set(entry.hangul, {
+        ...entry,
+        tags: new Set(post.data.tags),
+        sources: [{ title: post.data.title, slug: post.slug }],
+      });
+    }
+  }
+}
+
+const glossary = Array.from(glossaryMap.values()).sort((a, b) =>
+  a.romanization.localeCompare(b.romanization)
+);
+
+// Turns a romanization like "jaoeseon chadanje" into a URL-safe anchor id
+// like "jaoeseon-chadanje". Post bodies link to /vocab#<this> so an inline
+// Korean word jumps straight to its glossary entry (and from there, to
+// every other post that uses the same word).
+function slugify(romanization: string) {
+  return romanization.trim().toLowerCase().replace(/\s+/g, "-");
+}
+
+// Every unique tag across the whole glossary, for the filter chips below.
+const allTags = Array.from(
+  new Set(glossary.flatMap((entry) => Array.from(entry.tags)))
+).sort();
+---
+
+<BaseLayout
+  title="Vocab Glossary"
+  description="Every Korean beauty, fashion, and language term explained across K-Decoded, in one searchable glossary."
+>
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+    <h1 class="text-3xl font-bold text-gray-900">Vocab Glossary</h1>
+    <p class="mt-2 text-gray-600">
+      Every Korean word we've taught across all posts, collected in one place.
+    </p>
+
+    <!-- Search + filter controls. No JS framework — just a plain input
+         and buttons, wired up by the <script> at the bottom of this file. -->
+    <div class="mt-8 space-y-4">
+      <input
+        id="vocab-search"
+        type="search"
+        placeholder="Search hangul, romanization, or meaning…"
+        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+      />
+
+      {allTags.length > 0 && (
+        <div class="flex flex-wrap gap-2" id="vocab-tag-filters">
+          <button
+            type="button"
+            data-tag="all"
+            class="tag-filter-btn rounded-full bg-brand-600 px-3 py-1 text-xs font-medium text-white"
+          >
+            All
+          </button>
+          {allTags.map((tag) => (
+            <button
+              type="button"
+              data-tag={tag}
+              class="tag-filter-btn rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-200"
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <p id="vocab-empty-state" class="mt-6 hidden text-sm text-gray-400">
+      No matching terms.
+    </p>
+
+    <ul class="mt-8 divide-y divide-gray-100" id="vocab-list">
+      {glossary.map((entry) => (
+        <li
+          id={slugify(entry.romanization)}
+          class="vocab-entry scroll-mt-24 py-4 target:rounded-lg target:bg-brand-50 target:ring-1 target:ring-brand-200"
+          data-search={`${entry.hangul} ${entry.romanization} ${entry.meaning}`.toLowerCase()}
+          data-tags={Array.from(entry.tags).join(",")}
+        >
+          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span class="font-korean text-xl font-bold text-brand-800">{entry.hangul}</span>
+            <span class="text-sm italic text-brand-600">{entry.romanization}</span>
+            <span class="text-sm text-gray-700">— {entry.meaning}</span>
+          </div>
+          <p class="mt-1 text-xs text-gray-400">
+            From:{" "}
+            {entry.sources.map((source, i) => (
+              <>
+                {i > 0 && ", "}
+                <a href={`/blog/${source.slug}`} class="underline hover:text-brand-600">
+                  {source.title}
+                </a>
+              </>
+            ))}
+          </p>
+        </li>
+      ))}
+    </ul>
+
+    {glossary.length === 0 && (
+      <p class="mt-8 text-gray-500">
+        No vocab yet — add a <code>vocab</code> array to a post's frontmatter to get started.
+      </p>
+    )}
+  </section>
+</BaseLayout>
+
+<script>
+  // Plain vanilla JS: filters the glossary list client-side as the user
+  // types or clicks a tag chip. Runs entirely in the browser after the
+  // static HTML loads — no server, no framework, no build step of its own.
+  const searchInput = document.getElementById("vocab-search") as HTMLInputElement | null;
+  const tagButtons = document.querySelectorAll<HTMLButtonElement>(".tag-filter-btn");
+  const entries = document.querySelectorAll<HTMLLIElement>(".vocab-entry");
+  const emptyState = document.getElementById("vocab-empty-state");
+
+  let activeTag = "all";
+
+  function applyFilters() {
+    const query = (searchInput?.value ?? "").trim().toLowerCase();
+    let visibleCount = 0;
+
+    entries.forEach((entry) => {
+      const matchesSearch = entry.dataset.search?.includes(query) ?? true;
+      const entryTags = entry.dataset.tags?.split(",") ?? [];
+      const matchesTag = activeTag === "all" || entryTags.includes(activeTag);
+
+      const isVisible = matchesSearch && matchesTag;
+      entry.classList.toggle("hidden", !isVisible);
+      if (isVisible) visibleCount++;
+    });
+
+    emptyState?.classList.toggle("hidden", visibleCount > 0);
+  }
+
+  searchInput?.addEventListener("input", applyFilters);
+
+  tagButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      activeTag = button.dataset.tag ?? "all";
+
+      // Toggle active styling on the clicked chip.
+      tagButtons.forEach((btn) => {
+        btn.classList.remove("bg-brand-600", "text-white");
+        btn.classList.add("bg-gray-100", "text-gray-600");
+      });
+      button.classList.remove("bg-gray-100", "text-gray-600");
+      button.classList.add("bg-brand-600", "text-white");
+
+      applyFilters();
+    });
+  });
+</script>
