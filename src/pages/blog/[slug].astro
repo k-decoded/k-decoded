@@ -9,6 +9,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import VocabCard from "../../components/VocabCard.astro";
 import ProductReview from "../../components/ProductReview.astro";
 import Comments from "../../components/Comments.astro";
+import ShareButtons from "../../components/ShareButtons.astro";
 import { getTagColor } from "../../lib/tagColors";
 
 export async function getStaticPaths() {
@@ -36,6 +37,11 @@ const formattedDate = date.toLocaleDateString("en-US", {
   month: "long",
   day: "numeric",
 });
+
+// Share links need absolute URLs — same pattern SEO.astro uses to build
+// them from Astro.site (the canonical domain set in astro.config.mjs).
+const absolutePageURL = new URL(Astro.url.pathname, Astro.site).toString();
+const absoluteImageURL = heroImage ? new URL(heroImage, Astro.site).toString() : undefined;
 ---
 
 <BaseLayout title={title} description={description} image={heroImage}>
@@ -75,6 +81,8 @@ const formattedDate = date.toLocaleDateString("en-US", {
     <div class="prose prose-brand max-w-none">
       <Content />
     </div>
+
+    <ShareButtons title={title} url={absolutePageURL} image={absoluteImageURL} />
 
     <VocabCard vocab={vocab} />
 

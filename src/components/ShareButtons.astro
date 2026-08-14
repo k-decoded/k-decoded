@@ -1,0 +1,110 @@
+---
+// ShareButtons.astro
+// Lets readers share a post to X, Threads, Facebook, or Pinterest, plus
+// a "copy link" fallback. Plain <a> tags pointing at each platform's
+// official share-intent URL — no SDK, no API keys, no tracking script,
+// and they still work even with JavaScript disabled (except the copy
+// button, which needs a click handler to run).
+
+interface Props {
+  title: string;
+  url: string; // absolute URL of the page being shared
+  image?: string; // absolute URL, used by Pinterest's share intent
+}
+
+const { title, url, image } = Astro.props;
+
+const encodedUrl = encodeURIComponent(url);
+const encodedTitle = encodeURIComponent(title);
+
+const shareLinks = [
+  {
+    label: "Share on X",
+    href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+  },
+  {
+    label: "Share on Threads",
+    href: `https://www.threads.net/intent/post?text=${encodeURIComponent(`${title} ${url}`)}`,
+  },
+  {
+    label: "Share on Facebook",
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+  },
+  {
+    label: "Pin it",
+    href: `https://pinterest.com/pin/create/button/?url=${encodedUrl}&description=${encodedTitle}${
+      image ? `&media=${encodeURIComponent(image)}` : ""
+    }`,
+  },
+];
+---
+
+<div class="not-prose flex flex-wrap items-center gap-2 border-t border-gray-100 py-6">
+  <span class="text-sm font-medium text-gray-500">Share this post:</span>
+
+  {shareLinks.map((link) => (
+    <a
+      href={link.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="rounded-full border border-brand-200 px-3 py-1.5 text-xs font-medium text-brand-700 transition-colors hover:bg-brand-50"
+    >
+      {link.label}
+    </a>
+  ))}
+
+  <button
+    type="button"
+    id="copy-link-btn"
+    data-url={url}
+    class="rounded-full border border-brand-200 px-3 py-1.5 text-xs font-medium text-brand-700 transition-colors hover:bg-brand-50"
+  >
+    Copy link
+  </button>
+
+  <span id="copy-link-feedback" class="hidden text-xs font-medium" aria-live="polite"></span>
+</div>
+
+<script>
+  // Same copy-with-fallback pattern used on the contact page: try the
+  // modern Clipboard API first, fall back to the older execCommand
+  // approach, and always tell the visitor what happened either way.
+  const copyButton = document.getElementById("copy-link-btn");
+  const feedback = document.getElementById("copy-link-feedback");
+  let hideTimeout: ReturnType<typeof setTimeout> | undefined;
+
+  function showFeedback(message: string, isError: boolean) {
+    if (!feedback) return;
+    feedback.textContent = message;
+    feedback.classList.toggle("text-green-600", !isError);
+    feedback.classList.toggle("text-red-600", isError);
+    feedback.classList.remove("hidden");
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(() => feedback.classList.add("hidden"), 3000);
+  }
+
+  function copyWithFallback(text: string): boolean {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    const succeeded = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return succeeded;
+  }
+
+  copyButton?.addEventListener("click", async () => {
+    const url = copyButton.dataset.url ?? "";
+
+    try {
+      await navigator.clipboard.writeText(url);
+      showFeedback("Link copied!", false);
+    } catch {
+      const succeeded = copyWithFallback(url);
+      showFeedback(succeeded ? "Link copied!" : "Couldn't copy — try selecting the URL manually.", !succeeded);
+    }
+  });
+</script>
