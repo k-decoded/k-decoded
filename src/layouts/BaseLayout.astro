@@ -25,6 +25,18 @@ const { title, description, image } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- Google Analytics (GA4). is:inline tells Astro to leave these
+         scripts exactly as-is instead of bundling/hashing them — required
+         for third-party snippets like this that rely on a specific
+         global (gtag) and load order. -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-5ECJ9D8LDN"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("js", new Date());
+      gtag("config", "G-5ECJ9D8LDN");
+    </script>
+
     <!-- Google Fonts: Fredoka (headings), Work Sans (body), Noto Sans KR
          (Korean text). preconnect warms up the connection before the
          stylesheet request, shaving a bit of load time. -->
