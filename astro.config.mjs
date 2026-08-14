@@ -3,10 +3,9 @@ import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
 
-// Replace with your real domain once you buy one — Vercel gives you a
-// *.vercel.app URL for free, but the sitemap/SEO tags need a canonical
-// domain to point search engines at.
-const SITE_URL = "https://k-decoded.vercel.app";
+// Canonical domain — used to build absolute URLs for the sitemap and
+// SEO/Open Graph tags.
+const SITE_URL = "https://k-decoded.com";
 
 export default defineConfig({
   site: SITE_URL,
