@@ -135,42 +135,129 @@ const allTags = Array.from(
         No vocab yet — add a <code>vocab</code> array to a post's frontmatter to get started.
       </p>
     )}
+
+    <!-- Pagination for the default (unsearched, "All") view — a growing
+         glossary shouldn't turn into one endless scroll. Hidden whenever
+         a search/tag filter is active, since a filtered result set is
+         short enough to just show in full. -->
+    <div id="vocab-pagination" class="mt-8 hidden items-center justify-center gap-4">
+      <button
+        type="button"
+        id="vocab-prev-btn"
+        class="rounded-full border border-brand-200 px-4 py-1.5 text-sm font-medium text-brand-700 transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        ← Prev
+      </button>
+      <span id="vocab-page-label" class="text-sm text-gray-500"></span>
+      <button
+        type="button"
+        id="vocab-next-btn"
+        class="rounded-full border border-brand-200 px-4 py-1.5 text-sm font-medium text-brand-700 transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        Next →
+      </button>
+    </div>
   </section>
 </BaseLayout>
 
 <script>
   // Plain vanilla JS: filters the glossary list client-side as the user
-  // types or clicks a tag chip. Runs entirely in the browser after the
-  // static HTML loads — no server, no framework, no build step of its own.
+  // types or clicks a tag chip, and paginates the default (unfiltered)
+  // view so the page doesn't just keep growing as more posts add vocab.
+  // Runs entirely in the browser after the static HTML loads — no
+  // server, no framework, no build step of its own.
+  const PAGE_SIZE = 15;
+
   const searchInput = document.getElementById("vocab-search") as HTMLInputElement | null;
   const tagButtons = document.querySelectorAll<HTMLButtonElement>(".tag-filter-btn");
-  const entries = document.querySelectorAll<HTMLLIElement>(".vocab-entry");
+  const entries = Array.from(document.querySelectorAll<HTMLLIElement>(".vocab-entry"));
   const emptyState = document.getElementById("vocab-empty-state");
+  const paginationEl = document.getElementById("vocab-pagination");
+  const prevButton = document.getElementById("vocab-prev-btn") as HTMLButtonElement | null;
+  const nextButton = document.getElementById("vocab-next-btn") as HTMLButtonElement | null;
+  const pageLabel = document.getElementById("vocab-page-label");
 
   let activeTag = "all";
+  let currentPage = 1;
 
   function applyFilters() {
     const query = (searchInput?.value ?? "").trim().toLowerCase();
-    let visibleCount = 0;
+    const isDefaultView = query === "" && activeTag === "all";
 
-    entries.forEach((entry) => {
+    const matching = entries.filter((entry) => {
       const matchesSearch = entry.dataset.search?.includes(query) ?? true;
       const entryTags = entry.dataset.tags?.split(",") ?? [];
       const matchesTag = activeTag === "all" || entryTags.includes(activeTag);
-
-      const isVisible = matchesSearch && matchesTag;
-      entry.classList.toggle("hidden", !isVisible);
-      if (isVisible) visibleCount++;
+      return matchesSearch && matchesTag;
     });
 
-    emptyState?.classList.toggle("hidden", visibleCount > 0);
+    // Only paginate the default "everything, unfiltered" view — a
+    // search or tag filter usually narrows things down enough that
+    // showing all matches at once is more useful than paging through them.
+    let visible: HTMLLIElement[];
+    if (isDefaultView && matching.length > PAGE_SIZE) {
+      const totalPages = Math.ceil(matching.length / PAGE_SIZE);
+      currentPage = Math.min(Math.max(1, currentPage), totalPages);
+      const start = (currentPage - 1) * PAGE_SIZE;
+      visible = matching.slice(start, start + PAGE_SIZE);
+      renderPagination(currentPage, totalPages);
+    } else {
+      visible = matching;
+      renderPagination(0, 0);
+    }
+
+    const visibleSet = new Set(visible);
+    entries.forEach((entry) => {
+      entry.classList.toggle("hidden", !visibleSet.has(entry));
+    });
+
+    emptyState?.classList.toggle("hidden", matching.length > 0);
   }
 
-  searchInput?.addEventListener("input", applyFilters);
+  function renderPagination(page: number, totalPages: number) {
+    if (!paginationEl || !prevButton || !nextButton || !pageLabel) return;
+
+    if (totalPages <= 1) {
+      paginationEl.classList.add("hidden");
+      return;
+    }
+
+    paginationEl.classList.remove("hidden");
+    pageLabel.textContent = `Page ${page} of ${totalPages}`;
+    prevButton.disabled = page <= 1;
+    nextButton.disabled = page >= totalPages;
+  }
+
+  // If a post links to /vocab#some-term, that entry might be on what
+  // would otherwise be page 2 or 3 — jump to the right page first, then
+  // scroll to it, so the deep link still works with pagination in place.
+  function goToEntryFromHash() {
+    const id = window.location.hash.replace("#", "");
+    if (!id) {
+      applyFilters();
+      return;
+    }
+
+    const index = entries.findIndex((entry) => entry.id === id);
+    if (index === -1) {
+      applyFilters();
+      return;
+    }
+
+    currentPage = Math.floor(index / PAGE_SIZE) + 1;
+    applyFilters();
+    entries[index].scrollIntoView({ block: "center" });
+  }
+
+  searchInput?.addEventListener("input", () => {
+    currentPage = 1;
+    applyFilters();
+  });
 
   tagButtons.forEach((button) => {
     button.addEventListener("click", () => {
       activeTag = button.dataset.tag ?? "all";
+      currentPage = 1;
 
       // Toggle active styling on the clicked chip.
       tagButtons.forEach((btn) => {
@@ -183,4 +270,18 @@ const allTags = Array.from(
       applyFilters();
     });
   });
+
+  prevButton?.addEventListener("click", () => {
+    currentPage--;
+    applyFilters();
+    document.getElementById("vocab-list")?.scrollIntoView({ block: "start" });
+  });
+
+  nextButton?.addEventListener("click", () => {
+    currentPage++;
+    applyFilters();
+    document.getElementById("vocab-list")?.scrollIntoView({ block: "start" });
+  });
+
+  goToEntryFromHash();
 </script>

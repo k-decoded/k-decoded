@@ -16,11 +16,11 @@ const allPosts = await getCollection("posts", ({ data }) => {
   return data.draft !== true;
 });
 
-// Sort newest-first, then take the top 3 for the homepage — one clean
-// row in the 3-column grid used below.
+// Sort newest-first, then take the top 6 for the homepage — two clean
+// rows in the 3-column grid used below.
 const featuredPosts = allPosts
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
+  .slice(0, 6);
 ---
 
 <BaseLayout
