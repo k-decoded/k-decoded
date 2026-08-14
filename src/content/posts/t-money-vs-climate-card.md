@@ -30,7 +30,9 @@ Two <a href="/vocab#gyotong-kadeu" class="font-korean rounded bg-brand-50 px-1 f
 visiting Korea: T-money and the Climate Card. They solve different
 problems — one is pay-as-you-go and works everywhere in the country,
 the other is an unlimited pass that only works in Seoul. Which one you
-actually want depends entirely on your trip.
+actually want depends entirely on your trip. We own both ourselves, and
+picked the Climate Card back up on our most recent Seoul trip — it was
+genuinely worth the purchase.
 
 ## T-money Card: the nationwide default
 
@@ -54,6 +56,13 @@ but is Lotte-affiliated and less universally accepted; the Namane Card
 adds KTX high-speed train payment on top of standard transit, which
 T-money doesn't cover. Neither beats T-money for general-purpose use —
 they're niche picks for specific needs.
+
+**A nice bonus:** T-money cards come in a huge range of designs —
+character collabs, regional and attraction-themed editions, seasonal
+releases — to the point where collecting different T-money cards is its
+own small hobby for some visitors and locals alike. If you're going to
+be buying one anyway, it's worth a quick look at what designs are
+available before grabbing the first plain one you see.
 
 ## Climate Card: Seoul's unlimited pass
 
@@ -80,11 +89,13 @@ assume "unlimited" means everything.
 - 7 day: ₩20,000
 - 30 day: roughly ₩62,000–65,000 (with youth discounts for ages 19–39)
 
-**Buying one:** cash only, at convenience stores or metro customer
-service desks — including pickup points at Incheon Airport and the
-Myeong-dong Tourist Information Center. It can't be pre-purchased
-online, and validity starts the moment you first use it, not when you
-buy it.
+**Buying one:** cash only, at convenience stores, metro customer
+service desks, or directly from ticket machines at Seoul subway
+stations — we bought ours straight from a station machine, which was
+quick and didn't require tracking down a staffed counter. Pickup points
+also include Incheon Airport and the Myeong-dong Tourist Information
+Center. It can't be pre-purchased online, and validity starts the
+moment you first use it, not when you buy it.
 
 **One important 2026 change:** the 30-day pass for Seoul residents is
 being phased out in favor of "Climate Card Plus" / K-Pass. If you're a
@@ -108,6 +119,8 @@ For most visitors, the honest answer is both, used differently:
   pass a wasted cost.
 
 A quick gut check: if you're mostly parked in Seoul for 3+ days of
-subway-heavy sightseeing, the Climate Card likely pays for itself. If
-your trip is more scattered — day trips, taxis, other cities — just
-stick with T-money and don't bother with the pass.
+subway-heavy sightseeing, the Climate Card likely pays for itself —
+that was exactly our situation on our most recent trip, and it held up
+in practice, not just on paper. If your trip is more scattered — day
+trips, taxis, other cities — just stick with T-money and don't bother
+with the pass.
