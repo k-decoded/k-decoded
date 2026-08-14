@@ -3,6 +3,7 @@ title: "T-money Card vs. Climate Card: Which Seoul Transit Card Do You Actually 
 description: "T-money is Korea's nationwide pay-as-you-go transit card; the Climate Card is Seoul's unlimited-ride pass. Here's the full breakdown — pricing, coverage, and which one actually fits your trip."
 date: 2026-08-14
 tags: ["travel", "language"]
+heroImage: "/images/posts/t-money-vs-climate-card-hero.webp"
 draft: false
 vocab:
   - hangul: "교통카드"
