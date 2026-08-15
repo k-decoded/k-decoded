@@ -1,0 +1,39 @@
+---
+// Discussion.astro
+// Embeds a Disqus thread in-page — unlike Google Groups (embedding was
+// discontinued by Google), Disqus actually renders as a widget on the
+// page. One shortname serves every board; each board's identifier/url
+// keeps its thread separate from the others.
+// ponytail: Disqus shows ads on the free tier and tracks visitors more
+// than anything else on this site — the cost of a working embed with
+// Google/Facebook/email sign-in built in.
+
+const DISQUS_SHORTNAME = ""; // set after creating a site at disqus.com/admin/create
+
+interface Props {
+  identifier: string;
+  url: string;
+}
+
+const { identifier, url } = Astro.props;
+---
+
+{DISQUS_SHORTNAME ? (
+  <Fragment>
+    <div id="disqus_thread"></div>
+    <script define:vars={{ DISQUS_SHORTNAME, identifier, url }}>
+      window.disqus_config = function () {
+        this.page.url = url;
+        this.page.identifier = identifier;
+      };
+      (function () {
+        const script = document.createElement("script");
+        script.src = `https://${DISQUS_SHORTNAME}.disqus.com/embed.js`;
+        script.setAttribute("data-timestamp", String(+new Date()));
+        document.head.appendChild(script);
+      })();
+    </script>
+  </Fragment>
+) : (
+  <p class="text-gray-500">This board is launching soon — check back shortly.</p>
+)}
