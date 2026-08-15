@@ -1,11 +1,11 @@
 ---
 // PostEngagement.astro
-// View count + emoji reactions, backed by countapi.xyz — the same
-// zero-server, zero-signup pattern Comments.astro used (giscus): a free
-// public counter API keyed by namespace/key, no backend of our own.
-// ponytail: countapi.xyz has no uptime SLA; if it goes down counts just
-// stop updating (fails soft, see script below). Swap for a real backend
-// (Supabase/Cloudflare KV) if that ever matters.
+// View count + emoji reactions, stored in localStorage — no backend, no
+// account to set up, works immediately.
+// ponytail: this is per-browser, not a real site-wide total — each
+// visitor only sees their own device's count. Swap for a shared backend
+// (Cloudflare Workers KV, Supabase, etc.) if you need real aggregate
+// numbers later.
 
 interface Props {
   slug: string;
@@ -21,7 +21,7 @@ const REACTIONS = [
 
 <div class="not-prose flex flex-wrap items-center gap-4 border-t border-gray-100 py-6" data-slug={slug}>
   <span class="text-sm text-gray-500">
-    👁️ <span id="view-count">–</span> views
+    👁️ <span id="view-count">–</span> views (on this device)
   </span>
 
   <div class="flex flex-wrap gap-2">
@@ -39,54 +39,37 @@ const REACTIONS = [
 </div>
 
 <script>
-  const NAMESPACE = "k-decoded";
-  const API = "https://api.countapi.xyz";
-
   const root = document.querySelector("[data-slug]") as HTMLElement | null;
   const slug = root?.dataset.slug;
   if (root && slug) {
+    const viewKey = `views:${slug}`;
+    const views = Number(localStorage.getItem(viewKey) ?? 0) + 1;
+    localStorage.setItem(viewKey, String(views));
     const viewCountEl = document.getElementById("view-count");
-    fetch(`${API}/hit/${NAMESPACE}/${slug}-views`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (viewCountEl) viewCountEl.textContent = String(data.value);
-      })
-      .catch(() => {
-        if (viewCountEl) viewCountEl.textContent = "?";
-      });
+    if (viewCountEl) viewCountEl.textContent = String(views);
 
     root.querySelectorAll<HTMLButtonElement>(".reaction-btn").forEach((button) => {
       const key = button.dataset.key!;
       const countEl = button.querySelector(".reaction-count")!;
-      const storageKey = `reacted:${slug}:${key}`;
-      const alreadyReacted = localStorage.getItem(storageKey) === "1";
-      button.dataset.active = String(alreadyReacted);
-
-      fetch(`${API}/get/${NAMESPACE}/${slug}-${key}`)
-        .then((r) => r.json())
-        .then((data) => {
-          countEl.textContent = String(data.value ?? 0);
-        })
-        .catch(() => {
-          countEl.textContent = "?";
-        });
+      const countKey = `count:${slug}:${key}`;
+      const reactedKey = `reacted:${slug}:${key}`;
+      const reacted = localStorage.getItem(reactedKey) === "1";
+      button.dataset.active = String(reacted);
+      countEl.textContent = String(Number(localStorage.getItem(countKey) ?? 0));
 
       button.addEventListener("click", () => {
-        const reacted = button.dataset.active === "true";
-        const amount = reacted ? -1 : 1;
-        button.dataset.active = String(!reacted);
+        const wasReacted = button.dataset.active === "true";
+        const current = Number(localStorage.getItem(countKey) ?? 0);
+        const next = Math.max(0, current + (wasReacted ? -1 : 1));
 
-        fetch(`${API}/update/${NAMESPACE}/${slug}-${key}?amount=${amount}`)
-          .then((r) => r.json())
-          .then((data) => {
-            countEl.textContent = String(data.value);
-          })
-          .catch(() => {});
+        localStorage.setItem(countKey, String(next));
+        countEl.textContent = String(next);
+        button.dataset.active = String(!wasReacted);
 
-        if (reacted) {
-          localStorage.removeItem(storageKey);
+        if (wasReacted) {
+          localStorage.removeItem(reactedKey);
         } else {
-          localStorage.setItem(storageKey, "1");
+          localStorage.setItem(reactedKey, "1");
         }
       });
     });
