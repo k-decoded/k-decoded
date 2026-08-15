@@ -1,0 +1,49 @@
+---
+// src/pages/community/index.astro
+// Landing page for the discussion forum: guidelines + links to each
+// topic board. The boards themselves live at /community/[topic].
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { COMMUNITY_TOPICS } from "../../lib/communityTopics";
+---
+
+<BaseLayout
+  title="Community"
+  description="Join the K-Decoded community — talk K-beauty, travel, language, and more with other readers."
+>
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+    <h1 class="text-3xl font-bold text-gray-900">Community</h1>
+    <p class="mt-4 text-gray-600">
+      A place to talk with other readers — K-beauty finds, travel tips, language practice,
+      whatever's on your mind. Pick a board below.
+    </p>
+
+    <div class="mt-6 rounded-xl bg-brand-50 p-5 text-sm text-gray-700">
+      <p class="font-semibold text-gray-900">A couple of ground rules</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5">
+        <li>Be kind — disagree without being a jerk.</li>
+        <li>Keep it on-topic for the board you're posting in.</li>
+        <li>No spam, scams, or self-promo dumps.</li>
+      </ul>
+      <p class="mt-3 text-gray-500">
+        Posting uses your free GitHub account (sign-in happens right in the thread) — no separate
+        registration on this site. Threads that break the rules get locked or removed.
+      </p>
+    </div>
+
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+      {COMMUNITY_TOPICS.map((topic) => (
+        <li>
+          <a
+            href={`/community/${topic.slug}`}
+            class="block h-full rounded-xl border border-brand-100 p-5 transition-colors hover:border-brand-300 hover:bg-brand-50"
+          >
+            <span class="text-2xl">{topic.emoji}</span>
+            <p class="mt-2 font-semibold text-gray-900">{topic.label}</p>
+            <p class="mt-1 text-sm text-gray-600">{topic.description}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
