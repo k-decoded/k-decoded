@@ -1,11 +1,11 @@
 ---
 // src/pages/community/[topic].astro
-// One page per board in COMMUNITY_TOPICS. Each gets its own GitHub
-// Discussions thread via Discussion.astro (mapped by this page's own
-// pathname, so /community/beauty and /community/travel never collide).
+// One page per board in COMMUNITY_TOPICS. Each links out to that board's
+// Google Group (sign in with Google, no site registration). Until a
+// board's groupUrl is set, it shows a "coming soon" placeholder instead
+// of a broken link.
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Discussion from "../../components/Discussion.astro";
 import { COMMUNITY_TOPICS } from "../../lib/communityTopics";
 
 export async function getStaticPaths() {
@@ -22,14 +22,28 @@ const { topic } = Astro.props;
   title={`${topic.label} — Community`}
   description={topic.description}
 >
-  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+  <section class="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6">
     <a href="/community" class="text-sm text-brand-600 hover:underline">← All boards</a>
 
     <h1 class="mt-3 text-3xl font-bold text-gray-900">{topic.emoji} {topic.label}</h1>
-    <p class="mt-2 text-gray-600">{topic.description}</p>
+    <p class="mx-auto mt-2 max-w-md text-gray-600">{topic.description}</p>
 
     <div class="mt-10">
-      <Discussion />
+      {topic.groupUrl ? (
+        <Fragment>
+          <a
+            href={topic.groupUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg"
+          >
+            Open the {topic.label} group
+          </a>
+          <p class="mt-3 text-sm text-gray-500">Sign in with your Google account to join and post.</p>
+        </Fragment>
+      ) : (
+        <p class="text-gray-500">This board is launching soon — check back shortly.</p>
+      )}
     </div>
   </section>
 </BaseLayout>
