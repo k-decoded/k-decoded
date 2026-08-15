@@ -67,12 +67,11 @@ grocery <a href="/vocab#aullet" class="font-korean rounded bg-brand-50 px-1 font
 (*aullet*), outlet, than a beauty boutique — and that's part of the
 charm once you're used to it.
 
-<img src="/images/posts/off-beauty-ampoule-shelf.webp" alt="A shelf of vitamin ampoules at Off Beauty — niacinamide, retinol, and panthenol serums — each tagged with a 76% discount bringing the price down to ₩7,000" class="not-prose my-8 w-full rounded-xl object-cover" />
+<img src="/images/posts/off-beauty-toner-pad-shelf.webp" alt="Shelves of toner pads and peeling pads at Off Beauty, including PDRN Tension Toner Pad and 5 Green Calming Toner Pad, each with discount price tags" class="not-prose my-8 w-full rounded-xl object-cover" />
 
-Shelves like this are exactly what we mean — wall-to-wall vitamin
-ampoules, each with an electronic price tag showing the same steep cut:
-76% off, down to ₩7,000 a bottle, on serums that would normally run
-closer to ₩29,000.
+Shelves like this are exactly what we mean — toner pads and peeling
+pads take up entire shelving units on their own, and every single item
+here has its own discount tag, no exceptions.
 
 ## What's actually worth buying
 
@@ -88,11 +87,12 @@ and the seal before you commit — most of it is a genuinely good deal,
 but it's still worth a quick check rather than assuming everything on
 the shelf is equally fresh.
 
-<img src="/images/posts/off-beauty-toner-pad-shelf.webp" alt="Shelves of toner pads and peeling pads at Off Beauty, including PDRN Tension Toner Pad and 5 Green Calming Toner Pad, each with discount price tags" class="not-prose my-8 w-full rounded-xl object-cover" />
+<img src="/images/posts/off-beauty-ampoule-shelf.webp" alt="A shelf of vitamin ampoules at Off Beauty — niacinamide, retinol, and panthenol serums — each tagged with a 76% discount bringing the price down to ₩7,000" class="not-prose my-8 w-full rounded-xl object-cover" />
 
-Toner pads and peeling pads take up entire shelving units on their
-own — this is a fraction of one aisle, and every single item here has
-its own discount tag.
+Vitamin ampoules are one of the categories we'd point to directly —
+wall-to-wall serums here, each with an electronic price tag showing the
+same steep cut: 76% off, down to ₩7,000 a bottle, on serums that would
+normally run closer to ₩29,000.
 
 <img src="/images/posts/off-beauty-cleanser-shelf.webp" alt="Dr. Melaxin Melting Cleanser and Dermafirm Hydra Foaming Cleanser on an Off Beauty shelf, tagged at 85% and 75% off" class="not-prose my-8 w-full max-w-sm mx-auto rounded-xl object-cover" />
 
