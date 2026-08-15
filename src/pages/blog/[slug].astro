@@ -8,8 +8,8 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import VocabCard from "../../components/VocabCard.astro";
 import ProductReview from "../../components/ProductReview.astro";
-import Comments from "../../components/Comments.astro";
 import ShareButtons from "../../components/ShareButtons.astro";
+import PostEngagement from "../../components/PostEngagement.astro";
 import { getTagColor } from "../../lib/tagColors";
 
 export async function getStaticPaths() {
@@ -86,6 +86,6 @@ const absoluteImageURL = heroImage ? new URL(heroImage, Astro.site).toString() :
 
     <VocabCard vocab={vocab} />
 
-    <Comments />
+    <PostEngagement slug={post.slug} />
   </article>
 </BaseLayout>
