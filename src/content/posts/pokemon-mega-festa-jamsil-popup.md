@@ -76,6 +76,8 @@ There's also an <a href="/vocab#ichiban-kuji" class="font-korean rounded bg-bran
 2nd drop) go on sale the moment doors open today, and L.POINT members
 get an exclusive bonus Magikarp promo card thrown in with purchase.
 
+The collection is unmistakably Magikarp-first: its bright orange, floppy-fish charm carries through the plush, apparel, accessories, stationery, and even the waterside floor mat.
+
 ![Pokémon Mega Festa 2026 Magikarp merchandise, including plush, apparel, tableware, stationery, and a floor mat](/images/posts/pokemon-mega-festa-2026-magikarp-merch.jpg)
 
 <p class="not-prose -mt-4 mb-8 text-xs text-gray-400">Merchandise image: <a href="https://www.instagram.com/p/Db8KrO6DzPG/" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-600">Pokémon Korea</a> — © Pokémon Korea / @pokemon_korea_official.</p>
