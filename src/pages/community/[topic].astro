@@ -1,8 +1,7 @@
 ---
 // src/pages/community/[topic].astro
-// One page per board in COMMUNITY_TOPICS. Each embeds its own Disqus
-// thread via Discussion.astro, keyed by the topic's slug so boards never
-// share a thread.
+// One page per board in COMMUNITY_TOPICS. Each has an independently keyed
+// anonymous Supabase discussion, so boards never share a thread.
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Discussion from "../../components/Discussion.astro";
@@ -16,7 +15,6 @@ export async function getStaticPaths() {
 }
 
 const { topic } = Astro.props;
-const absoluteUrl = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
 <BaseLayout
@@ -30,7 +28,7 @@ const absoluteUrl = new URL(Astro.url.pathname, Astro.site).toString();
     <p class="mt-2 text-gray-600">{topic.description}</p>
 
     <div class="mt-10">
-      <Discussion identifier={topic.slug} url={absoluteUrl} />
+      <Discussion identifier={topic.slug} />
     </div>
   </section>
 </BaseLayout>

@@ -111,27 +111,24 @@ Clicking it jumps to that word's glossary entry, which lists every other
 post that uses the same term — so readers can follow a word across the
 whole site. See `beauty-of-joseon-relief-sun-review.md` for more examples.
 
-## Turning on comments
+## Community discussions
 
-Every post has a "Discussion" section at the bottom (`src/components/Comments.astro`),
-powered by [Giscus](https://giscus.app) — comments are stored as GitHub
-Discussions on your own repo, so there's no database or backend to pay
-for or maintain. Until you set it up, the section just renders empty —
-nothing breaks.
+Community boards use Supabase so visitors can post with a display name
+instead of creating an account. New posts are held for approval; approve
+or reject them in the `community_posts` table in Supabase's Table Editor.
 
-To turn it on:
+The one-time database setup lives in `supabase/community_posts.sql`.
+Set these public values in `.env.local` for local development and in
+Vercel for every deployment environment:
 
-1. Push this project to a **public** GitHub repository (see "Deploying
-   to Vercel" below — you need this step anyway).
-2. In that repo: **Settings → General → Features → enable "Discussions"**.
-3. Install the giscus app on the repo: https://github.com/apps/giscus
-4. Go to https://giscus.app, enter your repo, and it'll generate four
-   values (`repo`, `repoId`, `category`, `categoryId`).
-5. Paste those four values into the constants at the top of
-   `src/components/Comments.astro`, replacing the placeholders.
+```bash
+PUBLIC_SUPABASE_URL=
+PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+```
 
-Commenters need a GitHub account to post — that's a feature, not a
-limitation: it keeps spam near-zero without you having to moderate.
+In Supabase, enable **Authentication → Sign In / Providers → Allow
+anonymous sign-ins**. Keep Row Level Security enabled: the included SQL
+allows visitors to read approved posts and submit only pending posts.
 
 ## Updating the contact page
 
