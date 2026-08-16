@@ -75,6 +75,14 @@ const absoluteImageURL = heroImage ? new URL(heroImage, Astro.site).toString() :
 
     {isReview && product && <ProductReview product={product} />}
 
+    {vocab.length > 0 && (
+      <aside class="quick-decode not-prose mb-8 rounded-2xl p-5">
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">Quick decode</p>
+        <p class="mt-2 font-korean text-xl font-bold text-gray-900">{vocab[0].hangul} <span class="font-body text-sm font-medium text-gray-500">{vocab[0].romanization}</span></p>
+        <p class="mt-1 text-sm leading-6 text-gray-700">{vocab[0].meaning}</p>
+      </aside>
+    )}
+
     <!-- `prose` (from @tailwindcss/typography) styles the raw Markdown
          output — headings, paragraphs, lists — without us hand-styling
          every element the post body might contain. -->

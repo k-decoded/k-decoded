@@ -10,7 +10,7 @@ interface Props {
   image?: string; // absolute or root-relative path to a preview image
 }
 
-const { title, description, image = "/og-default.png" } = Astro.props;
+const { title, description, image = "/og.png" } = Astro.props;
 
 // Astro.site comes from the `site` value in astro.config.mjs. We use it to
 // build an absolute URL, which Open Graph/Twitter require (relative paths

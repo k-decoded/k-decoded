@@ -14,6 +14,45 @@ body {
   @apply bg-white text-gray-800 antialiased font-body;
 }
 
+/* A subtle paper-like texture makes the pastel surfaces feel tactile without
+   competing with article photography or copy. */
+.featured-story,
+.pastel-note,
+.quick-decode {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgb(179 83 110 / 0.08) 1px, transparent 0),
+    linear-gradient(135deg, rgb(253 243 245 / 0.96), rgb(236 253 245 / 0.82));
+  background-size: 18px 18px, 100% 100%;
+}
+
+.pastel-note {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgb(13 148 136 / 0.08) 1px, transparent 0),
+    linear-gradient(135deg, rgb(240 253 250 / 0.96), rgb(253 243 245 / 0.84));
+}
+
+.quick-decode {
+  border: 1px solid rgb(246 210 219);
+}
+
+.k-stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border: 1px solid rgb(179 83 110 / 0.32);
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.8);
+  box-shadow: 0 4px 14px rgb(86 39 55 / 0.12);
+  color: rgb(144 64 88);
+  font-family: "Fredoka", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transform: rotate(-8deg);
+}
+
 /* Every heading site-wide uses the heading font automatically, instead of
    adding font-heading to each h1/h2/h3 by hand in every component. */
 h1,
