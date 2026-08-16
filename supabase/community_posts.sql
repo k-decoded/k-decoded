@@ -20,14 +20,6 @@ create policy "Anyone can read approved community posts"
   to anon, authenticated
   using (status = 'approved');
 
-create policy "Anonymous visitors can submit pending posts"
-  on public.community_posts for insert
-  to authenticated
-  with check (
-    auth.uid() = author_id
-    and (auth.jwt() ->> 'is_anonymous')::boolean is true
-    and status = 'pending'
-  );
-
--- Approve or reject submissions from the Supabase Table Editor. Do not add
--- client-side update/delete policies: moderation stays owner-controlled.
+-- Posts are inserted only by the moderation Edge Function, using the service
+-- role after it has screened the content. Keeping direct client inserts closed
+-- prevents visitors from bypassing that screen.

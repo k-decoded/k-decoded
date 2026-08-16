@@ -17,7 +17,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 >
   <div>
     <h2 class="text-xl font-bold text-gray-900">Join the conversation</h2>
-    <p class="mt-1 text-sm text-gray-600">No account needed. Pick a display name and your post will appear after moderation.</p>
+    <p class="mt-1 text-sm text-gray-600">No account needed. Pick a display name and safe posts appear straight away.</p>
   </div>
 
   <form class="mt-5 grid gap-3" data-discussion-form>
@@ -120,15 +120,21 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
         try {
           const session = await getSession();
           if (!session?.user) throw new Error("No session");
-          const { error } = await supabase.from("community_posts").insert({
-            topic_slug: topic,
-            author_id: session.user.id,
-            author_name: authorName,
-            body,
+          const { data, error } = await supabase.functions.invoke("moderate-community-post", {
+            body: {
+              topic_slug: topic,
+              author_name: authorName,
+              body,
+            },
           });
           if (error) throw error;
           form.reset();
-          setStatus("Thanks! Your post is waiting for approval.");
+          if (data?.status === "approved") {
+            setStatus("Posted — thanks for joining the conversation!");
+            await loadPosts();
+          } else {
+            setStatus("Thanks! This post is being reviewed before it appears.");
+          }
         } catch {
           setStatus("Couldn’t submit your post. Please try again shortly.");
         }
