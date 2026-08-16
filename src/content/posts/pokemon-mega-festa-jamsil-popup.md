@@ -73,8 +73,7 @@ the game's designated punching bag before it evolves. The
 There's also an <a href="/vocab#ichiban-kuji" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">이치방쿠지</a>
 (*ichiban kuji*) draw for the 30th anniversary, "Vol. 1" — the grand
 "Last One" prize is a 50 cm Pikachu plush. Both merch batches (1st and
-2nd drop) go on sale the moment doors open today, and L.POINT members
-get an exclusive bonus Magikarp promo card thrown in with purchase.
+2nd drop) go on sale the moment doors open today.
 
 The collection is unmistakably Magikarp-first: its bright orange, floppy-fish charm carries through the plush, apparel, accessories, stationery, and even the waterside floor mat.
 
@@ -99,8 +98,8 @@ A couple of built-in perks: spend over ₩100,000 in the market for a
 chance at a limited-edition Magikarp bandana or cup holder, and
 following Pokémon Korea's Instagram gets you a free Pokémon sun visor
 on a first-come, first-served basis each day. Turn in a "Starlight
-Magikarp Wish Card" on your way out for a coupon toward the same
-promotional Magikarp card mentioned above (still L.POINT-members-only).
+Magikarp Wish Card" on your way out to receive a promotional Magikarp
+card (still L.POINT-members-only).
 
 ![Pokémon Mega Festa 2026 Lotte Town Summer Market notice explaining how eligible guests can receive a promotional Magikarp card](/images/posts/pokemon-mega-festa-2026-promo-card-perk.webp)
 
