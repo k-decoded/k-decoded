@@ -3,7 +3,7 @@ title: "포켓몬 무릉도원: Pokémon's 30th-Anniversary Pop-Up Opens in Jams
 description: "Pokémon Mega Festa 2026 lands at Lotte World Mall today with the Muleungdowon pop-up and the outdoor Starlight Paradise market — address, hours, reservations, and the Magikarp merch drop, plus how to plan a visit before it closes August 31."
 date: 2026-08-16
 tags: ["travel", "media"]
-heroImage: "/images/posts/pokemon-starlight-paradise-hero.svg"
+heroImage: "/images/posts/pokemon-mega-festa-2026-lotte-town-summer-market.webp"
 draft: false
 vocab:
   - hangul: "무릉도원"
@@ -23,7 +23,7 @@ vocab:
     meaning: "reservation, booking"
 ---
 
-<p class="not-prose -mt-4 mb-8 text-xs text-gray-400">Illustration inspired by the "Pokémon Starlight Paradise" theme. The official key art is <a href="https://www.instagram.com/p/Dbrga7dj015/" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-600">on Pokémon Korea's Instagram</a> — © Pokémon Korea / @pokemon_korea_official.</p>
+<p class="not-prose -mt-4 mb-8 text-xs text-gray-400">Hero image: <a href="https://www.instagram.com/p/Dbrga7dj015/" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-600">Pokémon Korea</a> — © Pokémon Korea / @pokemon_korea_official.</p>
 
 If you're in Seoul this week, Jamsil just became ground zero for Pokémon's 30th birthday. Today, August 16, Pokémon Korea opens <a href="/vocab#muleungdowon" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">무릉도원</a>
 (*Muleungdowon*) at Lotte World Mall — the newest stop on the citywide
