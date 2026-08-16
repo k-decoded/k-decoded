@@ -8,6 +8,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import VocabCard from "../../components/VocabCard.astro";
 import ProductReview from "../../components/ProductReview.astro";
+import ReviewHelper from "../../components/ReviewHelper.astro";
 import ShareButtons from "../../components/ShareButtons.astro";
 import PostEngagement from "../../components/PostEngagement.astro";
 import { getTagColor } from "../../lib/tagColors";
@@ -42,6 +43,10 @@ const formattedDate = date.toLocaleDateString("en-US", {
 // them from Astro.site (the canonical domain set in astro.config.mjs).
 const absolutePageURL = new URL(Astro.url.pathname, Astro.site).toString();
 const absoluteImageURL = heroImage ? new URL(heroImage, Astro.site).toString() : undefined;
+const allPosts = await getCollection("posts", ({ data }) => data.draft !== true);
+const relatedPosts = allPosts
+  .filter((candidate) => candidate.slug !== post.slug && candidate.data.tags.some((tag) => tags.includes(tag)))
+  .slice(0, 3);
 ---
 
 <BaseLayout title={title} description={description} image={heroImage}>
@@ -74,6 +79,7 @@ const absoluteImageURL = heroImage ? new URL(heroImage, Astro.site).toString() :
     )}
 
     {isReview && product && <ProductReview product={product} />}
+    {isReview && <ReviewHelper />}
 
     {vocab.length > 0 && (
       <aside class="quick-decode not-prose mb-8 rounded-2xl p-5">
@@ -90,10 +96,26 @@ const absoluteImageURL = heroImage ? new URL(heroImage, Astro.site).toString() :
       <Content />
     </div>
 
+    {relatedPosts.length > 0 && (
+      <aside class="not-prose mt-10 rounded-2xl border border-brand-100 bg-brand-50/50 p-6">
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">Decode next</p>
+        <h2 class="mt-1 text-2xl font-bold text-gray-900">More to explore</h2>
+        <ul class="mt-4 grid gap-3 sm:grid-cols-3">
+          {relatedPosts.map((related) => (
+            <li>
+              <a href={`/blog/${related.slug}`} class="block rounded-xl bg-white p-4 text-sm font-semibold leading-5 text-gray-800 shadow-sm transition-transform hover:-translate-y-0.5 hover:text-brand-700">
+                {related.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    )}
+
     <ShareButtons title={title} url={absolutePageURL} image={absoluteImageURL} />
 
     <VocabCard vocab={vocab} />
 
-    <PostEngagement slug={post.slug} />
+    <PostEngagement slug={post.slug} tags={tags} />
   </article>
 </BaseLayout>

@@ -83,6 +83,24 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
     </div>
   </section>
 
+  <section class="mx-auto max-w-5xl px-4 pt-10 sm:px-6">
+    <div class="rounded-3xl border border-brand-100 bg-white p-5 shadow-sm sm:p-6">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[0.14em] text-brand-600">Pick your vibe</p>
+          <p class="mt-1 text-sm text-gray-600">Choose a topic to tailor the stories below.</p>
+        </div>
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Filter stories by topic">
+          <button type="button" class="topic-filter rounded-full bg-brand-600 px-3 py-1.5 text-sm font-semibold text-white" data-topic="all" aria-pressed="true">All stories</button>
+          <button type="button" class="topic-filter rounded-full bg-teal-50 px-3 py-1.5 text-sm font-semibold text-teal-800" data-topic="skincare" aria-pressed="false">Beauty</button>
+          <button type="button" class="topic-filter rounded-full bg-sky-50 px-3 py-1.5 text-sm font-semibold text-sky-800" data-topic="travel" aria-pressed="false">Travel</button>
+          <button type="button" class="topic-filter rounded-full bg-orange-50 px-3 py-1.5 text-sm font-semibold text-orange-800" data-topic="snacks" aria-pressed="false">Food</button>
+          <button type="button" class="topic-filter rounded-full bg-rose-50 px-3 py-1.5 text-sm font-semibold text-rose-800" data-topic="language" aria-pressed="false">Language</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Featured posts -->
   <section class="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
     <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
@@ -96,7 +114,7 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
       <a href="/blog" class="text-sm font-semibold text-brand-700 transition-colors hover:text-brand-900">View all posts <span aria-hidden="true">→</span></a>
     </div>
     {leadPost && (
-      <a href={`/blog/${leadPost.slug}`} class="featured-story group mt-6 grid overflow-hidden rounded-3xl border border-brand-100 bg-brand-50/50 transition-shadow hover:shadow-xl lg:grid-cols-[1.15fr_0.85fr]">
+      <a href={`/blog/${leadPost.slug}`} class="featured-story group mt-6 grid overflow-hidden rounded-3xl border border-brand-100 bg-brand-50/50 transition-shadow hover:shadow-xl lg:grid-cols-[1.15fr_0.85fr]" data-post-tags={leadPost.data.tags.join(",")}>
         <div class="relative min-h-72 overflow-hidden lg:order-2 lg:min-h-full">
           {leadPost.data.heroImage && (
             <img src={leadPost.data.heroImage} alt={leadPost.data.title} class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -142,5 +160,70 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
         <a href="/flashcards" class="rounded-full px-4 py-2 text-sm font-semibold text-teal-800 transition-colors hover:text-teal-950">Try flashcards <span aria-hidden="true">→</span></a>
       </div>
     </aside>
+
+    {wordOfTheWeek && (
+      <section class="mt-6 grid gap-6 rounded-3xl border border-violet-100 bg-violet-50/70 p-6 sm:grid-cols-[1fr_auto] sm:items-center sm:p-8">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[0.14em] text-violet-700">Today’s two-tap quiz</p>
+          <h2 class="mt-1 text-xl font-bold text-gray-900">What does <span class="font-korean text-2xl text-violet-800">{wordOfTheWeek.hangul}</span> mean?</h2>
+          <p class="mt-2 hidden text-sm leading-6 text-gray-700" data-word-answer><span class="font-semibold">{wordOfTheWeek.romanization}</span> — {wordOfTheWeek.meaning}</p>
+        </div>
+        <button type="button" data-word-reveal class="rounded-full bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105">Reveal answer</button>
+      </section>
+    )}
+
+    <section class="mt-6 grid gap-5 rounded-3xl border border-orange-100 bg-orange-50/70 p-6 sm:grid-cols-[1fr_auto] sm:items-center sm:p-8" data-transit-quiz>
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.14em] text-orange-700">Seoul commute mini quiz</p>
+        <h2 class="mt-1 text-xl font-bold text-gray-900">How do you expect to use public transport?</h2>
+        <p class="mt-1 text-sm text-gray-600" data-transit-result>Choose the option that sounds most like your trip.</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button type="button" class="transit-choice rounded-full border border-orange-200 bg-white px-4 py-2 text-sm font-semibold text-orange-800 hover:bg-orange-100" data-result="A rechargeable T-money card is the flexible starting point for occasional rides and broader travel.">A few flexible rides</button>
+        <button type="button" class="transit-choice rounded-full border border-orange-200 bg-white px-4 py-2 text-sm font-semibold text-orange-800 hover:bg-orange-100" data-result="The Climate Card may suit frequent city transit—compare both options in our guide before you choose.">Lots of Seoul rides</button>
+      </div>
+    </section>
+
+    <p class="mt-8 text-center text-sm text-gray-500" data-seasonal-phrase>🌷 A little Korean discovery for every season.</p>
   </section>
 </BaseLayout>
+
+<script>
+  const topicButtons = document.querySelectorAll<HTMLButtonElement>(".topic-filter");
+  const postCards = document.querySelectorAll<HTMLElement>("[data-post-tags]");
+  topicButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const topic = button.dataset.topic ?? "all";
+      topicButtons.forEach((item) => {
+        const active = item === button;
+        item.setAttribute("aria-pressed", String(active));
+        item.classList.toggle("bg-brand-600", active);
+        item.classList.toggle("text-white", active);
+      });
+      postCards.forEach((card) => {
+        const matches = topic === "all" || (card.dataset.postTags?.split(",").includes(topic) ?? false);
+        card.classList.toggle("hidden", !matches);
+      });
+    });
+  });
+
+  const revealButton = document.querySelector<HTMLButtonElement>("[data-word-reveal]");
+  const answer = document.querySelector<HTMLElement>("[data-word-answer]");
+  revealButton?.addEventListener("click", () => {
+    answer?.classList.remove("hidden");
+    revealButton.textContent = "Answer revealed";
+    revealButton.disabled = true;
+  });
+
+  document.querySelectorAll<HTMLButtonElement>(".transit-choice").forEach((button) => {
+    button.addEventListener("click", () => {
+      const result = document.querySelector<HTMLElement>("[data-transit-result]");
+      if (result) result.textContent = button.dataset.result ?? "";
+    });
+  });
+
+  const phrase = document.querySelector<HTMLElement>("[data-seasonal-phrase]");
+  const month = new Date().getMonth();
+  const seasonalPhrases = ["❄️ Winter is for warm cafés and cosy Korean skincare.", "🌷 Spring is for new words and fresh Seoul discoveries.", "☀️ Summer is for cool snacks and city adventures.", "🍂 Autumn is for layers, markets, and language practice."];
+  if (phrase) phrase.textContent = seasonalPhrases[Math.floor(month / 3)];
+</script>

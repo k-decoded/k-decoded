@@ -9,17 +9,18 @@
 
 interface Props {
   slug: string;
+  tags?: string[];
 }
 
-const { slug } = Astro.props;
+const { slug, tags = [] } = Astro.props;
 const REACTIONS = [
-  { emoji: "👍", key: "like" },
-  { emoji: "❤️", key: "love" },
-  { emoji: "🎉", key: "yay" },
+  { emoji: "💡", key: "useful", label: "Useful" },
+  { emoji: "✨", key: "trying", label: "Trying this" },
+  { emoji: "🔖", key: "saved", label: "Saved" },
 ];
 ---
 
-<div class="not-prose flex flex-wrap items-center gap-4 border-t border-gray-100 py-6" data-slug={slug}>
+<div class="not-prose flex flex-wrap items-center gap-4 border-t border-gray-100 py-6" data-slug={slug} data-tags={tags.join(",")}>
   <span class="text-sm text-gray-500">
     👁️ <span id="view-count">–</span> views (on this device)
   </span>
@@ -32,10 +33,19 @@ const REACTIONS = [
         data-key={r.key}
         data-active="false"
       >
-        {r.emoji} <span class="reaction-count">–</span>
+        {r.emoji} {r.label} <span class="reaction-count">–</span>
       </button>
     ))}
   </div>
+
+  <button type="button" class="bookmark-btn ml-auto rounded-full border border-teal-200 bg-teal-50 px-3 py-1.5 text-sm font-semibold text-teal-800 transition-colors hover:bg-teal-100">
+    ♡ Save to reads
+  </button>
+  {tags.includes("travel") && (
+    <button type="button" class="seoul-list-btn rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-sm font-semibold text-orange-800 transition-colors hover:bg-orange-100">
+      + Add to Seoul list
+    </button>
+  )}
 </div>
 
 <script>
@@ -72,6 +82,41 @@ const REACTIONS = [
           localStorage.setItem(reactedKey, "1");
         }
       });
+    });
+
+    const title = document.querySelector("h1")?.textContent?.trim() ?? slug;
+    const bookmarkButton = root.querySelector<HTMLButtonElement>(".bookmark-btn");
+    const savedReadsKey = "k-decoded:saved-reads";
+    const savedReads = new Set<string>(JSON.parse(localStorage.getItem(savedReadsKey) ?? "[]"));
+    function renderBookmark() {
+      if (!bookmarkButton) return;
+      const saved = savedReads.has(slug);
+      bookmarkButton.textContent = saved ? "♥ Saved to reads" : "♡ Save to reads";
+      bookmarkButton.setAttribute("aria-pressed", String(saved));
+    }
+    renderBookmark();
+    bookmarkButton?.addEventListener("click", () => {
+      savedReads.has(slug) ? savedReads.delete(slug) : savedReads.add(slug);
+      localStorage.setItem(savedReadsKey, JSON.stringify([...savedReads]));
+      localStorage.setItem(`k-decoded:read-title:${slug}`, title);
+      renderBookmark();
+    });
+
+    const seoulButton = root.querySelector<HTMLButtonElement>(".seoul-list-btn");
+    const seoulListKey = "k-decoded:seoul-list";
+    const seoulList = new Set<string>(JSON.parse(localStorage.getItem(seoulListKey) ?? "[]"));
+    function renderSeoulList() {
+      if (!seoulButton) return;
+      const saved = seoulList.has(slug);
+      seoulButton.textContent = saved ? "✓ On your Seoul list" : "+ Add to Seoul list";
+      seoulButton.setAttribute("aria-pressed", String(saved));
+    }
+    renderSeoulList();
+    seoulButton?.addEventListener("click", () => {
+      seoulList.has(slug) ? seoulList.delete(slug) : seoulList.add(slug);
+      localStorage.setItem(seoulListKey, JSON.stringify([...seoulList]));
+      localStorage.setItem(`k-decoded:seoul-title:${slug}`, title);
+      renderSeoulList();
     });
   }
 </script>
