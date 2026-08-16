@@ -176,18 +176,6 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
       </section>
     )}
 
-    <section class="mt-6 grid gap-5 rounded-3xl border border-orange-100 bg-orange-50/70 p-6 sm:grid-cols-[1fr_auto] sm:items-center sm:p-8" data-transit-quiz>
-      <div>
-        <p class="text-sm font-semibold uppercase tracking-[0.14em] text-orange-700">Seoul commute mini quiz</p>
-        <h2 class="mt-1 text-xl font-bold text-gray-900">How do you expect to use public transport?</h2>
-        <p class="mt-1 text-sm text-gray-600" data-transit-result>Choose the option that sounds most like your trip.</p>
-      </div>
-      <div class="flex flex-wrap gap-2">
-        <button type="button" class="transit-choice rounded-full border border-orange-200 bg-white px-4 py-2 text-sm font-semibold text-orange-800 hover:bg-orange-100" data-result="A rechargeable T-money card is the flexible starting point for occasional rides and broader travel.">A few flexible rides</button>
-        <button type="button" class="transit-choice rounded-full border border-orange-200 bg-white px-4 py-2 text-sm font-semibold text-orange-800 hover:bg-orange-100" data-result="The Climate Card may suit frequent city transit—compare both options in our guide before you choose.">Lots of Seoul rides</button>
-      </div>
-    </section>
-
     <p class="mt-8 text-center text-sm text-gray-500" data-seasonal-phrase>🌷 A little Korean discovery for every season.</p>
   </section>
 </BaseLayout>
@@ -243,13 +231,6 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
     while (nextIndex === currentQuizIndex) nextIndex = Math.floor(Math.random() * quizWords.length);
     currentQuizIndex = nextIndex;
     renderQuiz(currentQuizIndex);
-  });
-
-  document.querySelectorAll(".transit-choice").forEach((button) => {
-    button.addEventListener("click", () => {
-      const result = document.querySelector("[data-transit-result]");
-      if (result) result.textContent = button.dataset.result ?? "";
-    });
   });
 
   const phrase = document.querySelector("[data-seasonal-phrase]");
