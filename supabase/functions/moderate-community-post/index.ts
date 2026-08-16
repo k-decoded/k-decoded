@@ -19,8 +19,6 @@ Deno.serve(async (request) => {
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const publishableKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const openAiKey = Deno.env.get("OPENAI_API_KEY");
-  if (!openAiKey) return reply({ error: "Moderation is not configured" }, 503);
 
   const userClient = createClient(supabaseUrl, publishableKey, {
     global: { headers: { Authorization: authHeader } },
@@ -30,6 +28,7 @@ Deno.serve(async (request) => {
   // app_metadata. Accept the documented provider fallback as well.
   const isAnonymous = user?.is_anonymous === true || user?.app_metadata?.provider === "anonymous";
   if (userError || !user || !isAnonymous) {
+    console.error("Anonymous user validation failed", userError?.message ?? "not an anonymous user");
     return reply({ error: "Unauthenticated" }, 401);
   }
 
@@ -42,14 +41,15 @@ Deno.serve(async (request) => {
     return reply({ error: "Invalid post" }, 400);
   }
 
-  const moderation = await fetch("https://api.openai.com/v1/moderations", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${openAiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model: "omni-moderation-latest", input: body }),
-  });
-  if (!moderation.ok) return reply({ error: "Moderation is temporarily unavailable" }, 503);
-  const result = await moderation.json();
-  const flagged = result.results?.[0]?.flagged === true;
+  // A deliberately small local filter for clearly hateful or threatening
+  // language. It keeps the community usable without sending visitor content to
+  // a paid third-party service. Matches are held for manual review.
+  const blockedLanguage = [
+    /\b(?:n[i1]gg(?:a|er|ers?)|f[a@]gg?[o0]t|k[i1]ke|sp[i1]c|ch[i1]nk|wetback)\b/i,
+    /\b(?:kill|hurt|attack)\s+(?:yourself|yourselves|all\s+(?:women|men|muslims|jews|gays|lesbians|trans(?:gender)?\s+people))\b/i,
+    /\b(?:go\s+back|should\s+die)\b.{0,40}\b(?:country|where\s+you\s+came\s+from|muslims|jews|gays|lesbians|trans(?:gender)?\s+people)\b/i,
+  ];
+  const flagged = blockedLanguage.some((pattern) => pattern.test(body));
 
   const adminClient = createClient(supabaseUrl, serviceRoleKey);
   const { error: insertError } = await adminClient.from("community_posts").insert({
@@ -59,6 +59,9 @@ Deno.serve(async (request) => {
     body,
     status: flagged ? "pending" : "approved",
   });
-  if (insertError) return reply({ error: "Could not save post" }, 500);
+  if (insertError) {
+    console.error("Could not save community post", insertError.message);
+    return reply({ error: "Could not save post" }, 500);
+  }
   return reply({ status: flagged ? "pending" : "approved" });
 });
