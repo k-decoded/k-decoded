@@ -70,6 +70,21 @@ interiors that lean maximalist or minimalist depending on which door
 you pick. It's the kind of neighborhood where "we just went in for a
 picture" is a completely normal reason to sit down somewhere.
 
+<div class="not-prose my-8 grid grid-cols-3 gap-3">
+  <figure>
+    <img src="/images/posts/ikseon-dong-cafe-tiger-plush-decor.jpg" alt="A plush tiger sculpture draped over a hanok doorway outside a cafe in Ikseon-dong" class="aspect-square w-full rounded-xl object-cover" />
+    <figcaption class="mt-2 text-center text-xs text-gray-400">Photo-op decor outside one cafe</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/posts/ikseon-dong-cafe-waterwheel-courtyard.jpg" alt="A traditional wooden waterwheel and millstones in a cafe's hanok courtyard entrance" class="aspect-square w-full rounded-xl object-cover" />
+    <figcaption class="mt-2 text-center text-xs text-gray-400">A waterwheel courtyard entrance</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/posts/ikseon-dong-cafe-stone-garden-path.jpg" alt="A stone garden path lined with greenery leading into a hanok cafe" class="aspect-square w-full rounded-xl object-cover" />
+    <figcaption class="mt-2 text-center text-xs text-gray-400">A stepping-stone garden path</figcaption>
+  </figure>
+</div>
+
 That said, be ready for the prices. Some of the more photogenic cafes
 charge well above what you'd pay for the same coffee or dessert
 elsewhere in Seoul — you're paying for the space and the atmosphere as
