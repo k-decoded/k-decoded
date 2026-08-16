@@ -24,7 +24,8 @@ const featuredPosts = allPosts
 
 const leadPost = featuredPosts[0];
 const supportingPosts = featuredPosts.slice(1, 5);
-const wordOfTheWeek = allPosts.flatMap((post) => post.data.vocab)[0];
+const quizWords = allPosts.flatMap((post) => post.data.vocab);
+const wordOfTheWeek = quizWords[0];
 const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 ---
 
@@ -165,10 +166,13 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
       <section class="mt-6 grid gap-6 rounded-3xl border border-violet-100 bg-violet-50/70 p-6 sm:grid-cols-[1fr_auto] sm:items-center sm:p-8">
         <div>
           <p class="text-sm font-semibold uppercase tracking-[0.14em] text-violet-700">Today’s two-tap quiz</p>
-          <h2 class="mt-1 text-xl font-bold text-gray-900">What does <span class="font-korean text-2xl text-violet-800">{wordOfTheWeek.hangul}</span> mean?</h2>
-          <p class="mt-2 hidden text-sm leading-6 text-gray-700" data-word-answer><span class="font-semibold">{wordOfTheWeek.romanization}</span> — {wordOfTheWeek.meaning}</p>
+          <h2 class="mt-1 text-xl font-bold text-gray-900">What does <span class="font-korean text-2xl text-violet-800" data-word-question>{wordOfTheWeek.hangul}</span> mean?</h2>
+          <p class="mt-2 hidden text-sm leading-6 text-gray-700" data-word-answer><span class="font-semibold" data-word-romanization>{wordOfTheWeek.romanization}</span> — <span data-word-meaning>{wordOfTheWeek.meaning}</span></p>
         </div>
-        <button type="button" data-word-reveal class="rounded-full bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105">Reveal answer</button>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" data-word-reveal class="rounded-full bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105">Reveal answer</button>
+          {quizWords.length > 1 && <button type="button" data-word-shuffle class="rounded-full border border-violet-200 bg-white px-5 py-2.5 text-sm font-semibold text-violet-800 transition-colors hover:bg-violet-100">Shuffle question</button>}
+        </div>
       </section>
     )}
 
@@ -188,7 +192,7 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
   </section>
 </BaseLayout>
 
-<script>
+<script define:vars={{ quizWords }}>
   const topicButtons = document.querySelectorAll<HTMLButtonElement>(".topic-filter");
   const postCards = document.querySelectorAll<HTMLElement>("[data-post-tags]");
   topicButtons.forEach((button) => {
@@ -209,10 +213,36 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
 
   const revealButton = document.querySelector<HTMLButtonElement>("[data-word-reveal]");
   const answer = document.querySelector<HTMLElement>("[data-word-answer]");
+  const shuffleButton = document.querySelector<HTMLButtonElement>("[data-word-shuffle]");
+  const question = document.querySelector<HTMLElement>("[data-word-question]");
+  const romanization = document.querySelector<HTMLElement>("[data-word-romanization]");
+  const meaning = document.querySelector<HTMLElement>("[data-word-meaning]");
+  let currentQuizIndex = 0;
+
+  function renderQuiz(index: number) {
+    const word = quizWords[index];
+    if (!word) return;
+    if (question) question.textContent = word.hangul;
+    if (romanization) romanization.textContent = word.romanization;
+    if (meaning) meaning.textContent = word.meaning;
+    answer?.classList.add("hidden");
+    if (revealButton) {
+      revealButton.textContent = "Reveal answer";
+      revealButton.disabled = false;
+    }
+  }
+
   revealButton?.addEventListener("click", () => {
     answer?.classList.remove("hidden");
     revealButton.textContent = "Answer revealed";
     revealButton.disabled = true;
+  });
+  shuffleButton?.addEventListener("click", () => {
+    if (quizWords.length < 2) return;
+    let nextIndex = currentQuizIndex;
+    while (nextIndex === currentQuizIndex) nextIndex = Math.floor(Math.random() * quizWords.length);
+    currentQuizIndex = nextIndex;
+    renderQuiz(currentQuizIndex);
   });
 
   document.querySelectorAll<HTMLButtonElement>(".transit-choice").forEach((button) => {
