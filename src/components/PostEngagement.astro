@@ -1,11 +1,11 @@
 ---
 // PostEngagement.astro
-// View count + emoji reactions, stored in localStorage — no backend, no
-// account to set up, works immediately.
-// ponytail: this is per-browser, not a real site-wide total — each
-// visitor only sees their own device's count. Swap for a shared backend
-// (Cloudflare Workers KV, Supabase, etc.) if you need real aggregate
-// numbers later.
+// View count (shared, via Supabase — see supabase/post_views.sql) +
+// emoji reactions, stored in localStorage.
+// ponytail: reactions/bookmarks/Seoul-list are still per-browser, same
+// limitation the view count used to have. Move those to Supabase the
+// same way post_views was done if real aggregate counts matter for
+// them too.
 
 interface Props {
   slug: string;
@@ -13,6 +13,8 @@ interface Props {
 }
 
 const { slug, tags = [] } = Astro.props;
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const REACTIONS = [
   { emoji: "💡", key: "useful", label: "Useful" },
   { emoji: "✨", key: "trying", label: "Trying this" },
@@ -20,9 +22,15 @@ const REACTIONS = [
 ];
 ---
 
-<div class="not-prose flex flex-wrap items-center gap-4 border-t border-gray-100 py-6" data-slug={slug} data-tags={tags.join(",")}>
+<div
+  class="not-prose flex flex-wrap items-center gap-4 border-t border-gray-100 py-6"
+  data-slug={slug}
+  data-tags={tags.join(",")}
+  data-supabase-url={supabaseUrl}
+  data-supabase-key={supabaseKey}
+>
   <span class="text-sm text-gray-500">
-    👁️ <span id="view-count">–</span> views (on this device)
+    👁️ <span id="view-count">–</span> views
   </span>
 
   <div class="flex flex-wrap gap-2">
@@ -49,14 +57,22 @@ const REACTIONS = [
 </div>
 
 <script>
+  import { createClient } from "@supabase/supabase-js";
+
   const root = document.querySelector("[data-slug]") as HTMLElement | null;
   const slug = root?.dataset.slug;
   if (root && slug) {
-    const viewKey = `views:${slug}`;
-    const views = Number(localStorage.getItem(viewKey) ?? 0) + 1;
-    localStorage.setItem(viewKey, String(views));
     const viewCountEl = document.getElementById("view-count");
-    if (viewCountEl) viewCountEl.textContent = String(views);
+    const supabaseUrl = root.dataset.supabaseUrl;
+    const supabaseKey = root.dataset.supabaseKey;
+    if (supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      supabase
+        .rpc("increment_post_view", { post_slug: slug })
+        .then(({ data, error }: { data: number | null; error: unknown }) => {
+          if (viewCountEl) viewCountEl.textContent = error || data == null ? "–" : String(data);
+        });
+    }
 
     root.querySelectorAll<HTMLButtonElement>(".reaction-btn").forEach((button) => {
       const key = button.dataset.key!;
