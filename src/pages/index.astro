@@ -58,25 +58,27 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
       <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-gray-600 sm:text-lg">
         Clear, useful guides to Korean products, places, and the words behind them.
       </p>
-      <div class="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <div class="mt-7 flex flex-col items-center">
         <a
           href="/blog"
           class="rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg"
         >
           Explore the blog
         </a>
-        <a
-          href="/community"
-          class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors hover:text-brand-900"
-        >
-          Join the community
-        </a>
-        <a
-          href="/vocab"
-          class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors hover:text-brand-900"
-        >
-          Browse the vocab glossary
-        </a>
+        <div class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+          <a
+            href="/community"
+            class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors hover:text-brand-900"
+          >
+            Join the community
+          </a>
+          <a
+            href="/vocab"
+            class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors hover:text-brand-900"
+          >
+            Browse the vocab glossary
+          </a>
+        </div>
       </div>
     </div>
   </section>
