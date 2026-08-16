@@ -92,11 +92,11 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
           <p class="mt-1 text-sm text-gray-600">Choose a topic to tailor the stories below.</p>
         </div>
         <div class="flex flex-wrap gap-2" role="group" aria-label="Filter stories by topic">
-          <button type="button" class="topic-filter rounded-full bg-brand-600 px-3 py-1.5 text-sm font-semibold text-white" data-topic="all" aria-pressed="true">All stories</button>
-          <button type="button" class="topic-filter rounded-full bg-teal-50 px-3 py-1.5 text-sm font-semibold text-teal-800" data-topic="skincare" aria-pressed="false">Beauty</button>
-          <button type="button" class="topic-filter rounded-full bg-sky-50 px-3 py-1.5 text-sm font-semibold text-sky-800" data-topic="travel" aria-pressed="false">Travel</button>
-          <button type="button" class="topic-filter rounded-full bg-orange-50 px-3 py-1.5 text-sm font-semibold text-orange-800" data-topic="snacks" aria-pressed="false">Food</button>
-          <button type="button" class="topic-filter rounded-full bg-rose-50 px-3 py-1.5 text-sm font-semibold text-rose-800" data-topic="language" aria-pressed="false">Language</button>
+          <button type="button" class="topic-filter rounded-full bg-brand-600 px-3 py-1.5 text-sm font-semibold text-white transition-colors" data-topic="all" aria-pressed="true">All stories</button>
+          <button type="button" class="topic-filter rounded-full border border-brand-200 bg-white px-3 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50" data-topic="skincare" aria-pressed="false">Beauty</button>
+          <button type="button" class="topic-filter rounded-full border border-brand-200 bg-white px-3 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50" data-topic="travel" aria-pressed="false">Travel</button>
+          <button type="button" class="topic-filter rounded-full border border-brand-200 bg-white px-3 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50" data-topic="snacks" aria-pressed="false">Food</button>
+          <button type="button" class="topic-filter rounded-full border border-brand-200 bg-white px-3 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50" data-topic="language" aria-pressed="false">Language</button>
         </div>
       </div>
     </div>
@@ -191,6 +191,8 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
         item.setAttribute("aria-pressed", String(active));
         item.classList.toggle("bg-brand-600", active);
         item.classList.toggle("text-white", active);
+        item.classList.toggle("bg-white", !active);
+        item.classList.toggle("text-brand-700", !active);
       });
       postCards.forEach((card) => {
         const matches = topic === "all" || (card.dataset.postTags?.split(",").includes(topic) ?? false);
