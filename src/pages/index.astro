@@ -193,8 +193,8 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
 </BaseLayout>
 
 <script define:vars={{ quizWords }}>
-  const topicButtons = document.querySelectorAll<HTMLButtonElement>(".topic-filter");
-  const postCards = document.querySelectorAll<HTMLElement>("[data-post-tags]");
+  const topicButtons = document.querySelectorAll(".topic-filter");
+  const postCards = document.querySelectorAll("[data-post-tags]");
   topicButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const topic = button.dataset.topic ?? "all";
@@ -211,15 +211,15 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
     });
   });
 
-  const revealButton = document.querySelector<HTMLButtonElement>("[data-word-reveal]");
-  const answer = document.querySelector<HTMLElement>("[data-word-answer]");
-  const shuffleButton = document.querySelector<HTMLButtonElement>("[data-word-shuffle]");
-  const question = document.querySelector<HTMLElement>("[data-word-question]");
-  const romanization = document.querySelector<HTMLElement>("[data-word-romanization]");
-  const meaning = document.querySelector<HTMLElement>("[data-word-meaning]");
+  const revealButton = document.querySelector("[data-word-reveal]");
+  const answer = document.querySelector("[data-word-answer]");
+  const shuffleButton = document.querySelector("[data-word-shuffle]");
+  const question = document.querySelector("[data-word-question]");
+  const romanization = document.querySelector("[data-word-romanization]");
+  const meaning = document.querySelector("[data-word-meaning]");
   let currentQuizIndex = 0;
 
-  function renderQuiz(index: number) {
+  function renderQuiz(index) {
     const word = quizWords[index];
     if (!word) return;
     if (question) question.textContent = word.hangul;
@@ -245,14 +245,14 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
     renderQuiz(currentQuizIndex);
   });
 
-  document.querySelectorAll<HTMLButtonElement>(".transit-choice").forEach((button) => {
+  document.querySelectorAll(".transit-choice").forEach((button) => {
     button.addEventListener("click", () => {
-      const result = document.querySelector<HTMLElement>("[data-transit-result]");
+      const result = document.querySelector("[data-transit-result]");
       if (result) result.textContent = button.dataset.result ?? "";
     });
   });
 
-  const phrase = document.querySelector<HTMLElement>("[data-seasonal-phrase]");
+  const phrase = document.querySelector("[data-seasonal-phrase]");
   const month = new Date().getMonth();
   const seasonalPhrases = ["❄️ Winter is for warm cafés and cosy Korean skincare.", "🌷 Spring is for new words and fresh Seoul discoveries.", "☀️ Summer is for cool snacks and city adventures.", "🍂 Autumn is for layers, markets, and language practice."];
   if (phrase) phrase.textContent = seasonalPhrases[Math.floor(month / 3)];
