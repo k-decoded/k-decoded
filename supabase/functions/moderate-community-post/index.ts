@@ -26,7 +26,10 @@ Deno.serve(async (request) => {
     global: { headers: { Authorization: authHeader } },
   });
   const { data: { user }, error: userError } = await userClient.auth.getUser();
-  if (userError || !user || user.app_metadata?.is_anonymous !== true) {
+  // Supabase returns the anonymous marker on the user record, not in
+  // app_metadata. Accept the documented provider fallback as well.
+  const isAnonymous = user?.is_anonymous === true || user?.app_metadata?.provider === "anonymous";
+  if (userError || !user || !isAnonymous) {
     return reply({ error: "Unauthenticated" }, 401);
   }
 
