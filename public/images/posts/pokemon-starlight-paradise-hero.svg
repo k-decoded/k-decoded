@@ -1,0 +1,81 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#141034"/>
+      <stop offset="55%" stop-color="#241a4a"/>
+      <stop offset="100%" stop-color="#3a2560"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a2a63"/>
+      <stop offset="100%" stop-color="#1c1440"/>
+    </linearGradient>
+    <radialGradient id="moonglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff3d6" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#fff3d6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#sky)"/>
+
+  <!-- moon -->
+  <circle cx="960" cy="140" r="140" fill="url(#moonglow)"/>
+  <circle cx="960" cy="140" r="62" fill="#fdf3d8"/>
+  <circle cx="978" cy="122" r="62" fill="#241a4a"/>
+
+  <!-- stars -->
+  <g fill="#fdf3d8">
+    <circle cx="120" cy="80" r="2.4"/>
+    <circle cx="220" cy="150" r="1.6"/>
+    <circle cx="80" cy="220" r="1.8"/>
+    <circle cx="340" cy="70" r="2"/>
+    <circle cx="430" cy="180" r="1.4"/>
+    <circle cx="560" cy="60" r="2.2"/>
+    <circle cx="700" cy="120" r="1.6"/>
+    <circle cx="780" cy="60" r="1.8"/>
+    <circle cx="600" cy="200" r="1.4"/>
+    <circle cx="1120" cy="90" r="2"/>
+    <circle cx="1150" cy="220" r="1.6"/>
+    <circle cx="40" cy="140" r="1.4"/>
+    <circle cx="260" cy="240" r="1.4"/>
+    <circle cx="500" cy="120" r="1.6"/>
+  </g>
+  <g fill="none" stroke="#fdf3d8" stroke-width="2" stroke-linecap="round">
+    <path d="M180 110 L192 110 M186 104 L186 116"/>
+    <path d="M660 170 L670 170 M665 165 L665 175"/>
+    <path d="M1040 200 L1050 200 M1045 195 L1045 205"/>
+  </g>
+
+  <!-- distant tree silhouettes -->
+  <g fill="#20163f">
+    <path d="M0 420 L60 300 L120 420 Z"/>
+    <path d="M70 430 L150 260 L230 430 Z"/>
+    <path d="M190 425 L260 320 L330 425 Z"/>
+    <path d="M900 430 L970 300 L1040 430 Z"/>
+    <path d="M980 425 L1060 280 L1140 425 Z"/>
+    <path d="M1090 430 L1150 330 L1200 430 Z"/>
+  </g>
+
+  <!-- foreground tree silhouettes -->
+  <g fill="#15102c">
+    <path d="M-20 470 L90 260 L200 470 Z"/>
+    <path d="M1000 470 L1110 250 L1220 470 Z"/>
+  </g>
+
+  <!-- water -->
+  <rect x="0" y="440" width="1200" height="190" fill="url(#water)"/>
+  <g stroke="#fdf3d8" stroke-opacity="0.35" stroke-width="2" fill="none">
+    <path d="M340 470 Q600 460 860 470"/>
+    <path d="M300 510 Q600 498 900 510"/>
+    <path d="M260 555 Q600 540 940 555"/>
+    <path d="M220 600 Q600 582 980 600"/>
+  </g>
+
+  <!-- gentle blossom/petal accents -->
+  <g fill="#e0577a" opacity="0.85">
+    <circle cx="150" cy="500" r="5"/>
+    <circle cx="180" cy="480" r="4"/>
+    <circle cx="1020" cy="520" r="5"/>
+    <circle cx="1060" cy="495" r="4"/>
+    <circle cx="600" cy="540" r="4"/>
+  </g>
+</svg>
