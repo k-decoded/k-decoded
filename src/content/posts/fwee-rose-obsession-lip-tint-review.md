@@ -9,6 +9,7 @@ isReview: true
 product:
   name: "Rose Obsession Stay-Fit Lip Tint"
   brand: "fwee"
+  affiliateLink: "https://amzn.to/4x53YuL"
   price:
     krw: "₩22,500"
     usd: "$17"
