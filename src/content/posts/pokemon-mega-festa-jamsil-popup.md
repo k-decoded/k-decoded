@@ -102,6 +102,12 @@ on a first-come, first-served basis each day. Turn in a "Starlight
 Magikarp Wish Card" on your way out for a coupon toward the same
 promotional Magikarp card mentioned above (still L.POINT-members-only).
 
+![Pokémon Mega Festa 2026 Lotte Town Summer Market notice explaining how eligible guests can receive a promotional Magikarp card](/images/posts/pokemon-mega-festa-2026-promo-card-perk.webp)
+
+![Pokémon Mega Festa 2026 Lotte Town Summer Market special event notice showing the Pokémon sun visor and Magikarp wish card perks](/images/posts/pokemon-mega-festa-2026-special-event-perks.webp)
+
+<p class="not-prose -mt-4 mb-8 text-xs text-gray-400">Extra-perk notices: <a href="https://www.instagram.com/p/Dbrga7dj015/" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-600">Pokémon Korea</a> — © Pokémon Korea / @pokemon_korea_official.</p>
+
 Unlike the indoor store, this half is reservation-only:
 
 - **Book via:** LotteON or Lotte Department Store Mall app
