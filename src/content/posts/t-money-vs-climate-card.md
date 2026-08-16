@@ -48,8 +48,8 @@ just the capital.
 stores like GS25 and 7-Eleven. At Incheon Airport specifically, there's
 a tourist-oriented variant called the Korea Tour Card for ₩4,000.
 
-<a href="https://affiliate.klook.com/sl/LDaqu6L" target="_blank" rel="noopener noreferrer sponsored" class="not-prose my-6 block max-w-md mx-auto overflow-hidden rounded-xl border border-gray-200 transition-opacity hover:opacity-90">
-  <img src="/images/posts/t-money-klook-banner.png" alt="T-money card — Incheon International Airport pick-up on Klook" class="w-full" />
+<a href="https://affiliate.klook.com/sl/LDaqu6L" target="_blank" rel="noopener noreferrer sponsored" class="not-prose my-6 block max-w-[250px] mx-auto overflow-hidden rounded-xl border border-gray-200 transition-opacity hover:opacity-90">
+  <img src="/images/posts/t-money-klook-banner.png" alt="T-money card — Incheon International Airport pick-up on Klook" width="250" height="250" class="w-full" />
 </a>
 <p class="text-center text-xs text-gray-400 -mt-4 mb-6">Affiliate link — we may earn a small commission at no extra cost to you.</p>
 
