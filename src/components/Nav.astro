@@ -76,36 +76,38 @@ const currentPath = Astro.url.pathname;
     </ul>
   </nav>
 
-  <!-- Second row: category links + site search. Kept as its own row
-       instead of cramming into the main nav so neither gets crowded —
-       categories wrap onto a second line on narrow screens rather than
-       scrolling. -->
+  <!-- Topic navigation is explicitly labelled so it reads as content
+       discovery, rather than a second competing site navigation bar. -->
   <div class="border-t border-brand-100">
     <div class="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-      <ul class="flex flex-wrap gap-2">
-        {CATEGORIES.map((category) => (
-          <li class="flex-shrink-0">
-            <a
-              href={`/tags/${category.slug}`}
-              class:list={[
-                "rounded-full px-3 py-1 text-xs font-medium transition-opacity hover:opacity-80",
-                getTagColor(category.slug),
-              ]}
-            >
-              {category.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="mr-1 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">Explore by topic</span>
+        <ul class="flex flex-wrap gap-2">
+          {CATEGORIES.map((category) => (
+            <li class="flex-shrink-0">
+              <a
+                href={`/tags/${category.slug}`}
+                class:list={[
+                  "rounded-full px-3 py-1 text-xs font-medium transition-opacity hover:opacity-80",
+                  getTagColor(category.slug),
+                ]}
+              >
+                {category.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <form action="/search" method="get" class="flex-shrink-0 sm:w-56">
+      <form action="/search" method="get" class="relative flex-shrink-0 sm:w-64">
         <label for="nav-search" class="sr-only">Search posts</label>
+        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-brand-500" aria-hidden="true">⌕</span>
         <input
           id="nav-search"
           type="search"
           name="q"
           placeholder="Search posts…"
-          class="w-full rounded-full border border-brand-200 bg-white px-3 py-1.5 text-xs focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          class="w-full rounded-full border border-brand-200 bg-white py-2 pl-8 pr-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
         />
       </form>
     </div>

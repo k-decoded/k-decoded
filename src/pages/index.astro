@@ -27,10 +27,9 @@ const featuredPosts = allPosts
   title="Home"
   description="K-Decoded translates Korean beauty, fashion, and makeup for people who can't read Korean — and teaches you the language along the way."
 >
-  <!-- Hero section. relative + overflow-hidden so the decorative blobs
-       and sparkles below can be absolutely positioned and clipped to the
-       section instead of spilling into the rest of the page. -->
-  <section class="relative overflow-hidden bg-gradient-to-br from-brand-50 via-orange-50 to-brand-100 py-10 sm:py-14">
+  <!-- A compact, benefit-led introduction gets visitors to useful content
+       quickly while keeping the soft K-beauty visual character. -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-brand-50 via-orange-50 to-brand-100 py-12 sm:py-16">
     <!-- Soft blurred color blobs, slowly drifting — the "cosmetic swatch"
          feel. pointer-events-none so they never intercept clicks/taps. -->
     <div class="pointer-events-none absolute -left-16 -top-16 h-64 w-64 animate-float rounded-full bg-brand-200 opacity-40 blur-3xl" aria-hidden="true"></div>
@@ -41,51 +40,48 @@ const featuredPosts = allPosts
          K-beauty/Korea cues (lipstick, food, the flag) instead of
          abstract stars, with a gentle idle wiggle. -->
     <Sketch type="lipstick" class="pointer-events-none absolute left-[10%] top-12 h-8 w-8" color="text-brand-400" delay={0} />
-    <Sketch type="food" class="pointer-events-none absolute right-[13%] top-20 h-9 w-9" color="text-orange-400" delay={0.8} />
-    <Sketch type="flag" class="pointer-events-none absolute bottom-24 left-[18%] h-8 w-11" color="text-teal-500" delay={1.5} />
-    <Sketch type="lipstick" class="pointer-events-none absolute bottom-12 right-[9%] h-7 w-7" color="text-brand-300" delay={2.2} />
+    <Sketch type="food" class="pointer-events-none absolute right-[13%] top-16 h-9 w-9" color="text-orange-400" delay={0.8} />
+    <Sketch type="flag" class="pointer-events-none absolute bottom-10 left-[15%] h-8 w-11" color="text-teal-500" delay={1.5} />
 
     <div class="relative z-10 mx-auto max-w-5xl animate-fade-in-up px-4 text-center sm:px-6">
-      <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">
         K-Decoded
+      </p>
+      <h1 class="mx-auto mt-2 max-w-3xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        Decode Korean beauty, fashion &amp; everyday culture
       </h1>
-      <p class="mx-auto mt-3 max-w-xl text-lg text-gray-600">
-        Korea, translated — beauty, fashion, and the language behind them.
+      <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-gray-600 sm:text-lg">
+        Clear, useful guides to Korean products, places, and the words behind them.
       </p>
-      <p class="mx-auto mt-3 max-w-2xl text-sm text-gray-500">
-        Can't read a Korean product label or shop a Korean site directly?
-        We decode K-beauty and K-fashion for you, and teach you the Korean
-        words behind it as we go.
-      </p>
-      <div class="mt-6 flex flex-wrap justify-center gap-4">
+      <div class="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <a
           href="/blog"
           class="rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg"
         >
-          Read the blog
+          Explore the blog
         </a>
         <a
-          href="/community"
-          class="rounded-full border-2 border-brand-300 bg-white/70 px-6 py-3 text-sm font-semibold text-brand-700 backdrop-blur transition-all duration-200 hover:scale-105 hover:bg-white"
+          href="/vocab"
+          class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors hover:text-brand-900"
         >
-          Join the community
-        </a>
-        <a
-          href="/flashcards"
-          class="rounded-full border-2 border-brand-300 bg-white/70 px-6 py-3 text-sm font-semibold text-brand-700 backdrop-blur transition-all duration-200 hover:scale-105 hover:bg-white"
-        >
-          Try the Hangul flashcards
+          Browse the vocab glossary
         </a>
       </div>
     </div>
   </section>
 
   <!-- Featured posts -->
-  <section class="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-    <h2 class="flex items-center gap-2 text-2xl font-bold text-gray-900">
-      <span class="h-6 w-1.5 rounded-full bg-gradient-to-b from-brand-500 to-orange-400" aria-hidden="true"></span>
-      Latest posts
-    </h2>
+  <section class="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+    <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand-600">Fresh from Korea</p>
+        <h2 class="mt-1 flex items-center gap-2 text-2xl font-bold text-gray-900">
+          <span class="h-6 w-1.5 rounded-full bg-gradient-to-b from-brand-500 to-orange-400" aria-hidden="true"></span>
+          Latest posts
+        </h2>
+      </div>
+      <a href="/blog" class="text-sm font-semibold text-brand-700 transition-colors hover:text-brand-900">View all posts <span aria-hidden="true">→</span></a>
+    </div>
     <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {featuredPosts.map((post) => <PostCard post={post} />)}
     </div>
@@ -94,5 +90,17 @@ const featuredPosts = allPosts
         No posts yet — add a Markdown file to <code>src/content/posts/</code> to get started.
       </p>
     )}
+
+    <aside class="mt-12 flex flex-col items-start gap-4 rounded-2xl border border-teal-100 bg-teal-50/70 p-6 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.14em] text-teal-700">Learn as you browse</p>
+        <h2 class="mt-1 text-xl font-bold text-gray-900">Pick up Korean words with every guide.</h2>
+        <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">Explore the glossary or practise a few Hangul characters whenever you have a minute.</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="/vocab" class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-teal-800 shadow-sm ring-1 ring-teal-200 transition-colors hover:bg-teal-100">Explore words</a>
+        <a href="/flashcards" class="rounded-full px-4 py-2 text-sm font-semibold text-teal-800 transition-colors hover:text-teal-950">Try flashcards <span aria-hidden="true">→</span></a>
+      </div>
+    </aside>
   </section>
 </BaseLayout>

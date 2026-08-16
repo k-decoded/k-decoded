@@ -39,9 +39,14 @@ const formattedDate = date.toLocaleDateString("en-US", {
       </div>
     )}
     <div class="p-5">
-      <time datetime={date.toISOString()} class="text-xs uppercase tracking-wide text-gray-400">
-        {formattedDate}
-      </time>
+      <div class="flex flex-wrap items-center gap-2">
+        {tags.slice(0, 1).map((tag) => (
+          <span class:list={["rounded-full px-2.5 py-1 text-xs font-semibold", getTagColor(tag)]}>{tag}</span>
+        ))}
+        <time datetime={date.toISOString()} class="text-xs uppercase tracking-wide text-gray-400">
+          {formattedDate}
+        </time>
+      </div>
       <h3 class="mt-2 flex items-center gap-1 text-lg font-semibold text-gray-900 group-hover:text-brand-600">
         {title}
         <Sketch
@@ -52,9 +57,9 @@ const formattedDate = date.toLocaleDateString("en-US", {
         />
       </h3>
       <p class="mt-2 text-sm text-gray-600">{description}</p>
-      {tags.length > 0 && (
+      {tags.length > 1 && (
         <ul class="mt-3 flex flex-wrap gap-2">
-          {tags.map((tag) => (
+          {tags.slice(1).map((tag) => (
             <li class:list={["rounded-full px-2.5 py-1 text-xs font-medium", getTagColor(tag)]}>
               {tag}
             </li>
