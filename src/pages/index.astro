@@ -16,14 +16,14 @@ const allPosts = await getCollection("posts", ({ data }) => {
   return data.draft !== true;
 });
 
-// Sort newest-first, then take the top 6 for the homepage — two clean
-// rows in the 3-column grid used below.
+// Sort newest-first, then take the top 7 for the homepage: one featured
+// guide plus six supporting posts in the two-column grid below.
 const featuredPosts = allPosts
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 6);
+  .slice(0, 7);
 
 const leadPost = featuredPosts[0];
-const supportingPosts = featuredPosts.slice(1, 5);
+const supportingPosts = featuredPosts.slice(1, 7);
 const quizWords = allPosts.flatMap((post) => post.data.vocab);
 const wordOfTheWeek = quizWords[0];
 const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
