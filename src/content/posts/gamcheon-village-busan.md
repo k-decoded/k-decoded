@@ -114,7 +114,16 @@ you've found every stamp on the map, you get free postcards to take home —
 a nice, low-effort souvenir for something that mostly just cost you a bit of
 walking.
 
-<img src="/images/posts/gamcheon-village-busan-stamp-map.jpg" alt="A held Gamcheon Culture Village stamp map, mostly filled in with purple ink stamps from Little Museum, Peace House, House of Hope, and more" class="not-prose my-8 w-full max-w-md mx-auto rounded-xl object-cover" />
+<div class="not-prose my-8 grid grid-cols-2 gap-4">
+  <figure>
+    <img src="/images/posts/gamcheon-village-busan-stamping-map.jpg" alt="Stamping the Gamcheon Culture Village stamp map at one of the purple ink stations along the route" class="aspect-square w-full rounded-xl object-cover" />
+    <figcaption class="mt-2 text-center text-xs text-gray-400">One of the stamp stations</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/posts/gamcheon-village-busan-stamp-map.jpg" alt="A held Gamcheon Culture Village stamp map, mostly filled in with purple ink stamps from Little Museum, Peace House, House of Hope, and more" class="aspect-square w-full rounded-xl object-cover" />
+    <figcaption class="mt-2 text-center text-xs text-gray-400">The finished map</figcaption>
+  </figure>
+</div>
 
 ## Hidden art spaces
 
