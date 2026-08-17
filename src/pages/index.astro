@@ -27,6 +27,11 @@ const supportingPosts = featuredPosts.slice(1, 7);
 const quizWords = allPosts.flatMap((post) => post.data.vocab);
 const wordOfTheWeek = quizWords[0];
 const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const upliftingQuotes = [
+  { quote: "Curiosity is the loveliest way to travel.", detail: "Follow the little details, one Korean discovery at a time." },
+  { quote: "A new word can open a whole new world.", detail: "Take your time — every phrase you learn brings Korea a little closer." },
+  { quote: "The best finds are the ones you almost walked past.", detail: "Stay curious, look twice, and enjoy the small surprises." },
+];
 ---
 
 <BaseLayout
@@ -85,18 +90,14 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
   </section>
 
   <section class="mx-auto max-w-5xl px-4 pt-10 sm:px-6">
-    <div class="rounded-3xl border border-brand-100 bg-white p-5 shadow-sm sm:p-6">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="relative overflow-hidden rounded-3xl border border-brand-100 bg-gradient-to-r from-brand-50 via-white to-orange-50 px-6 py-7 shadow-sm sm:px-9 sm:py-8">
+      <div class="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-orange-200/50 blur-2xl" aria-hidden="true"></div>
+      <div class="relative flex items-start gap-4">
+        <span class="font-serif text-5xl leading-none text-brand-300" aria-hidden="true">“</span>
         <div>
-          <p class="text-sm font-semibold uppercase tracking-[0.14em] text-brand-600">Pick your vibe</p>
-          <p class="mt-1 text-sm text-gray-600">Choose a topic to tailor the stories below.</p>
-        </div>
-        <div class="flex flex-wrap gap-2" role="group" aria-label="Filter stories by topic">
-          <button type="button" class="topic-filter rounded-full bg-brand-600 px-3 py-1.5 text-sm font-semibold text-white transition-colors" data-topic="all" aria-pressed="true">All stories</button>
-          <button type="button" class="topic-filter rounded-full border border-brand-200 bg-white px-3 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50" data-topic="skincare" aria-pressed="false">Beauty</button>
-          <button type="button" class="topic-filter rounded-full border border-brand-200 bg-white px-3 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50" data-topic="travel" aria-pressed="false">Travel</button>
-          <button type="button" class="topic-filter rounded-full border border-brand-200 bg-white px-3 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50" data-topic="snacks" aria-pressed="false">Food</button>
-          <button type="button" class="topic-filter rounded-full border border-brand-200 bg-white px-3 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50" data-topic="language" aria-pressed="false">Language</button>
+          <p class="text-sm font-semibold uppercase tracking-[0.14em] text-brand-600">A little encouragement</p>
+          <blockquote class="mt-2 text-xl font-semibold leading-8 text-gray-900 sm:text-2xl" data-uplifting-quote aria-live="polite">{upliftingQuotes[0].quote}</blockquote>
+          <p class="mt-2 text-sm text-gray-600" data-uplifting-detail>{upliftingQuotes[0].detail}</p>
         </div>
       </div>
     </div>
@@ -180,26 +181,17 @@ const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+
   </section>
 </BaseLayout>
 
-<script define:vars={{ quizWords }}>
-  const topicButtons = document.querySelectorAll(".topic-filter");
-  const postCards = document.querySelectorAll("[data-post-tags]");
-  topicButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const topic = button.dataset.topic ?? "all";
-      topicButtons.forEach((item) => {
-        const active = item === button;
-        item.setAttribute("aria-pressed", String(active));
-        item.classList.toggle("bg-brand-600", active);
-        item.classList.toggle("text-white", active);
-        item.classList.toggle("bg-white", !active);
-        item.classList.toggle("text-brand-700", !active);
-      });
-      postCards.forEach((card) => {
-        const matches = topic === "all" || (card.dataset.postTags?.split(",").includes(topic) ?? false);
-        card.classList.toggle("hidden", !matches);
-      });
-    });
-  });
+<script define:vars={{ quizWords, upliftingQuotes }}>
+  const quote = document.querySelector("[data-uplifting-quote]");
+  const quoteDetail = document.querySelector("[data-uplifting-detail]");
+  let quoteIndex = 0;
+
+  window.setInterval(() => {
+    quoteIndex = (quoteIndex + 1) % upliftingQuotes.length;
+    const nextQuote = upliftingQuotes[quoteIndex];
+    if (quote) quote.textContent = nextQuote.quote;
+    if (quoteDetail) quoteDetail.textContent = nextQuote.detail;
+  }, 6500);
 
   const revealButton = document.querySelector("[data-word-reveal]");
   const answer = document.querySelector("[data-word-answer]");

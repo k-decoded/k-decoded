@@ -14,7 +14,10 @@ import PostEngagement from "../../components/PostEngagement.astro";
 import { getTagColor } from "../../lib/tagColors";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts", ({ data }) => data.draft !== true);
+  // Drafts are available on Vercel preview deployments for editorial review,
+  // but never included in the production site's generated routes.
+  const includeDrafts = import.meta.env.VERCEL_ENV === "preview";
+  const posts = await getCollection("posts", ({ data }) => includeDrafts || data.draft !== true);
 
   return posts.map((post) => ({
     params: { slug: post.slug },
