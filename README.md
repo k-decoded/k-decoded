@@ -132,6 +132,9 @@ anonymous sign-ins**. For the forum, enable email magic-link authentication
 and configure its redirect URL. Keep Row Level Security enabled; forum writes
 go through the `community-forum` Edge Function.
 
+For a complete staging/production handoff, including first-admin setup and
+manual security checks, follow [`supabase/DEPLOYMENT.md`](supabase/DEPLOYMENT.md).
+
 ## Updating the contact page
 
 `src/pages/contact.astro` currently points at a placeholder address
