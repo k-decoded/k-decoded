@@ -67,6 +67,25 @@ create table if not exists public.community_replies (
   deleted_at timestamptz
 );
 
+create table if not exists public.community_reactions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  target_type text not null check (target_type in ('topic', 'reply')),
+  target_id uuid not null,
+  reaction text not null check (reaction in ('like', 'helpful', 'insightful')),
+  created_at timestamptz not null default now(),
+  unique (user_id, target_type, target_id, reaction)
+);
+
+create table if not exists public.community_topic_views (
+  id uuid primary key default gen_random_uuid(),
+  topic_id uuid not null references public.community_topics(id) on delete cascade,
+  viewer_id uuid references auth.users(id) on delete set null,
+  visitor_key_hash text,
+  viewed_at timestamptz not null default now(),
+  check (viewer_id is not null or visitor_key_hash is not null)
+);
+
 create table if not exists public.community_reports (
   id uuid primary key default gen_random_uuid(),
   reporter_id uuid not null references auth.users(id) on delete cascade,
@@ -91,7 +110,12 @@ create table if not exists public.community_moderation_log (
 
 create index if not exists community_topics_visible_activity_idx on public.community_topics (last_activity_at desc, id desc) where status = 'visible';
 create index if not exists community_topics_category_activity_idx on public.community_topics (category_id, last_activity_at desc, id desc) where status = 'visible';
+create index if not exists community_topics_author_idx on public.community_topics (author_id, created_at desc);
 create index if not exists community_replies_topic_parent_idx on public.community_replies (topic_id, parent_reply_id, created_at asc) where status = 'visible';
+create index if not exists community_replies_author_idx on public.community_replies (author_id, created_at desc);
+create index if not exists community_replies_parent_idx on public.community_replies (parent_reply_id, created_at asc);
+create index if not exists community_reactions_target_idx on public.community_reactions (target_type, target_id);
+create index if not exists community_topic_views_topic_idx on public.community_topic_views (topic_id, viewed_at desc);
 create index if not exists community_reports_open_idx on public.community_reports (created_at asc) where status = 'open';
 
 alter table public.community_categories enable row level security;
@@ -99,6 +123,8 @@ alter table public.profiles enable row level security;
 alter table public.community_roles enable row level security;
 alter table public.community_topics enable row level security;
 alter table public.community_replies enable row level security;
+alter table public.community_reactions enable row level security;
+alter table public.community_topic_views enable row level security;
 alter table public.community_reports enable row level security;
 alter table public.community_moderation_log enable row level security;
 
@@ -106,6 +132,26 @@ create policy "Public can read active categories" on public.community_categories
 create policy "Public can read visible profiles" on public.profiles for select to anon, authenticated using (true);
 create policy "Public can read visible topics" on public.community_topics for select to anon, authenticated using (status = 'visible');
 create policy "Public can read visible replies" on public.community_replies for select to anon, authenticated using (status = 'visible');
+
+create or replace function public.community_set_updated_at()
+returns trigger language plpgsql security invoker set search_path = public as $$
+begin new.updated_at = now(); return new; end;
+$$;
+create or replace trigger community_topics_updated_at before update on public.community_topics for each row execute function public.community_set_updated_at();
+create or replace trigger community_replies_updated_at before update on public.community_replies for each row execute function public.community_set_updated_at();
+
+create or replace function public.community_validate_reply_parent()
+returns trigger language plpgsql security invoker set search_path = public as $$
+declare parent_topic uuid;
+begin
+  if new.parent_reply_id is null then return new; end if;
+  if new.parent_reply_id = new.id then raise exception 'A reply cannot be its own parent'; end if;
+  select topic_id into parent_topic from public.community_replies where id = new.parent_reply_id;
+  if parent_topic is null or parent_topic <> new.topic_id then raise exception 'Parent reply must belong to the same topic'; end if;
+  return new;
+end;
+$$;
+create or replace trigger community_replies_validate_parent before insert or update of topic_id, parent_reply_id on public.community_replies for each row execute function public.community_validate_reply_parent();
 
 -- Writes intentionally have no browser-facing RLS policies. The Edge Function
 -- validates identity, ownership, locking, and roles, then writes with service role.

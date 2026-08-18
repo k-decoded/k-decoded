@@ -2,7 +2,12 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const headers = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Content-Type": "application/json" };
 const respond = (body: Record<string, unknown>, status = 200) => new Response(JSON.stringify(body), { status, headers });
-const clean = (value: unknown, max: number) => typeof value === "string" ? value.trim().slice(0, max) : "";
+// Forum content is plain text. Strip markup/control characters before storage;
+// clients must still render it as text, never as HTML.
+const clean = (value: unknown, max: number) => typeof value === "string"
+  ? value.normalize("NFKC").replace(/<[^>]*>/g, "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim().slice(0, max)
+  : "";
+const validStatus = (value: string) => ["visible", "hidden", "deleted", "pending", "rejected"].includes(value);
 
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers });
@@ -57,7 +62,9 @@ Deno.serve(async (request) => {
     if (!topic) return respond({ error: "Discussion not found" }, 404);
     if (action === "moderate-topic" && !isAdmin) return respond({ error: "Administrator permission required" }, 403);
     if (!isAdmin && topic.author_id !== user.id) return respond({ error: "Not permitted" }, 403);
-    const patch = action === "delete-topic" ? { status: "deleted", deleted_at: new Date().toISOString() } : action === "moderate-topic" ? { status: clean(input.status, 16), is_locked: input.is_locked === true } : { title: clean(input.title, 160), body: clean(input.body, 10000) };
+    const moderationStatus = clean(input.status, 16);
+    if (action === "moderate-topic" && !validStatus(moderationStatus)) return respond({ error: "Invalid moderation status" }, 400);
+    const patch = action === "delete-topic" ? { status: "deleted", deleted_at: new Date().toISOString() } : action === "moderate-topic" ? { status: moderationStatus, is_locked: input.is_locked === true } : { title: clean(input.title, 160), body: clean(input.body, 10000) };
     const { error } = await admin.from("community_topics").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
     return error ? respond({ error: "Could not update discussion" }, 500) : respond({ ok: true });
   }
@@ -67,10 +74,12 @@ Deno.serve(async (request) => {
     if (!reply) return respond({ error: "Reply not found" }, 404);
     if (action === "moderate-reply" && !isAdmin) return respond({ error: "Administrator permission required" }, 403);
     if (!isAdmin && reply.author_id !== user.id) return respond({ error: "Not permitted" }, 403);
+    const moderationStatus = clean(input.status, 16);
+    if (action === "moderate-reply" && !validStatus(moderationStatus)) return respond({ error: "Invalid moderation status" }, 400);
     const patch = action === "delete-reply"
       ? { status: "deleted", deleted_at: new Date().toISOString() }
       : action === "moderate-reply"
-        ? { status: clean(input.status, 16) }
+        ? { status: moderationStatus }
         : { body: clean(input.body, 10000) };
     if (action === "update-reply" && !(patch as { body: string }).body) return respond({ error: "Reply text is required" }, 400);
     const { error } = await admin.from("community_replies").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
@@ -84,6 +93,13 @@ Deno.serve(async (request) => {
     if ((targetType !== "topic" && targetType !== "reply") || !targetId || reason.length < 3) return respond({ error: "A reason is required" }, 400);
     const { error } = await admin.from("community_reports").insert({ reporter_id: user.id, target_type: targetType, target_id: targetId, reason });
     return error ? respond({ error: "Could not submit report" }, 500) : respond({ ok: true }, 201);
+  }
+  if (action === "toggle-reaction") {
+    const targetType = clean(input.target_type, 10), targetId = clean(input.target_id, 80), reaction = clean(input.reaction, 20);
+    if ((targetType !== "topic" && targetType !== "reply") || !targetId || !["like", "helpful", "insightful"].includes(reaction)) return respond({ error: "Invalid reaction" }, 400);
+    const { data: existing } = await admin.from("community_reactions").select("id").eq("user_id", user.id).eq("target_type", targetType).eq("target_id", targetId).eq("reaction", reaction).maybeSingle();
+    const { error } = existing ? await admin.from("community_reactions").delete().eq("id", existing.id) : await admin.from("community_reactions").insert({ user_id: user.id, target_type: targetType, target_id: targetId, reaction });
+    return error ? respond({ error: "Could not update reaction" }, 500) : respond({ active: !existing });
   }
   return respond({ error: "Unsupported action" }, 400);
 });
