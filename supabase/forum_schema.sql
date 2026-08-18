@@ -100,6 +100,14 @@ create table if not exists public.community_reports (
   reviewed_by uuid references auth.users(id) on delete set null
 );
 
+create table if not exists public.community_suspensions (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  reason text not null check (char_length(reason) between 3 and 1000),
+  suspended_at timestamptz not null default now(),
+  suspended_until timestamptz,
+  suspended_by uuid references auth.users(id) on delete set null
+);
+
 create table if not exists public.community_moderation_log (
   id uuid primary key default gen_random_uuid(),
   actor_id uuid references auth.users(id) on delete set null,
@@ -120,6 +128,7 @@ create index if not exists community_replies_parent_idx on public.community_repl
 create index if not exists community_reactions_target_idx on public.community_reactions (target_type, target_id);
 create index if not exists community_topic_views_topic_idx on public.community_topic_views (topic_id, viewed_at desc);
 create index if not exists community_reports_open_idx on public.community_reports (created_at asc) where status = 'open';
+create index if not exists community_moderation_log_recent_idx on public.community_moderation_log (created_at desc);
 
 alter table public.community_categories enable row level security;
 alter table public.profiles enable row level security;
@@ -129,6 +138,7 @@ alter table public.community_replies enable row level security;
 alter table public.community_reactions enable row level security;
 alter table public.community_topic_views enable row level security;
 alter table public.community_reports enable row level security;
+alter table public.community_suspensions enable row level security;
 alter table public.community_moderation_log enable row level security;
 
 create policy "Public can read active categories" on public.community_categories for select to anon, authenticated using (is_active);

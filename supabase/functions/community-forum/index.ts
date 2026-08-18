@@ -8,6 +8,7 @@ const clean = (value: unknown, max: number) => typeof value === "string"
   ? value.normalize("NFKC").replace(/<[^>]*>/g, "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim().slice(0, max)
   : "";
 const validStatus = (value: string) => ["visible", "hidden", "deleted", "pending", "rejected"].includes(value);
+const unsafeLink = (value: string) => /(?:javascript|data|vbscript)\s*:/i.test(value);
 
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers });
@@ -35,11 +36,33 @@ Deno.serve(async (request) => {
   const { data: membership } = await admin.from("community_roles").select("role").eq("user_id", user.id).maybeSingle();
   const isAdmin = membership?.role === "admin";
   if (action === "get-permissions") return respond({ user_id: user.id, is_admin: isAdmin });
+  if (action === "moderation-dashboard") {
+    if (!isAdmin) return respond({ error: "Administrator permission required" }, 403);
+    const query = clean(input.query, 160);
+    const [reports, actions, topics, replies] = await Promise.all([
+      admin.from("community_reports").select("*").eq("status", "open").order("created_at", { ascending: true }).limit(100),
+      admin.from("community_moderation_log").select("*").order("created_at", { ascending: false }).limit(50),
+      query ? admin.from("community_topics").select("id,title,author_id,author_name_snapshot,status,is_locked,created_at").or(`title.ilike.%${query}%,body.ilike.%${query}%,author_name_snapshot.ilike.%${query}%`).limit(50) : Promise.resolve({ data: [] }),
+      query ? admin.from("community_replies").select("id,topic_id,author_id,author_name_snapshot,body,status,created_at").or(`body.ilike.%${query}%,author_name_snapshot.ilike.%${query}%`).limit(50) : Promise.resolve({ data: [] }),
+    ]);
+    return respond({ reports: reports.data ?? [], actions: actions.data ?? [], topics: topics.data ?? [], replies: replies.data ?? [] });
+  }
+  if (action === "suspend-user") {
+    if (!isAdmin) return respond({ error: "Administrator permission required" }, 403);
+    const targetUserId = clean(input.user_id, 80), reason = clean(input.reason, 1000), until = clean(input.suspended_until, 40) || null;
+    if (!targetUserId || reason.length < 3) return respond({ error: "User and reason are required" }, 400);
+    const { error } = await admin.from("community_suspensions").upsert({ user_id: targetUserId, reason, suspended_until: until, suspended_by: user.id });
+    if (!error) await admin.from("community_moderation_log").insert({ actor_id: user.id, action: "suspend-user", target_type: "topic", target_id: targetUserId, details: { reason, suspended_until: until } });
+    return error ? respond({ error: "Could not suspend user" }, 500) : respond({ ok: true });
+  }
+  const { data: suspension } = await admin.from("community_suspensions").select("suspended_until").eq("user_id", user.id).maybeSingle();
+  if (suspension && (!suspension.suspended_until || new Date(suspension.suspended_until) > new Date())) return respond({ error: "Your posting privileges are suspended" }, 403);
 
   if (action === "create-topic") {
     const title = clean(input.title, 160), body = clean(input.body, 10000), categorySlug = clean(input.category_slug, 80);
     const imagePath = clean(input.image_path, 500) || null;
     const tags = Array.isArray(input.tags) ? [...new Set(input.tags.map(tag => clean(tag, 30).toLowerCase()).filter(tag => /^[a-z0-9-]{2,30}$/.test(tag)))].slice(0, 5) : [];
+    if (unsafeLink(title) || unsafeLink(body)) return respond({ error: "Unsafe links are not allowed.", field: "body" }, 400);
     if (title.length < 6) return respond({ error: "Use a more descriptive title (at least 6 characters).", field: "title" }, 400);
     if (!categorySlug) return respond({ error: "Choose a category.", field: "category" }, 400);
     if (body.length < 20) return respond({ error: "Add a little more detail (at least 20 characters).", field: "body" }, 400);
