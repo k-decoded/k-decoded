@@ -114,7 +114,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
         email,
         options: { emailRedirectTo: new URL("/community", location.origin).toString() },
       });
-      say(error ? "Could not send sign-in link." : "Check your inbox for the sign-in link.");
+      say(error ? `Could not send sign-in link: ${error.message}` : "Check your inbox for the sign-in link.");
     }, true);
     queueMicrotask(() => {
       void ensureProfile();
