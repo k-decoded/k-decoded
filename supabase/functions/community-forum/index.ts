@@ -37,10 +37,20 @@ Deno.serve(async (request) => {
 
   if (action === "create-topic") {
     const title = clean(input.title, 160), body = clean(input.body, 10000), categorySlug = clean(input.category_slug, 80);
-    if (title.length < 3 || body.length < 1 || !categorySlug) return respond({ error: "Title, category, and body are required" }, 400);
+    const imagePath = clean(input.image_path, 500) || null;
+    const tags = Array.isArray(input.tags) ? [...new Set(input.tags.map(tag => clean(tag, 30).toLowerCase()).filter(tag => /^[a-z0-9-]{2,30}$/.test(tag)))].slice(0, 5) : [];
+    if (title.length < 6) return respond({ error: "Use a more descriptive title (at least 6 characters).", field: "title" }, 400);
+    if (!categorySlug) return respond({ error: "Choose a category.", field: "category" }, 400);
+    if (body.length < 20) return respond({ error: "Add a little more detail (at least 20 characters).", field: "body" }, 400);
+    if (imagePath && !imagePath.startsWith(`${user.id}/`)) return respond({ error: "Invalid image upload.", field: "image" }, 400);
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    const { count: recentCount } = await admin.from("community_topics").select("id", { count: "exact", head: true }).eq("author_id", user.id).gte("created_at", tenMinutesAgo);
+    if ((recentCount ?? 0) >= 3) return respond({ error: "Please wait a few minutes before starting another discussion.", field: "form" }, 429);
+    const { data: duplicate } = await admin.from("community_topics").select("id").eq("author_id", user.id).eq("title", title).eq("body", body).gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()).maybeSingle();
+    if (duplicate) return respond({ error: "You already posted this discussion.", field: "form" }, 409);
     const { data: category } = await admin.from("community_categories").select("id").eq("slug", categorySlug).eq("is_active", true).maybeSingle();
     if (!category) return respond({ error: "Invalid category" }, 400);
-    const { data, error } = await admin.from("community_topics").insert({ category_id: category.id, author_id: user.id, author_name_snapshot: profile.display_name, title, body, last_activity_by: user.id }).select("id").single();
+    const { data, error } = await admin.from("community_topics").insert({ category_id: category.id, author_id: user.id, author_name_snapshot: profile.display_name, title, body, image_path: imagePath, tags, last_activity_by: user.id }).select("id, category_id").single();
     return error ? respond({ error: "Could not create discussion" }, 500) : respond({ id: data.id }, 201);
   }
 

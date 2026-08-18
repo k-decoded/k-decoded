@@ -42,6 +42,8 @@ create table if not exists public.community_topics (
   author_name_snapshot text not null check (char_length(author_name_snapshot) between 2 and 32),
   title text not null check (char_length(title) between 3 and 160),
   body text not null check (char_length(body) between 1 and 10000),
+  image_path text check (char_length(image_path) between 1 and 500),
+  tags text[] not null default '{}'::text[] check (cardinality(tags) <= 5),
   status text not null default 'visible' check (status in ('visible', 'hidden', 'deleted', 'pending', 'rejected')),
   is_locked boolean not null default false,
   is_pinned boolean not null default false,
@@ -111,6 +113,7 @@ create table if not exists public.community_moderation_log (
 create index if not exists community_topics_visible_activity_idx on public.community_topics (last_activity_at desc, id desc) where status = 'visible';
 create index if not exists community_topics_category_activity_idx on public.community_topics (category_id, last_activity_at desc, id desc) where status = 'visible';
 create index if not exists community_topics_author_idx on public.community_topics (author_id, created_at desc);
+create index if not exists community_topics_tags_idx on public.community_topics using gin (tags);
 create index if not exists community_replies_topic_parent_idx on public.community_replies (topic_id, parent_reply_id, created_at asc) where status = 'visible';
 create index if not exists community_replies_author_idx on public.community_replies (author_id, created_at desc);
 create index if not exists community_replies_parent_idx on public.community_replies (parent_reply_id, created_at asc);
@@ -132,6 +135,12 @@ create policy "Public can read active categories" on public.community_categories
 create policy "Public can read visible profiles" on public.profiles for select to anon, authenticated using (true);
 create policy "Public can read visible topics" on public.community_topics for select to anon, authenticated using (status = 'visible');
 create policy "Public can read visible replies" on public.community_replies for select to anon, authenticated using (status = 'visible');
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('community-images', 'community-images', true, 5242880, array['image/jpeg', 'image/png', 'image/webp'])
+on conflict (id) do nothing;
+create policy "Members can upload own community images" on storage.objects for insert to authenticated with check (bucket_id = 'community-images' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "Public can view community images" on storage.objects for select to anon, authenticated using (bucket_id = 'community-images');
 
 create or replace function public.community_set_updated_at()
 returns trigger language plpgsql security invoker set search_path = public as $$
