@@ -33,6 +33,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
     const escape = (value: string) => value.replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]!));
     const when = (value: string) => new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
     const signedIn = async () => !!(await client!.auth.getUser()).data.user;
+    const ensureProfile = async () => {
+      const { data: { user } } = await client!.auth.getUser();
+      if (!user) return;
+      const { data: profile } = await client!.from("profiles").select("id").eq("id", user.id).maybeSingle();
+      if (!profile) {
+        authPanel?.classList.remove("hidden");
+        profileForm?.classList.remove("hidden");
+        say("You're signed in. Choose a display name before publishing.");
+      }
+    };
     const invoke = async (body: Record<string, unknown>) => { const { data, error } = await client!.functions.invoke("community-forum", { body }); if (error) throw error; if (data?.error) throw new Error(data.error); return data; };
     const categoryFor = (id: string) => categories.find(c => c.id === id);
     const card = (topic: any) => `<article data-topic-card data-search="${escape(`${topic.title} ${topic.body} ${topic.author_name_snapshot}`.toLowerCase())}" class="group rounded-2xl border border-brand-100 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"><div class="flex flex-wrap items-center gap-2 text-xs text-gray-500"><span class="rounded-full bg-brand-50 px-2.5 py-1 font-semibold text-brand-800">${escape(categoryFor(topic.category_id)?.name ?? "Community")}</span>${topic.is_locked ? '<span class="rounded-full bg-gray-100 px-2 py-1">Locked</span>' : ''}</div><h3 class="mt-3 text-xl font-bold leading-snug text-gray-900"><a class="transition hover:text-brand-700" href="?discussion=${topic.id}">${escape(topic.title)}</a></h3><p class="mt-2 line-clamp-2 text-sm leading-6 text-gray-600">${escape(topic.body)}</p><div class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-gray-100 pt-4 text-sm text-gray-500"><span class="inline-flex items-center gap-2"> <b class="grid h-7 w-7 place-items-center rounded-full bg-brand-100 text-xs text-brand-800">${escape(topic.author_name_snapshot.slice(0, 1).toUpperCase())}</b> <strong class="font-medium text-gray-700">${escape(topic.author_name_snapshot)}</strong></span><span>💬 ${topic.reply_count}</span><span>◉ ${topic.view_count}</span><span class="sm:ml-auto">Active ${when(topic.last_activity_at)}</span></div></article>`;
@@ -93,6 +103,23 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
         if (activeId) await showTopic(activeId);
       } catch (error) { say(error instanceof Error ? error.message : "You are not permitted to change this content."); }
     }, true);
+    root.addEventListener("click", async event => {
+      const target = event.target as HTMLElement;
+      if (!target.matches("[data-send-link]")) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const email = root.querySelector<HTMLInputElement>("[data-auth-email]")?.value.trim();
+      if (!email) return say("Enter your email address.");
+      const { error } = await client!.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: new URL("/community", location.origin).toString() },
+      });
+      say(error ? "Could not send sign-in link." : "Check your inbox for the sign-in link.");
+    }, true);
+    queueMicrotask(() => {
+      void ensureProfile();
+      client?.auth.onAuthStateChange((_event, session) => { if (session) void ensureProfile(); });
+    });
     if (!url || !key) say("Community is being connected — please check back shortly."); else { client = createClient(url, key); client.from("community_categories").select("*").order("sort_order").then(async ({ data }) => { categories = data ?? []; const select = root.querySelector<HTMLSelectElement>("[data-category-select]"); if (select) select.innerHTML = categories.map(c => `<option value="${c.slug}" ${c.slug === category ? "selected" : ""}>${escape(c.name)}</option>`).join(""); if (activeId) await showTopic(activeId); else await loadTopics(); }); root.querySelector("[data-new-topic]")?.addEventListener("click", async () => { if (!await signedIn()) return requestSignIn(); form?.classList.remove("hidden"); }); root.querySelector("[data-cancel-topic]")?.addEventListener("click", () => form?.classList.add("hidden")); root.querySelector("[data-load-more]")?.addEventListener("click", () => loadTopics(true)); root.querySelectorAll<HTMLButtonElement>("[data-sort]").forEach(button => button.addEventListener("click", () => { sort = button.dataset.sort!; offset = 0; loadTopics(); })); form?.addEventListener("submit", async e => { e.preventDefault(); const fd = new FormData(form); try { const result = await invoke({ action: "create-topic", title: fd.get("title"), category_slug: fd.get("category"), body: fd.get("body") }); location.href = `?discussion=${result.id}`; } catch (error) { say(error instanceof Error ? error.message : "Could not publish discussion."); } }); root.querySelector("[data-send-link]")?.addEventListener("click", async () => { const email = root.querySelector<HTMLInputElement>("[data-auth-email]")?.value.trim(); if (!email) return say("Enter your email address."); const { error } = await client!.auth.signInWithOtp({ email, options: { emailRedirectTo: location.href } }); say(error ? "Could not send sign-in link." : "Check your inbox for the sign-in link."); }); root.querySelector("[data-save-profile]")?.addEventListener("click", async () => { try { await invoke({ action: "upsert-profile", display_name: root.querySelector<HTMLInputElement>("[data-display-name]")?.value }); profileForm?.classList.add("hidden"); say("Profile saved. You can now post."); } catch (error) { say(error instanceof Error ? error.message : "Could not save profile."); } }); client.auth.getUser().then(async ({ data }) => { if (data.user) { const { data: profile } = await client!.from("profiles").select("id").eq("id", data.user.id).maybeSingle(); if (!profile) profileForm?.classList.remove("hidden"); } }); root.addEventListener("click", async e => { const target = e.target as HTMLElement; if (target.matches("[data-back]")) { e.preventDefault(); location.href = location.pathname; } if (target.matches("[data-reply-topic], [data-reply-to]")) { if (!await signedIn()) return requestSignIn(); const replyForm = root.querySelector<HTMLFormElement>("[data-reply-form]"); if (!replyForm) return; replyForm.classList.remove("hidden"); replyForm.querySelector<HTMLInputElement>("input[type=hidden]")!.value = target.dataset.replyTo ?? ""; } if (target.matches("[data-edit-topic], [data-delete-topic], [data-edit-reply], [data-delete-reply]")) say("Editing and deletion controls are being connected in the next build step."); }); root.addEventListener("submit", async e => { const replyForm = (e.target as HTMLElement).closest<HTMLFormElement>("[data-reply-form]"); if (!replyForm) return; e.preventDefault(); try { await invoke({ action: "create-reply", topic_id: activeId, parent_reply_id: replyForm.querySelector<HTMLInputElement>("input[type=hidden]")?.value, body: replyForm.querySelector<HTMLTextAreaElement>("textarea")?.value }); await showTopic(activeId!); } catch (error) { say(error instanceof Error ? error.message : "Could not post reply."); } }); }
   }
 </script>
