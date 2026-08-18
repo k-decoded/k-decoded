@@ -1,7 +1,6 @@
 // communityTopics.ts
-// Topic boards for /community/[topic] — each renders its own Disqus
-// thread (see components/Discussion.astro). Add a topic here to get a
-// new board; no other file needs to change.
+// Topic boards for /community/[topic]. These match the seeded Supabase forum
+// categories in supabase/forum_schema.sql; keep slugs aligned when editing.
 
 export interface CommunityTopic {
   slug: string;

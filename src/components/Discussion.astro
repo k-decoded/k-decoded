@@ -1,146 +1,39 @@
 ---
-interface Props {
-  identifier: string;
-}
-
-const { identifier } = Astro.props;
+interface Props { identifier?: string; home?: boolean; }
+const { identifier, home = false } = Astro.props;
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 ---
 
-<section
-  class="rounded-2xl border border-brand-100 bg-white p-5 shadow-sm"
-  data-community-discussion
-  data-topic={identifier}
-  data-supabase-url={supabaseUrl}
-  data-supabase-key={supabaseKey}
->
-  <div>
-    <h2 class="text-xl font-bold text-gray-900">Join the conversation</h2>
-    <p class="mt-1 text-sm text-gray-600">No account needed. Pick a display name and posts appear straight away; clearly hateful or threatening language is held for review.</p>
+<section class="grid gap-5" data-forum data-category={identifier ?? ""} data-home={String(home)} data-supabase-url={supabaseUrl} data-supabase-key={supabaseKey}>
+  <div class="rounded-2xl border border-brand-100 bg-white p-5 shadow-sm">
+    <div class="flex flex-wrap items-start justify-between gap-3"><div><h2 class="text-xl font-bold text-gray-900">{home ? "Discussions" : "Latest discussions"}</h2><p class="mt-1 text-sm text-gray-600">Read freely; sign in to start a discussion or reply.</p></div><button type="button" class="rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700" data-new-topic>Start a discussion</button></div>
+    {home && <div class="mt-5 flex flex-wrap gap-2" data-forum-tabs><button type="button" data-sort="latest" class="rounded-full bg-brand-100 px-3 py-1.5 text-sm font-semibold text-brand-800">Latest</button><button type="button" data-sort="popular" class="rounded-full border border-brand-200 px-3 py-1.5 text-sm">Popular</button><button type="button" data-sort="unanswered" class="rounded-full border border-brand-200 px-3 py-1.5 text-sm">Unanswered</button></div>}
   </div>
-
-  <form class="mt-5 grid gap-3" data-discussion-form>
-    <label class="grid gap-1 text-sm font-semibold text-gray-800">
-      Display name
-      <input name="authorName" required minlength="2" maxlength="32" autocomplete="nickname" class="rounded-lg border border-gray-300 px-3 py-2 font-normal" placeholder="SeoulSnackFan" />
-    </label>
-    <label class="grid gap-1 text-sm font-semibold text-gray-800">
-      Your thought or question
-      <textarea name="body" required minlength="1" maxlength="1000" rows="4" class="rounded-lg border border-gray-300 px-3 py-2 font-normal" placeholder="Share a tip, question, or experience…"></textarea>
-    </label>
-    <div class="flex flex-wrap items-center gap-3">
-      <button type="submit" class="rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700">Post anonymously</button>
-      <p class="text-sm text-gray-600" data-discussion-status aria-live="polite"></p>
-    </div>
-  </form>
-
-  <div class="mt-7 border-t border-gray-100 pt-5">
-    <h3 class="font-semibold text-gray-900">Community posts</h3>
-    <div class="mt-3 grid gap-3" data-discussion-posts></div>
-  </div>
+  <form class="hidden rounded-2xl border border-brand-200 bg-brand-50 p-5" data-topic-form><h3 class="font-bold text-gray-900">Start a discussion</h3><div class="mt-4 grid gap-3"><input name="title" required minlength="3" maxlength="160" class="rounded-lg border border-gray-300 px-3 py-2" placeholder="Discussion title" /><select name="category" required class="rounded-lg border border-gray-300 px-3 py-2" data-category-select></select><textarea name="body" required maxlength="10000" rows="6" class="rounded-lg border border-gray-300 px-3 py-2" placeholder="What would you like to discuss?"></textarea><div class="flex gap-3"><button class="rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white">Publish discussion</button><button type="button" class="text-sm text-gray-600" data-cancel-topic>Cancel</button></div></div></form>
+  <div class="hidden rounded-2xl border border-brand-200 bg-white p-5" data-auth-panel><h3 class="font-bold text-gray-900">Sign in to join the conversation</h3><p class="mt-1 text-sm text-gray-600">We’ll email you a secure sign-in link. Guests can always keep reading.</p><div class="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]"><input type="email" required class="rounded-lg border border-gray-300 px-3 py-2" placeholder="you@example.com" data-auth-email /><button type="button" class="rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white" data-send-link>Email me a link</button></div><div class="mt-3 hidden grid gap-3" data-profile-form><input maxlength="32" class="rounded-lg border border-gray-300 px-3 py-2" placeholder="Choose a display name" data-display-name /><button type="button" class="w-fit rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white" data-save-profile>Save profile</button></div></div>
+  <p class="text-sm text-gray-600" data-forum-status aria-live="polite"></p><div class="grid gap-3" data-topic-list></div><button type="button" class="hidden justify-self-center rounded-full border border-brand-200 px-4 py-2 text-sm font-semibold text-brand-700" data-load-more>Load more discussions</button>
+  <article class="hidden rounded-2xl border border-brand-100 bg-white p-5 shadow-sm" data-topic-detail><a class="text-sm text-brand-700 hover:underline" href="" data-back>← Back to discussions</a><div class="mt-4" data-topic-content></div><div class="mt-6 border-t border-gray-100 pt-5"><h3 class="font-bold text-gray-900">Replies</h3><div class="mt-4 grid gap-3" data-replies></div></div></article>
 </section>
 
 <script>
   import { createClient } from "@supabase/supabase-js";
-
-  const discussionRoot = document.querySelector("[data-community-discussion]");
-
-  if (discussionRoot) {
-    const supabaseUrl = discussionRoot.dataset.supabaseUrl;
-    const supabaseKey = discussionRoot.dataset.supabaseKey;
-    const topic = discussionRoot.dataset.topic;
-    const form = discussionRoot.querySelector("[data-discussion-form]");
-    const status = discussionRoot.querySelector("[data-discussion-status]");
-    const posts = discussionRoot.querySelector("[data-discussion-posts]");
-
-    const setStatus = (message) => {
-      if (status) status.textContent = message;
-    };
-
-    const renderPosts = (items) => {
-      if (!posts) return;
-      posts.replaceChildren();
-      if (!items.length) {
-        const empty = document.createElement("p");
-        empty.className = "text-sm text-gray-500";
-        empty.textContent = "No posts yet — start the conversation.";
-        posts.append(empty);
-        return;
-      }
-      items.forEach((item) => {
-        const article = document.createElement("article");
-        article.className = "rounded-xl bg-brand-50/60 p-4";
-        const author = document.createElement("p");
-        author.className = "text-sm font-semibold text-brand-800";
-        author.textContent = item.author_name;
-        const body = document.createElement("p");
-        body.className = "mt-1 whitespace-pre-wrap text-sm leading-6 text-gray-700";
-        body.textContent = item.body;
-        article.append(author, body);
-        posts.append(article);
-      });
-    };
-
-    if (!supabaseUrl || !supabaseKey) {
-      setStatus("Community is being connected — please check back shortly.");
-    } else {
-      const supabase = createClient(supabaseUrl, supabaseKey);
-
-      const loadPosts = async () => {
-        const { data, error } = await supabase
-          .from("community_posts")
-          .select("author_name, body, created_at")
-          .eq("topic_slug", topic)
-          .eq("status", "approved")
-          .order("created_at", { ascending: false });
-        if (error) {
-          setStatus("Posts are temporarily unavailable.");
-          return;
-        }
-        renderPosts(data ?? []);
-      };
-
-      const getSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) return session;
-        const { data, error } = await supabase.auth.signInAnonymously();
-        if (error) throw error;
-        return data.session;
-      };
-
-      form?.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const formData = new FormData(form);
-        const authorName = String(formData.get("authorName") ?? "").trim();
-        const body = String(formData.get("body") ?? "").trim();
-        if (authorName.length < 2 || body.length < 1) return;
-
-        setStatus("Posting…");
-        try {
-          const session = await getSession();
-          if (!session?.user) throw new Error("No session");
-          const { data, error } = await supabase.functions.invoke("moderate-community-post", {
-            body: {
-              topic_slug: topic,
-              author_name: authorName,
-              body,
-            },
-          });
-          if (error) throw error;
-          form.reset();
-          if (data?.status === "approved") {
-            setStatus("Posted — thanks for joining the conversation!");
-            await loadPosts();
-          } else {
-            setStatus("Thanks! This post is being reviewed before it appears.");
-          }
-        } catch {
-          setStatus("Couldn’t submit your post. Please try again shortly.");
-        }
-      });
-
-      loadPosts();
-    }
+  const root = document.querySelector("[data-forum]") as HTMLElement | null;
+  if (root) {
+    const url = root.dataset.supabaseUrl, key = root.dataset.supabaseKey, category = root.dataset.category || null, home = root.dataset.home === "true";
+    const status = root.querySelector<HTMLElement>("[data-forum-status]"), list = root.querySelector<HTMLElement>("[data-topic-list]"), detail = root.querySelector<HTMLElement>("[data-topic-detail]"), content = root.querySelector<HTMLElement>("[data-topic-content]"), repliesEl = root.querySelector<HTMLElement>("[data-replies]"), form = root.querySelector<HTMLFormElement>("[data-topic-form]"), authPanel = root.querySelector<HTMLElement>("[data-auth-panel]"), profileForm = root.querySelector<HTMLElement>("[data-profile-form]");
+    let client: ReturnType<typeof createClient> | null = null, categories: any[] = [], offset = 0, sort = "latest", activeId = new URLSearchParams(location.search).get("discussion");
+    const say = (message: string) => { if (status) status.textContent = message; };
+    const escape = (value: string) => value.replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]!));
+    const when = (value: string) => new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
+    const signedIn = async () => !!(await client!.auth.getUser()).data.user;
+    const invoke = async (body: Record<string, unknown>) => { const { data, error } = await client!.functions.invoke("community-forum", { body }); if (error) throw error; if (data?.error) throw new Error(data.error); return data; };
+    const categoryFor = (id: string) => categories.find(c => c.id === id);
+    const card = (topic: any) => `<article class="rounded-2xl border border-brand-100 bg-white p-5 shadow-sm"><div class="flex flex-wrap items-center gap-2 text-xs text-gray-500"><span class="rounded-full bg-brand-50 px-2 py-1 font-semibold text-brand-800">${escape(categoryFor(topic.category_id)?.name ?? "Community")}</span>${topic.is_locked ? '<span>Locked</span>' : ''}</div><h3 class="mt-3 text-lg font-bold text-gray-900"><a class="hover:text-brand-700" href="?discussion=${topic.id}">${escape(topic.title)}</a></h3><p class="mt-2 line-clamp-2 text-sm text-gray-600">${escape(topic.body)}</p><p class="mt-4 text-sm text-gray-500">By ${escape(topic.author_name_snapshot)} · ${topic.reply_count} replies · ${topic.view_count} views · Last activity ${when(topic.last_activity_at)}</p></article>`;
+    const loadTopics = async (append = false) => { if (!client || !list) return; say(""); let query = client.from("community_topics").select("*").eq("status", "visible"); if (category) { const match = categories.find(c => c.slug === category); if (match) query = query.eq("category_id", match.id); } if (sort === "unanswered") query = query.eq("reply_count", 0); query = sort === "popular" ? query.order("reply_count", { ascending: false }).order("view_count", { ascending: false }) : query.order("last_activity_at", { ascending: false }); const { data, error } = await query.range(offset, offset + 19); if (error) { say("Discussions are temporarily unavailable."); return; } if (!append) list.replaceChildren(); list.insertAdjacentHTML("beforeend", (data ?? []).map(card).join("") || (append ? "" : '<p class="text-sm text-gray-500">No discussions yet.</p>')); const more = root.querySelector<HTMLElement>("[data-load-more]"); if (more) more.classList.toggle("hidden", (data ?? []).length < 20); offset += (data ?? []).length; };
+    const replyMarkup = (reply: any, depth: number) => `<article class="rounded-xl ${depth ? 'ml-4 border-l-2 border-brand-200 bg-brand-50/50' : 'bg-gray-50'} p-4"><p class="text-sm font-semibold text-brand-800">${escape(reply.author_name_snapshot)} <span class="font-normal text-gray-500">${when(reply.created_at)}</span></p><p class="mt-1 whitespace-pre-wrap text-sm text-gray-700">${escape(reply.body)}</p><div class="mt-3 flex gap-3 text-sm"><button data-reply-to="${reply.id}" class="font-semibold text-brand-700">Reply</button><button data-edit-reply="${reply.id}" class="text-gray-600">Edit</button><button data-delete-reply="${reply.id}" class="text-gray-600">Delete</button></div></article>`;
+    const showTopic = async (id: string) => { const { data: topic } = await client!.from("community_topics").select("*").eq("id", id).eq("status", "visible").maybeSingle(); if (!topic) { say("Discussion not found."); return; } activeId = id; list?.classList.add("hidden"); root.querySelector<HTMLElement>("[data-load-more]")?.classList.add("hidden"); detail?.classList.remove("hidden"); if (content) content.innerHTML = `<div class="flex flex-wrap gap-2 text-xs text-gray-500"><span class="rounded-full bg-brand-50 px-2 py-1 font-semibold text-brand-800">${escape(categoryFor(topic.category_id)?.name ?? "Community")}</span>${topic.is_locked ? '<span>Locked</span>' : ''}</div><h2 class="mt-3 text-2xl font-bold text-gray-900">${escape(topic.title)}</h2><p class="mt-1 text-sm text-gray-500">By ${escape(topic.author_name_snapshot)} · ${when(topic.created_at)}</p><p class="mt-5 whitespace-pre-wrap leading-7 text-gray-700">${escape(topic.body)}</p><div class="mt-5 flex gap-3 text-sm"><button data-reply-topic class="font-semibold text-brand-700">Reply</button><button data-edit-topic class="text-gray-600">Edit</button><button data-delete-topic class="text-gray-600">Delete</button></div><form class="mt-4 hidden grid gap-2" data-reply-form><textarea required maxlength="10000" rows="4" class="rounded-lg border border-gray-300 px-3 py-2" placeholder="Write a reply"></textarea><input type="hidden" value="" /><button class="w-fit rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white">Post reply</button></form>`; const { data: replies } = await client!.from("community_replies").select("*").eq("topic_id", id).eq("status", "visible").order("created_at"); if (repliesEl) { const children = new Map<string, any[]>(); (replies ?? []).forEach(r => { const parent = r.parent_reply_id || "root"; children.set(parent, [...(children.get(parent) ?? []), r]); }); const render = (parent: string, depth = 0): string => (children.get(parent) ?? []).map(r => replyMarkup(r, Math.min(depth, 2)) + render(r.id, depth + 1)).join(""); repliesEl.innerHTML = render("root") || '<p class="text-sm text-gray-500">No replies yet — be the first to respond.</p>'; } };
+    const requestSignIn = () => { authPanel?.classList.remove("hidden"); say("Sign in to post or manage your content."); };
+    if (!url || !key) say("Community is being connected — please check back shortly."); else { client = createClient(url, key); client.from("community_categories").select("*").order("sort_order").then(async ({ data }) => { categories = data ?? []; const select = root.querySelector<HTMLSelectElement>("[data-category-select]"); if (select) select.innerHTML = categories.map(c => `<option value="${c.slug}" ${c.slug === category ? "selected" : ""}>${escape(c.name)}</option>`).join(""); if (activeId) await showTopic(activeId); else await loadTopics(); }); root.querySelector("[data-new-topic]")?.addEventListener("click", async () => { if (!await signedIn()) return requestSignIn(); form?.classList.remove("hidden"); }); root.querySelector("[data-cancel-topic]")?.addEventListener("click", () => form?.classList.add("hidden")); root.querySelector("[data-load-more]")?.addEventListener("click", () => loadTopics(true)); root.querySelectorAll<HTMLButtonElement>("[data-sort]").forEach(button => button.addEventListener("click", () => { sort = button.dataset.sort!; offset = 0; loadTopics(); })); form?.addEventListener("submit", async e => { e.preventDefault(); const fd = new FormData(form); try { const result = await invoke({ action: "create-topic", title: fd.get("title"), category_slug: fd.get("category"), body: fd.get("body") }); location.href = `?discussion=${result.id}`; } catch (error) { say(error instanceof Error ? error.message : "Could not publish discussion."); } }); root.querySelector("[data-send-link]")?.addEventListener("click", async () => { const email = root.querySelector<HTMLInputElement>("[data-auth-email]")?.value.trim(); if (!email) return say("Enter your email address."); const { error } = await client!.auth.signInWithOtp({ email, options: { emailRedirectTo: location.href } }); say(error ? "Could not send sign-in link." : "Check your inbox for the sign-in link."); }); root.querySelector("[data-save-profile]")?.addEventListener("click", async () => { try { await invoke({ action: "upsert-profile", display_name: root.querySelector<HTMLInputElement>("[data-display-name]")?.value }); profileForm?.classList.add("hidden"); say("Profile saved. You can now post."); } catch (error) { say(error instanceof Error ? error.message : "Could not save profile."); } }); client.auth.getUser().then(async ({ data }) => { if (data.user) { const { data: profile } = await client!.from("profiles").select("id").eq("id", data.user.id).maybeSingle(); if (!profile) profileForm?.classList.remove("hidden"); } }); root.addEventListener("click", async e => { const target = e.target as HTMLElement; if (target.matches("[data-back]")) { e.preventDefault(); location.href = location.pathname; } if (target.matches("[data-reply-topic], [data-reply-to]")) { if (!await signedIn()) return requestSignIn(); const replyForm = root.querySelector<HTMLFormElement>("[data-reply-form]"); if (!replyForm) return; replyForm.classList.remove("hidden"); replyForm.querySelector<HTMLInputElement>("input[type=hidden]")!.value = target.dataset.replyTo ?? ""; } if (target.matches("[data-edit-topic], [data-delete-topic], [data-edit-reply], [data-delete-reply]")) say("Editing and deletion controls are being connected in the next build step."); }); root.addEventListener("submit", async e => { const replyForm = (e.target as HTMLElement).closest<HTMLFormElement>("[data-reply-form]"); if (!replyForm) return; e.preventDefault(); try { await invoke({ action: "create-reply", topic_id: activeId, parent_reply_id: replyForm.querySelector<HTMLInputElement>("input[type=hidden]")?.value, body: replyForm.querySelector<HTMLTextAreaElement>("textarea")?.value }); await showTopic(activeId!); } catch (error) { say(error instanceof Error ? error.message : "Could not post reply."); } }); }
   }
 </script>

@@ -1,0 +1,89 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const headers = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Content-Type": "application/json" };
+const respond = (body: Record<string, unknown>, status = 200) => new Response(JSON.stringify(body), { status, headers });
+const clean = (value: unknown, max: number) => typeof value === "string" ? value.trim().slice(0, max) : "";
+
+Deno.serve(async (request) => {
+  if (request.method === "OPTIONS") return new Response("ok", { headers });
+  if (request.method !== "POST") return respond({ error: "Method not allowed" }, 405);
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader) return respond({ error: "Sign in required" }, 401);
+
+  const url = Deno.env.get("SUPABASE_URL")!;
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const userClient = createClient(url, anonKey, { global: { headers: { Authorization: authHeader } } });
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user || user.is_anonymous) return respond({ error: "Sign in with a permanent account to post" }, 401);
+  let input: Record<string, unknown>; try { input = await request.json(); } catch { return respond({ error: "Invalid request" }, 400); }
+  const admin = createClient(url, serviceKey);
+  const { data: profile } = await admin.from("profiles").select("display_name").eq("id", user.id).maybeSingle();
+  const action = clean(input.action, 40);
+  if (action === "upsert-profile") {
+    const displayName = clean(input.display_name, 32);
+    if (displayName.length < 2) return respond({ error: "A display name of at least 2 characters is required" }, 400);
+    const { error } = await admin.from("profiles").upsert({ id: user.id, display_name: displayName, updated_at: new Date().toISOString() });
+    return error ? respond({ error: "Could not save profile" }, 500) : respond({ ok: true });
+  }
+  if (!profile) return respond({ error: "Complete your profile before posting" }, 400);
+  const { data: membership } = await admin.from("community_roles").select("role").eq("user_id", user.id).maybeSingle();
+  const isAdmin = membership?.role === "admin";
+
+  if (action === "create-topic") {
+    const title = clean(input.title, 160), body = clean(input.body, 10000), categorySlug = clean(input.category_slug, 80);
+    if (title.length < 3 || body.length < 1 || !categorySlug) return respond({ error: "Title, category, and body are required" }, 400);
+    const { data: category } = await admin.from("community_categories").select("id").eq("slug", categorySlug).eq("is_active", true).maybeSingle();
+    if (!category) return respond({ error: "Invalid category" }, 400);
+    const { data, error } = await admin.from("community_topics").insert({ category_id: category.id, author_id: user.id, author_name_snapshot: profile.display_name, title, body, last_activity_by: user.id }).select("id").single();
+    return error ? respond({ error: "Could not create discussion" }, 500) : respond({ id: data.id }, 201);
+  }
+
+  if (action === "create-reply") {
+    const topicId = clean(input.topic_id, 80), parentId = clean(input.parent_reply_id, 80) || null, body = clean(input.body, 10000);
+    if (!topicId || !body) return respond({ error: "Reply text is required" }, 400);
+    const { data: topic } = await admin.from("community_topics").select("id,is_locked,status").eq("id", topicId).maybeSingle();
+    if (!topic || topic.status !== "visible") return respond({ error: "Discussion unavailable" }, 404);
+    if (topic.is_locked && !isAdmin) return respond({ error: "This discussion is locked" }, 403);
+    if (parentId) { const { data: parent } = await admin.from("community_replies").select("topic_id").eq("id", parentId).maybeSingle(); if (!parent || parent.topic_id !== topicId) return respond({ error: "Invalid parent reply" }, 400); }
+    const { data, error } = await admin.from("community_replies").insert({ topic_id: topicId, parent_reply_id: parentId, author_id: user.id, author_name_snapshot: profile.display_name, body }).select("id").single();
+    if (error) return respond({ error: "Could not create reply" }, 500);
+    await admin.from("community_topics").update({ reply_count: (await admin.from("community_replies").select("id", { count: "exact", head: true }).eq("topic_id", topicId).eq("status", "visible")).count ?? 0, last_activity_at: new Date().toISOString(), last_activity_by: user.id }).eq("id", topicId);
+    return respond({ id: data.id }, 201);
+  }
+
+  if (action === "update-topic" || action === "delete-topic" || action === "moderate-topic") {
+    const id = clean(input.id, 80); const { data: topic } = await admin.from("community_topics").select("author_id").eq("id", id).maybeSingle();
+    if (!topic) return respond({ error: "Discussion not found" }, 404);
+    if (action === "moderate-topic" && !isAdmin) return respond({ error: "Administrator permission required" }, 403);
+    if (!isAdmin && topic.author_id !== user.id) return respond({ error: "Not permitted" }, 403);
+    const patch = action === "delete-topic" ? { status: "deleted", deleted_at: new Date().toISOString() } : action === "moderate-topic" ? { status: clean(input.status, 16), is_locked: input.is_locked === true } : { title: clean(input.title, 160), body: clean(input.body, 10000) };
+    const { error } = await admin.from("community_topics").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
+    return error ? respond({ error: "Could not update discussion" }, 500) : respond({ ok: true });
+  }
+  if (action === "update-reply" || action === "delete-reply" || action === "moderate-reply") {
+    const id = clean(input.id, 80);
+    const { data: reply } = await admin.from("community_replies").select("author_id,topic_id").eq("id", id).maybeSingle();
+    if (!reply) return respond({ error: "Reply not found" }, 404);
+    if (action === "moderate-reply" && !isAdmin) return respond({ error: "Administrator permission required" }, 403);
+    if (!isAdmin && reply.author_id !== user.id) return respond({ error: "Not permitted" }, 403);
+    const patch = action === "delete-reply"
+      ? { status: "deleted", deleted_at: new Date().toISOString() }
+      : action === "moderate-reply"
+        ? { status: clean(input.status, 16) }
+        : { body: clean(input.body, 10000) };
+    if (action === "update-reply" && !(patch as { body: string }).body) return respond({ error: "Reply text is required" }, 400);
+    const { error } = await admin.from("community_replies").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
+    if (error) return respond({ error: "Could not update reply" }, 500);
+    const { count } = await admin.from("community_replies").select("id", { count: "exact", head: true }).eq("topic_id", reply.topic_id).eq("status", "visible");
+    await admin.from("community_topics").update({ reply_count: count ?? 0, last_activity_at: new Date().toISOString(), last_activity_by: user.id }).eq("id", reply.topic_id);
+    return respond({ ok: true });
+  }
+  if (action === "report-content") {
+    const targetType = clean(input.target_type, 10), targetId = clean(input.target_id, 80), reason = clean(input.reason, 1000);
+    if ((targetType !== "topic" && targetType !== "reply") || !targetId || reason.length < 3) return respond({ error: "A reason is required" }, 400);
+    const { error } = await admin.from("community_reports").insert({ reporter_id: user.id, target_type: targetType, target_id: targetId, reason });
+    return error ? respond({ error: "Could not submit report" }, 500) : respond({ ok: true }, 201);
+  }
+  return respond({ error: "Unsupported action" }, 400);
+});

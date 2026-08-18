@@ -1,7 +1,7 @@
 ---
 // src/pages/community/[topic].astro
-// One page per board in COMMUNITY_TOPICS. Each has an independently keyed
-// anonymous Supabase discussion, so boards never share a thread.
+// One page per board in COMMUNITY_TOPICS. The client-side forum component
+// lists category discussions and opens a selected thread using its query ID.
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Discussion from "../../components/Discussion.astro";

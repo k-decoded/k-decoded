@@ -113,9 +113,10 @@ whole site. See `beauty-of-joseon-relief-sun-review.md` for more examples.
 
 ## Community discussions
 
-Community boards use Supabase so visitors can post with a display name
-instead of creating an account. New posts are held for approval; approve
-or reject them in the `community_posts` table in Supabase's Table Editor.
+The legacy community board uses anonymous Supabase sessions and stores flat
+posts in `community_posts`. The forum migration in `supabase/forum_schema.sql`
+adds signed-in discussions, replies, categories, and moderation data without
+deleting that legacy table.
 
 The one-time database setup lives in `supabase/community_posts.sql`.
 Set these public values in `.env.local` for local development and in
@@ -126,9 +127,10 @@ PUBLIC_SUPABASE_URL=
 PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 ```
 
-In Supabase, enable **Authentication → Sign In / Providers → Allow
-anonymous sign-ins**. Keep Row Level Security enabled: the included SQL
-allows visitors to read approved posts and submit only pending posts.
+For the legacy board, enable **Authentication → Sign In / Providers → Allow
+anonymous sign-ins**. For the forum, enable email magic-link authentication
+and configure its redirect URL. Keep Row Level Security enabled; forum writes
+go through the `community-forum` Edge Function.
 
 ## Updating the contact page
 
