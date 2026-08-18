@@ -9,6 +9,7 @@ const clean = (value: unknown, max: number) => typeof value === "string"
   : "";
 const validStatus = (value: string) => ["visible", "hidden", "deleted", "pending", "rejected"].includes(value);
 const unsafeLink = (value: string) => /(?:javascript|data|vbscript)\s*:/i.test(value);
+const searchTerm = (value: unknown) => clean(value, 80).replace(/[%(),.]/g, " ").trim();
 
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers });
@@ -38,7 +39,7 @@ Deno.serve(async (request) => {
   if (action === "get-permissions") return respond({ user_id: user.id, is_admin: isAdmin });
   if (action === "moderation-dashboard") {
     if (!isAdmin) return respond({ error: "Administrator permission required" }, 403);
-    const query = clean(input.query, 160);
+    const query = searchTerm(input.query);
     const [reports, actions, topics, replies] = await Promise.all([
       admin.from("community_reports").select("*").eq("status", "open").order("created_at", { ascending: true }).limit(100),
       admin.from("community_moderation_log").select("*").order("created_at", { ascending: false }).limit(50),
@@ -80,7 +81,13 @@ Deno.serve(async (request) => {
 
   if (action === "create-reply") {
     const topicId = clean(input.topic_id, 80), parentId = clean(input.parent_reply_id, 80) || null, body = clean(input.body, 10000);
-    if (!topicId || !body) return respond({ error: "Reply text is required" }, 400);
+    if (!topicId || body.length < 2) return respond({ error: "Reply text is required" }, 400);
+    if (unsafeLink(body)) return respond({ error: "Unsafe links are not allowed" }, 400);
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const { count: recentReplies } = await admin.from("community_replies").select("id", { count: "exact", head: true }).eq("author_id", user.id).gte("created_at", fiveMinutesAgo);
+    if ((recentReplies ?? 0) >= 8) return respond({ error: "Please slow down before posting another reply" }, 429);
+    const { data: duplicateReply } = await admin.from("community_replies").select("id").eq("author_id", user.id).eq("topic_id", topicId).eq("body", body).gte("created_at", fiveMinutesAgo).maybeSingle();
+    if (duplicateReply) return respond({ error: "You just posted the same reply" }, 409);
     const { data: topic } = await admin.from("community_topics").select("id,is_locked,status").eq("id", topicId).maybeSingle();
     if (!topic || topic.status !== "visible") return respond({ error: "Discussion unavailable" }, 404);
     if (topic.is_locked && !isAdmin) return respond({ error: "This discussion is locked" }, 403);
@@ -99,7 +106,7 @@ Deno.serve(async (request) => {
     const moderationStatus = clean(input.status, 16);
     if (action === "moderate-topic" && !validStatus(moderationStatus)) return respond({ error: "Invalid moderation status" }, 400);
     const updatedTitle = clean(input.title, 160), updatedBody = clean(input.body, 10000);
-    if (action === "update-topic" && (updatedTitle.length < 6 || updatedBody.length < 20)) return respond({ error: "Topic title or body is too short" }, 400);
+    if (action === "update-topic" && (updatedTitle.length < 6 || updatedBody.length < 20 || unsafeLink(updatedTitle) || unsafeLink(updatedBody))) return respond({ error: "Topic title or body is invalid" }, 400);
     const patch = action === "delete-topic" ? { status: "deleted", deleted_at: new Date().toISOString() } : action === "moderate-topic" ? { status: moderationStatus, is_locked: input.is_locked === true } : { title: updatedTitle, body: updatedBody };
     const { error } = await admin.from("community_topics").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
     if (!error && (action === "delete-topic" || action === "moderate-topic")) await admin.from("community_moderation_log").insert({ actor_id: user.id, action, target_type: "topic", target_id: id, details: patch });
@@ -118,7 +125,7 @@ Deno.serve(async (request) => {
       : action === "moderate-reply"
         ? { status: moderationStatus }
         : { body: clean(input.body, 10000) };
-    if (action === "update-reply" && (patch as { body: string }).body.length < 1) return respond({ error: "Reply text is required" }, 400);
+    if (action === "update-reply" && ((patch as { body: string }).body.length < 2 || unsafeLink((patch as { body: string }).body))) return respond({ error: "Reply text is invalid" }, 400);
     const { error } = await admin.from("community_replies").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
     if (error) return respond({ error: "Could not update reply" }, 500);
     const { count } = await admin.from("community_replies").select("id", { count: "exact", head: true }).eq("topic_id", reply.topic_id).eq("status", "visible");
@@ -129,6 +136,9 @@ Deno.serve(async (request) => {
   if (action === "report-content") {
     const targetType = clean(input.target_type, 10), targetId = clean(input.target_id, 80), reason = clean(input.reason, 1000);
     if ((targetType !== "topic" && targetType !== "reply") || !targetId || reason.length < 3) return respond({ error: "A reason is required" }, 400);
+    const targetTable = targetType === "topic" ? "community_topics" : "community_replies";
+    const { data: target } = await admin.from(targetTable).select("id").eq("id", targetId).maybeSingle();
+    if (!target) return respond({ error: "Content not found" }, 404);
     const { error } = await admin.from("community_reports").insert({ reporter_id: user.id, target_type: targetType, target_id: targetId, reason });
     return error ? respond({ error: "Could not submit report" }, 500) : respond({ ok: true }, 201);
   }

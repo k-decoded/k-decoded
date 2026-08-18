@@ -106,13 +106,13 @@ const REACTIONS = [
     const savedReads = new Set<string>(JSON.parse(localStorage.getItem(savedReadsKey) ?? "[]"));
     function renderBookmark() {
       if (!bookmarkButton) return;
-      const saved = savedReads.has(slug);
+      const saved = savedReads.has(slug!);
       bookmarkButton.textContent = saved ? "♥ Saved to reads" : "♡ Save to reads";
       bookmarkButton.setAttribute("aria-pressed", String(saved));
     }
     renderBookmark();
     bookmarkButton?.addEventListener("click", () => {
-      savedReads.has(slug) ? savedReads.delete(slug) : savedReads.add(slug);
+      savedReads.has(slug!) ? savedReads.delete(slug!) : savedReads.add(slug!);
       localStorage.setItem(savedReadsKey, JSON.stringify([...savedReads]));
       localStorage.setItem(`k-decoded:read-title:${slug}`, title);
       renderBookmark();
@@ -123,13 +123,13 @@ const REACTIONS = [
     const seoulList = new Set<string>(JSON.parse(localStorage.getItem(seoulListKey) ?? "[]"));
     function renderSeoulList() {
       if (!seoulButton) return;
-      const saved = seoulList.has(slug);
+      const saved = seoulList.has(slug!);
       seoulButton.textContent = saved ? "✓ On your Seoul list" : "+ Add to Seoul list";
       seoulButton.setAttribute("aria-pressed", String(saved));
     }
     renderSeoulList();
     seoulButton?.addEventListener("click", () => {
-      seoulList.has(slug) ? seoulList.delete(slug) : seoulList.add(slug);
+      seoulList.has(slug!) ? seoulList.delete(slug!) : seoulList.add(slug!);
       localStorage.setItem(seoulListKey, JSON.stringify([...seoulList]));
       localStorage.setItem(`k-decoded:seoul-title:${slug}`, title);
       renderSeoulList();
