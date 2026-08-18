@@ -34,6 +34,7 @@ Deno.serve(async (request) => {
   if (!profile) return respond({ error: "Complete your profile before posting" }, 400);
   const { data: membership } = await admin.from("community_roles").select("role").eq("user_id", user.id).maybeSingle();
   const isAdmin = membership?.role === "admin";
+  if (action === "get-permissions") return respond({ user_id: user.id, is_admin: isAdmin });
 
   if (action === "create-topic") {
     const title = clean(input.title, 160), body = clean(input.body, 10000), categorySlug = clean(input.category_slug, 80);
@@ -74,8 +75,11 @@ Deno.serve(async (request) => {
     if (!isAdmin && topic.author_id !== user.id) return respond({ error: "Not permitted" }, 403);
     const moderationStatus = clean(input.status, 16);
     if (action === "moderate-topic" && !validStatus(moderationStatus)) return respond({ error: "Invalid moderation status" }, 400);
-    const patch = action === "delete-topic" ? { status: "deleted", deleted_at: new Date().toISOString() } : action === "moderate-topic" ? { status: moderationStatus, is_locked: input.is_locked === true } : { title: clean(input.title, 160), body: clean(input.body, 10000) };
+    const updatedTitle = clean(input.title, 160), updatedBody = clean(input.body, 10000);
+    if (action === "update-topic" && (updatedTitle.length < 6 || updatedBody.length < 20)) return respond({ error: "Topic title or body is too short" }, 400);
+    const patch = action === "delete-topic" ? { status: "deleted", deleted_at: new Date().toISOString() } : action === "moderate-topic" ? { status: moderationStatus, is_locked: input.is_locked === true } : { title: updatedTitle, body: updatedBody };
     const { error } = await admin.from("community_topics").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
+    if (!error && (action === "delete-topic" || action === "moderate-topic")) await admin.from("community_moderation_log").insert({ actor_id: user.id, action, target_type: "topic", target_id: id, details: patch });
     return error ? respond({ error: "Could not update discussion" }, 500) : respond({ ok: true });
   }
   if (action === "update-reply" || action === "delete-reply" || action === "moderate-reply") {
@@ -91,11 +95,12 @@ Deno.serve(async (request) => {
       : action === "moderate-reply"
         ? { status: moderationStatus }
         : { body: clean(input.body, 10000) };
-    if (action === "update-reply" && !(patch as { body: string }).body) return respond({ error: "Reply text is required" }, 400);
+    if (action === "update-reply" && (patch as { body: string }).body.length < 1) return respond({ error: "Reply text is required" }, 400);
     const { error } = await admin.from("community_replies").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
     if (error) return respond({ error: "Could not update reply" }, 500);
     const { count } = await admin.from("community_replies").select("id", { count: "exact", head: true }).eq("topic_id", reply.topic_id).eq("status", "visible");
     await admin.from("community_topics").update({ reply_count: count ?? 0, last_activity_at: new Date().toISOString(), last_activity_by: user.id }).eq("id", reply.topic_id);
+    if (action === "delete-reply" || action === "moderate-reply") await admin.from("community_moderation_log").insert({ actor_id: user.id, action, target_type: "reply", target_id: id, details: patch });
     return respond({ ok: true });
   }
   if (action === "report-content") {

@@ -134,7 +134,8 @@ alter table public.community_moderation_log enable row level security;
 create policy "Public can read active categories" on public.community_categories for select to anon, authenticated using (is_active);
 create policy "Public can read visible profiles" on public.profiles for select to anon, authenticated using (true);
 create policy "Public can read visible topics" on public.community_topics for select to anon, authenticated using (status = 'visible');
-create policy "Public can read visible replies" on public.community_replies for select to anon, authenticated using (status = 'visible');
+drop policy if exists "Public can read visible replies" on public.community_replies;
+create policy "Public can read visible and retained replies" on public.community_replies for select to anon, authenticated using (status in ('visible', 'deleted'));
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('community-images', 'community-images', true, 5242880, array['image/jpeg', 'image/png', 'image/webp'])
