@@ -12,43 +12,40 @@ import Discussion from "../../components/Discussion.astro";
   title="Community"
   description="Join the K-Decoded community — talk K-beauty, travel, language, and more with other readers."
 >
-  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-    <h1 class="text-3xl font-bold text-gray-900">Community</h1>
-    <p class="mt-4 text-gray-600">
-      A place to talk with other readers — K-beauty finds, travel tips, language practice,
-      whatever's on your mind. Pick a board below.
-    </p>
-
-    <div class="mt-6 rounded-xl bg-brand-50 p-5 text-sm text-gray-700">
-      <p class="font-semibold text-gray-900">A couple of ground rules</p>
-      <ul class="mt-2 list-disc space-y-1 pl-5">
-        <li>Be kind — disagree without being a jerk.</li>
-        <li>Keep it on-topic for the board you're posting in.</li>
-        <li>No spam, scams, or self-promo dumps.</li>
-      </ul>
-      <p class="mt-3 text-gray-500">
-        Anyone can read discussions. Sign in with email to create a topic or reply.
-        Administrators can lock or remove rule-breaking content.
-      </p>
+  <section class="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-16">
+    <div class="featured-story relative overflow-hidden rounded-3xl border border-brand-200 px-6 py-9 shadow-sm sm:px-10">
+      <span class="absolute right-8 top-5 text-5xl opacity-30" aria-hidden="true">💬</span>
+      <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand-700">K-Decoded Community</p>
+      <h1 class="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Find your people, share what you know.</h1>
+      <p class="mt-4 max-w-xl text-base leading-7 text-gray-600">Swap K-beauty discoveries, trip wisdom, language questions, and the little Korea finds worth passing on.</p>
     </div>
 
-    <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+    <div class="mt-10 grid gap-7 lg:grid-cols-[0.9fr_2.1fr]">
+      <aside class="space-y-5">
+        <div class="pastel-note rounded-2xl border border-teal-100 p-5">
+          <p class="font-heading text-lg font-bold text-gray-900">Browse a corner</p>
+          <p class="mt-1 text-sm leading-6 text-gray-600">Pick a topic, or browse every current conversation.</p>
+          <ul class="mt-4 grid gap-2">
       {COMMUNITY_TOPICS.map((topic) => (
         <li>
           <a
             href={`/community/${topic.slug}`}
-            class="block h-full rounded-xl border border-brand-100 p-5 transition-colors hover:border-brand-300 hover:bg-brand-50"
+            class="flex items-center gap-3 rounded-xl bg-white/70 px-3 py-3 text-sm transition-colors hover:bg-white"
           >
-            <span class="text-2xl">{topic.emoji}</span>
-            <p class="mt-2 font-semibold text-gray-900">{topic.label}</p>
-            <p class="mt-1 text-sm text-gray-600">{topic.description}</p>
+            <span class="text-xl">{topic.emoji}</span>
+            <span class="font-semibold text-gray-800">{topic.label}</span>
+            <span class="ml-auto text-brand-500">→</span>
           </a>
         </li>
       ))}
-    </ul>
-
-    <div class="mt-12">
-      <Discussion home />
+          </ul>
+        </div>
+        <div class="rounded-2xl border border-brand-100 bg-white p-5 text-sm text-gray-600 shadow-sm">
+          <p class="font-semibold text-gray-900">A kind little corner</p>
+          <p class="mt-2 leading-6">Guests are welcome to read. Sign in with email to start a discussion or reply; admins can lock or remove harmful content.</p>
+        </div>
+      </aside>
+      <div><Discussion home /></div>
     </div>
   </section>
 </BaseLayout>
