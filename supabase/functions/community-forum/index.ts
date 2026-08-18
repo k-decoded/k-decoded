@@ -19,7 +19,8 @@ Deno.serve(async (request) => {
 
   const url = Deno.env.get("SUPABASE_URL")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  // Supabase reserves the SUPABASE_* prefix for platform-managed variables.
+  const serviceKey = Deno.env.get("SERVICE_ROLE_KEY")!;
   const userClient = createClient(url, anonKey, { global: { headers: { Authorization: authHeader } } });
   const { data: { user } } = await userClient.auth.getUser();
   if (!user || user.is_anonymous) return respond({ error: "Sign in with a permanent account to post" }, 401);

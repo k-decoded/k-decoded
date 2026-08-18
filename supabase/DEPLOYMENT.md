@@ -28,7 +28,7 @@ limit and the owner-prefix upload policy before allowing uploads.
 Deploy `supabase/functions/community-forum` and set the server-only secret:
 
 ```text
-SUPABASE_SERVICE_ROLE_KEY=...
+SERVICE_ROLE_KEY=...
 ```
 
 Never put this key in Vercel or a `PUBLIC_` variable. The function uses the
