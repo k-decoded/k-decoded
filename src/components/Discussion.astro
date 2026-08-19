@@ -40,6 +40,14 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
       authStatus.textContent = message;
       authStatus.classList.toggle("hidden", !message);
     };
+    const syncTabs = () => root.querySelectorAll<HTMLButtonElement>("[data-sort]").forEach(button => {
+      const selected = button.dataset.sort === sort;
+      button.setAttribute("aria-pressed", String(selected));
+      button.classList.toggle("bg-brand-100", selected);
+      button.classList.toggle("text-brand-800", selected);
+      button.classList.toggle("border", !selected);
+      button.classList.toggle("border-brand-200", !selected);
+    });
     const escape = (value: string) => value.replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]!));
     const when = (value: string) => new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
     const signedIn = async () => !!(await client!.auth.getUser()).data.user;
@@ -127,6 +135,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
         options: { emailRedirectTo: new URL("/community", location.origin).toString() },
       });
       sayAuth(error ? `Could not send sign-in link: ${error.message}` : "Email sent — check your inbox for the secure sign-in link.");
+    }, true);
+    root.addEventListener("click", event => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-sort]");
+      if (!button || !root.contains(button)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      sort = button.dataset.sort ?? "latest";
+      offset = 0;
+      syncTabs();
+      void loadTopics();
     }, true);
     queueMicrotask(() => {
       void ensureProfile();
