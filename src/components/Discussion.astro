@@ -30,6 +30,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
     const status = root.querySelector<HTMLElement>("[data-forum-status]"), list = root.querySelector<HTMLElement>("[data-topic-list]"), detail = root.querySelector<HTMLElement>("[data-topic-detail]"), content = root.querySelector<HTMLElement>("[data-topic-content]"), repliesEl = root.querySelector<HTMLElement>("[data-replies]"), form = root.querySelector<HTMLFormElement>("[data-topic-form]"), authPanel = root.querySelector<HTMLElement>("[data-auth-panel]"), profileForm = root.querySelector<HTMLElement>("[data-profile-form]");
     let client: ReturnType<typeof createClient> | null = null, categories: any[] = [], offset = 0, sort = "latest", activeId = new URLSearchParams(location.search).get("discussion");
     const say = (message: string) => { if (status) status.textContent = message; };
+    const authStatus = document.createElement("p");
+    authStatus.className = "hidden rounded-xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm font-medium text-brand-800";
+    authStatus.setAttribute("role", "status");
+    authStatus.setAttribute("aria-live", "polite");
+    authStatus.style.order = "-1";
+    authPanel?.insertAdjacentElement("afterend", authStatus);
+    const sayAuth = (message: string) => {
+      authStatus.textContent = message;
+      authStatus.classList.toggle("hidden", !message);
+    };
     const escape = (value: string) => value.replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]!));
     const when = (value: string) => new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
     const signedIn = async () => !!(await client!.auth.getUser()).data.user;
@@ -111,12 +121,12 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
       event.preventDefault();
       event.stopImmediatePropagation();
       const email = root.querySelector<HTMLInputElement>("[data-auth-email]")?.value.trim();
-      if (!email) return say("Enter your email address.");
+      if (!email) return sayAuth("Enter your email address.");
       const { error } = await client!.auth.signInWithOtp({
         email,
         options: { emailRedirectTo: new URL("/community", location.origin).toString() },
       });
-      say(error ? `Could not send sign-in link: ${error.message}` : "Check your inbox for the sign-in link.");
+      sayAuth(error ? `Could not send sign-in link: ${error.message}` : "Email sent — check your inbox for the secure sign-in link.");
     }, true);
     queueMicrotask(() => {
       void ensureProfile();
