@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/sites-static-worker.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
