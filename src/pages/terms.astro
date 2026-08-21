@@ -1,0 +1,108 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const LAST_UPDATED = "August 21, 2026";
+const CONTACT_EMAIL = "hello@k-decoded.com";
+---
+
+<BaseLayout
+  title="Terms of Use"
+  description="The terms that govern your use of K-Decoded."
+>
+  <section class="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16">
+    <div class="rounded-3xl border border-brand-100 bg-white p-6 shadow-sm sm:p-10">
+      <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand-700">K-Decoded</p>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight text-gray-900">Terms of Use</h1>
+      <p class="mt-4 text-sm text-gray-500">Last updated: {LAST_UPDATED}</p>
+
+      <div class="prose prose-brand mt-9 max-w-none">
+        <p>
+          These terms govern your use of k-decoded.com (the "Site"), including its articles, vocabulary
+          tools, and Community discussion feature. By using the Site, you agree to these terms. If you don't
+          agree, please don't use the Site.
+        </p>
+
+        <h2>Who can use the Site</h2>
+        <p>
+          You must be at least 13 years old to create a Community account. If you're under the age of
+          majority where you live, you should have a parent or guardian's permission.
+        </p>
+
+        <h2>Reading the Site</h2>
+        <p>
+          Articles, vocabulary lists, and flashcards are free to browse — no account required. Content is
+          provided for general informational and educational purposes and reflects our own research,
+          experience, and opinion at the time of writing. Prices, hours, event dates, and product
+          availability can change after publication, so double-check anything time-sensitive before you rely
+          on it.
+        </p>
+
+        <h2>Community accounts and content</h2>
+        <ul>
+          <li><strong>Sign-in:</strong> posting in the Community requires a passwordless email sign-in. You're responsible for keeping access to that email address secure.</li>
+          <li><strong>Your content:</strong> you keep ownership of anything you post (topics, replies, images). By posting, you grant K-Decoded a non-exclusive, worldwide license to display, store, and distribute that content on the Site as part of operating the Community.</li>
+          <li><strong>Your responsibility:</strong> you're responsible for what you post. Don't post anything you don't have the right to share, or anything that violates someone else's rights.</li>
+          <li><strong>Guidelines:</strong> all Community activity is subject to our <a href="/community/guidelines">Community Guidelines</a>. We may hide, edit, lock, or remove content, and suspend or terminate accounts, that violate them.</li>
+        </ul>
+
+        <h2>Prohibited conduct</h2>
+        <p>When using the Site, you agree not to:</p>
+        <ul>
+          <li>Post unlawful, harassing, hateful, or sexually explicit content, or content that infringes someone else's intellectual property or privacy.</li>
+          <li>Impersonate another person, post spam, or use the Community for unsolicited advertising or scams.</li>
+          <li>Attempt to disrupt, scrape at scale, reverse-engineer, or gain unauthorized access to the Site or its underlying systems.</li>
+          <li>Use the Site in any way that violates applicable law.</li>
+        </ul>
+
+        <h2>Intellectual property</h2>
+        <p>
+          Original articles, graphics, and site design are owned by K-Decoded unless otherwise credited. You
+          may quote or link to our content with attribution; please don't republish full articles without
+          permission. Product names, brand names, and images referenced in reviews belong to their respective
+          owners and are used for identification and commentary purposes.
+        </p>
+
+        <h2>Affiliate links and advertising</h2>
+        <p>
+          Some posts contain affiliate links, and the Site displays ads through Google AdSense. See our
+          <a href="/privacy">Privacy Policy</a> for details on how that works and what data it involves.
+          These arrangements never determine whether or how we review a product.
+        </p>
+
+        <h2>Third-party links</h2>
+        <p>
+          The Site links to third-party sites (retailers, event pages, social media, other blogs) for
+          reference. We don't control and aren't responsible for their content, accuracy, or practices.
+        </p>
+
+        <h2>No warranty</h2>
+        <p>
+          The Site and its content are provided "as is," without warranties of any kind. We don't guarantee
+          the Site will be error-free, uninterrupted, or that any information is complete or current.
+        </p>
+
+        <h2>Limitation of liability</h2>
+        <p>
+          To the fullest extent permitted by law, K-Decoded won't be liable for any indirect, incidental, or
+          consequential damages arising from your use of the Site, including reliance on any information,
+          product review, or user-posted content.
+        </p>
+
+        <h2>Termination</h2>
+        <p>
+          We may suspend or terminate your Community access at any time for conduct that violates these
+          terms or our Community Guidelines.
+        </p>
+
+        <h2>Changes to these terms</h2>
+        <p>
+          We may update these terms from time to time. If we make material changes, we'll update the "Last
+          updated" date above. Continuing to use the Site after changes means you accept the updated terms.
+        </p>
+
+        <h2>Contact us</h2>
+        <p>Questions about these terms? Reach us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
