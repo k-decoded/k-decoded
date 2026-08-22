@@ -36,7 +36,7 @@ const worldCupThemes = {
     accent: { label: "text-brand-600", tab: ["border-brand-300", "bg-brand-100", "text-brand-800"], bar: "bg-teal-500" },
     community: { matchupSeed: 341, rankingLabel: "Community favourites" },
     entries: [
-      { name: "Tteokbokki", hangul: "떡볶이", rankPercentage: 78 }, { name: "Korean Fried Chicken", hangul: "치킨", rankPercentage: 76 },
+      { name: "Tteokbokki", hangul: "떡볶이", descriptor: "Spicy rice cakes", rankPercentage: 78 }, { name: "Korean Fried Chicken", hangul: "치킨", rankPercentage: 76 },
       { name: "Kimchi Jjigae", hangul: "김치찌개", rankPercentage: 69 }, { name: "Bibimbap", hangul: "비빔밥", rankPercentage: 72 },
       { name: "Kimbap", hangul: "김밥", rankPercentage: 65 }, { name: "Japchae", hangul: "잡채", rankPercentage: 61 },
       { name: "Hotteok", hangul: "호떡", rankPercentage: 58 }, { name: "Bingsu", hangul: "빙수", rankPercentage: 55 },
@@ -50,7 +50,7 @@ const worldCupThemes = {
     accent: { label: "text-violet-700", tab: ["border-violet-300", "bg-violet-100", "text-violet-800"], bar: "bg-violet-500" },
     community: { matchupSeed: 617, rankingLabel: "Community favourites" },
     entries: [
-      { name: "BTS", hangul: "방탄소년단", rankPercentage: 82 }, { name: "BLACKPINK", hangul: "블랙핑크", rankPercentage: 79 },
+      { name: "BTS", hangul: "방탄소년단", descriptor: "Global icons", rankPercentage: 82 }, { name: "BLACKPINK", hangul: "블랙핑크", rankPercentage: 79 },
       { name: "TWICE", hangul: "트와이스", rankPercentage: 73 }, { name: "Stray Kids", hangul: "스트레이 키즈", rankPercentage: 75 },
       { name: "SEVENTEEN", hangul: "세븐틴", rankPercentage: 71 }, { name: "NewJeans", hangul: "뉴진스", rankPercentage: 70 },
       { name: "aespa", hangul: "에스파", rankPercentage: 66 }, { name: "LE SSERAFIM", hangul: "르세라핌", rankPercentage: 64 },
@@ -64,7 +64,7 @@ const worldCupThemes = {
     accent: { label: "text-orange-700", tab: ["border-orange-300", "bg-orange-100", "text-orange-800"], bar: "bg-orange-500" },
     community: { matchupSeed: 829, rankingLabel: "Community favourites" },
     entries: [
-      { name: "Sheet Mask", hangul: "시트 마스크", rankPercentage: 77 }, { name: "Lip Tint", hangul: "립 틴트", rankPercentage: 80 },
+      { name: "Sheet Mask", hangul: "시트 마스크", descriptor: "Instant hydration", rankPercentage: 77 }, { name: "Lip Tint", hangul: "립 틴트", rankPercentage: 80 },
       { name: "Cushion Foundation", hangul: "쿠션 파운데이션", rankPercentage: 74 }, { name: "Sunscreen", hangul: "선크림", rankPercentage: 82 },
       { name: "Cleansing Oil", hangul: "클렌징 오일", rankPercentage: 68 }, { name: "Snail Mucin Serum", hangul: "달팽이 점액 세럼", rankPercentage: 71 },
       { name: "Essence", hangul: "에센스", rankPercentage: 65 }, { name: "Pimple Patch", hangul: "여드름 패치", rankPercentage: 63 },
@@ -78,7 +78,7 @@ const worldCupThemes = {
     accent: { label: "text-teal-700", tab: ["border-teal-300", "bg-teal-100", "text-teal-800"], bar: "bg-teal-500" },
     community: { matchupSeed: 1009, rankingLabel: "Community favourites" },
     entries: [
-      { name: "Gyeongbokgung Palace", hangul: "경복궁", rankPercentage: 81 }, { name: "N Seoul Tower", hangul: "N서울타워", rankPercentage: 75 },
+      { name: "Gyeongbokgung Palace", hangul: "경복궁", descriptor: "Royal palace", rankPercentage: 81 }, { name: "N Seoul Tower", hangul: "N서울타워", rankPercentage: 75 },
       { name: "Bukchon Hanok Village", hangul: "북촌한옥마을", rankPercentage: 73 }, { name: "Han River", hangul: "한강", rankPercentage: 78 },
       { name: "Myeongdong", hangul: "명동", rankPercentage: 70 }, { name: "Hongdae", hangul: "홍대", rankPercentage: 72 },
       { name: "Ikseon-dong", hangul: "익선동", rankPercentage: 68 }, { name: "Dongdaemun Design Plaza", hangul: "동대문디자인플라자", rankPercentage: 66 },
@@ -334,13 +334,15 @@ const worldCupThemes = {
       foodCupMatch.querySelector("[data-food-cup-restart]")?.addEventListener("click", startFoodCup);
     };
 
+    const entryContent = (food) => `<span class="block text-base font-bold leading-tight text-gray-900 sm:text-lg">${food.name}</span><span lang="ko" class="mt-2 block font-korean text-sm font-semibold text-teal-700">${food.hangul}</span>${food.descriptor ? `<span class="mt-1 block text-xs text-gray-500">${food.descriptor}</span>` : ""}`;
+
     const renderMatch = () => {
       const pair = round[matchIndex];
       foodCupProgress.textContent = `Round ${selections + 1} of 7`;
       foodCupStage.textContent = stages[stageIndex];
       foodCupCommunity.textContent = "";
       renderSteps();
-      foodCupMatch.innerHTML = `<div class="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-2 animate-fade-in-up sm:gap-3" data-food-cup-options><button type="button" class="min-h-32 rounded-2xl border border-brand-200 bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-400 hover:bg-brand-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-choice="0" aria-label="Choose ${pair[0].name}"><span class="block text-base font-bold leading-tight text-gray-900 sm:text-lg">${pair[0].name}</span><span lang="ko" class="mt-2 block font-korean text-sm font-semibold text-teal-700">${pair[0].hangul}</span></button><span class="self-center text-sm font-semibold italic text-gray-400" aria-hidden="true">vs</span><button type="button" class="min-h-32 rounded-2xl border border-brand-200 bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-400 hover:bg-brand-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-choice="1" aria-label="Choose ${pair[1].name}"><span class="block text-base font-bold leading-tight text-gray-900 sm:text-lg">${pair[1].name}</span><span lang="ko" class="mt-2 block font-korean text-sm font-semibold text-teal-700">${pair[1].hangul}</span></button></div>`;
+      foodCupMatch.innerHTML = `<div class="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-2 animate-fade-in-up sm:gap-3" data-food-cup-options><button type="button" class="min-h-32 rounded-2xl border border-brand-200 bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-400 hover:bg-brand-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-choice="0" aria-label="Choose ${pair[0].name}">${entryContent(pair[0])}</button><span class="self-center text-sm font-semibold italic text-gray-400" aria-hidden="true">vs</span><button type="button" class="min-h-32 rounded-2xl border border-brand-200 bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-400 hover:bg-brand-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-choice="1" aria-label="Choose ${pair[1].name}">${entryContent(pair[1])}</button></div>`;
       foodCupMatch.querySelectorAll("[data-food-cup-choice]").forEach((button) => button.addEventListener("click", () => chooseFood(pair, Number(button.dataset.foodCupChoice), button)));
     };
 
