@@ -31,10 +31,11 @@ const worldCupThemes = {
   food: {
     tab: "Korean Food",
     title: "Korean Food Mini World Cup",
-    description: "Seven quick choices. One champion.",
+    description: "Eight quick choices. One champion.",
     category: "Korean Food",
     accent: { label: "text-brand-600", tab: ["border-brand-300", "bg-brand-100", "text-brand-800"], bar: "bg-teal-500" },
     community: { matchupSeed: 341, rankingLabel: "Community favourites" },
+    wildcard: { name: "Korean BBQ", hangul: "불고기", descriptor: "Smoky and savoury", rankPercentage: 74 },
     entries: [
       { name: "Tteokbokki", hangul: "떡볶이", descriptor: "Spicy rice cakes", rankPercentage: 78 }, { name: "Korean Fried Chicken", hangul: "치킨", rankPercentage: 76 },
       { name: "Kimchi Jjigae", hangul: "김치찌개", rankPercentage: 69 }, { name: "Bibimbap", hangul: "비빔밥", rankPercentage: 72 },
@@ -49,6 +50,7 @@ const worldCupThemes = {
     category: "K-pop Groups",
     accent: { label: "text-violet-700", tab: ["border-violet-300", "bg-violet-100", "text-violet-800"], bar: "bg-violet-500" },
     community: { matchupSeed: 617, rankingLabel: "Community favourites" },
+    wildcard: { name: "EXO", hangul: "엑소", descriptor: "K-pop powerhouse", rankPercentage: 69 },
     entries: [
       { name: "BTS", hangul: "방탄소년단", descriptor: "Global icons", rankPercentage: 82 }, { name: "BLACKPINK", hangul: "블랙핑크", rankPercentage: 79 },
       { name: "TWICE", hangul: "트와이스", rankPercentage: 73 }, { name: "Stray Kids", hangul: "스트레이 키즈", rankPercentage: 75 },
@@ -63,6 +65,7 @@ const worldCupThemes = {
     category: "K-Beauty",
     accent: { label: "text-orange-700", tab: ["border-orange-300", "bg-orange-100", "text-orange-800"], bar: "bg-orange-500" },
     community: { matchupSeed: 829, rankingLabel: "Community favourites" },
+    wildcard: { name: "Toner", hangul: "토너", descriptor: "Prep and balance", rankPercentage: 70 },
     entries: [
       { name: "Sheet Mask", hangul: "시트 마스크", descriptor: "Instant hydration", rankPercentage: 77 }, { name: "Lip Tint", hangul: "립 틴트", rankPercentage: 80 },
       { name: "Cushion Foundation", hangul: "쿠션 파운데이션", rankPercentage: 74 }, { name: "Sunscreen", hangul: "선크림", rankPercentage: 82 },
@@ -77,6 +80,7 @@ const worldCupThemes = {
     category: "Seoul Landmarks",
     accent: { label: "text-teal-700", tab: ["border-teal-300", "bg-teal-100", "text-teal-800"], bar: "bg-teal-500" },
     community: { matchupSeed: 1009, rankingLabel: "Community favourites" },
+    wildcard: { name: "Lotte World Tower", hangul: "롯데월드타워", descriptor: "Sky-high views", rankPercentage: 74 },
     entries: [
       { name: "Gyeongbokgung Palace", hangul: "경복궁", descriptor: "Royal palace", rankPercentage: 81 }, { name: "N Seoul Tower", hangul: "N서울타워", rankPercentage: 75 },
       { name: "Bukchon Hanok Village", hangul: "북촌한옥마을", rankPercentage: 73 }, { name: "Han River", hangul: "한강", rankPercentage: 78 },
@@ -151,7 +155,7 @@ const worldCupThemes = {
             <p class="text-sm font-semibold uppercase tracking-[0.14em] text-brand-600" data-food-cup-category>Korean Food</p>
             <h2 id="food-cup-title" class="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl" data-food-cup-title>Korean Food Mini World Cup</h2>
           </div>
-          <p class="text-sm text-gray-600" data-food-cup-description>Seven quick choices. One champion.</p>
+          <p class="text-sm text-gray-600" data-food-cup-description>Eight quick choices. One champion.</p>
         </div>
         <div class="mt-5 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="World Cup theme" data-food-cup-themes>
           {Object.entries(worldCupThemes).map(([key, theme], index) => (
@@ -168,7 +172,7 @@ const worldCupThemes = {
         </div>
         <div class="mt-5 border-t border-brand-100 pt-4" data-food-cup>
           <div class="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-[0.13em]">
-            <span class="text-gray-600" data-food-cup-progress>Round 1 of 7</span>
+            <span class="text-gray-600" data-food-cup-progress>Round 1 of 8</span>
             <span class="text-brand-700" data-food-cup-stage>Quarterfinal</span>
           </div>
           <div class="mt-3 flex gap-1" aria-hidden="true" data-food-cup-steps></div>
@@ -288,6 +292,7 @@ const worldCupThemes = {
     let stageIndex = 0;
     let selections = 0;
     let isChoosing = false;
+    let bracketChampion = null;
     const accentClasses = ["text-brand-600", "text-violet-700", "text-orange-700", "text-teal-700", "border-brand-300", "bg-brand-100", "text-brand-800", "border-violet-300", "bg-violet-100", "text-violet-800", "border-orange-300", "bg-orange-100", "text-orange-800", "border-teal-300", "bg-teal-100", "text-teal-800"];
 
     const shuffle = (items) => {
@@ -310,12 +315,12 @@ const worldCupThemes = {
     };
 
     const renderSteps = () => {
-      foodCupSteps.innerHTML = Array.from({ length: 7 }, (_, index) => `<span class="h-1 flex-1 rounded-full ${index < selections ? "bg-brand-500" : index === selections ? "bg-orange-400" : "bg-brand-100"}"></span>`).join("");
+      foodCupSteps.innerHTML = Array.from({ length: 8 }, (_, index) => `<span class="h-1 flex-1 rounded-full ${index < selections ? "bg-brand-500" : index === selections ? "bg-orange-400" : "bg-brand-100"}"></span>`).join("");
     };
 
     const renderRanking = () => {
       foodCupRankingTitle.textContent = activeTheme.community.rankingLabel;
-      foodCupRankingList.innerHTML = [...activeTheme.entries].sort((a, b) => b.rankPercentage - a.rankPercentage).map((food, index) => `
+      foodCupRankingList.innerHTML = [...activeTheme.entries, activeTheme.wildcard].sort((a, b) => b.rankPercentage - a.rankPercentage).map((food, index) => `
         <li class="grid grid-cols-[1.25rem_minmax(0,1fr)_2.5rem] items-center gap-x-2 text-xs">
           <span class="font-semibold text-brand-700">${index + 1}</span>
           <span class="min-w-0 font-medium text-gray-700">${food.name} <span class="font-korean text-gray-500">${food.hangul}</span></span>
@@ -325,7 +330,7 @@ const worldCupThemes = {
     };
 
     const showWinner = (champion) => {
-      foodCupProgress.textContent = "7 choices complete";
+      foodCupProgress.textContent = "8 choices complete";
       foodCupStage.textContent = "Champion";
       renderSteps();
       foodCupCommunity.textContent = "";
@@ -336,17 +341,16 @@ const worldCupThemes = {
 
     const entryContent = (food) => `<span class="block text-base font-bold leading-tight text-gray-900 sm:text-lg">${food.name}</span><span lang="ko" class="mt-2 block font-korean text-sm font-semibold text-teal-700">${food.hangul}</span>${food.descriptor ? `<span class="mt-1 block text-xs text-gray-500">${food.descriptor}</span>` : ""}`;
 
-    const renderMatch = () => {
-      const pair = round[matchIndex];
-      foodCupProgress.textContent = `Round ${selections + 1} of 7`;
-      foodCupStage.textContent = stages[stageIndex];
+    const renderMatch = (pair = round[matchIndex], wildcard = false) => {
+      foodCupProgress.textContent = `Round ${selections + 1} of 8`;
+      foodCupStage.textContent = wildcard ? "Wildcard Challenge" : stages[stageIndex];
       foodCupCommunity.textContent = "";
       renderSteps();
       foodCupMatch.innerHTML = `<div class="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-2 animate-fade-in-up sm:gap-3" data-food-cup-options><button type="button" class="min-h-32 rounded-2xl border border-brand-200 bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-400 hover:bg-brand-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-choice="0" aria-label="Choose ${pair[0].name}">${entryContent(pair[0])}</button><span class="self-center text-sm font-semibold italic text-gray-400" aria-hidden="true">vs</span><button type="button" class="min-h-32 rounded-2xl border border-brand-200 bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-400 hover:bg-brand-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-choice="1" aria-label="Choose ${pair[1].name}">${entryContent(pair[1])}</button></div>`;
-      foodCupMatch.querySelectorAll("[data-food-cup-choice]").forEach((button) => button.addEventListener("click", () => chooseFood(pair, Number(button.dataset.foodCupChoice), button)));
+      foodCupMatch.querySelectorAll("[data-food-cup-choice]").forEach((button) => button.addEventListener("click", () => chooseFood(pair, Number(button.dataset.foodCupChoice), button, wildcard)));
     };
 
-    const chooseFood = (pair, choiceIndex, button) => {
+    const chooseFood = (pair, choiceIndex, button, wildcard = false) => {
       if (isChoosing) return;
       isChoosing = true;
       const selected = pair[choiceIndex];
@@ -360,6 +364,10 @@ const worldCupThemes = {
       window.setTimeout(() => {
         options?.classList.add("opacity-0", "translate-y-2");
         window.setTimeout(() => {
+          if (wildcard) {
+            showWinner(selected);
+            return;
+          }
           matchIndex += 1;
           if (matchIndex >= round.length) {
             round = winners.reduce((pairs, winner, index) => index % 2 === 0 ? [...pairs, [winner, winners[index + 1]]] : pairs, []);
@@ -367,7 +375,11 @@ const worldCupThemes = {
             matchIndex = 0;
             stageIndex += 1;
           }
-          if (stageIndex === stages.length) showWinner(selected);
+          if (stageIndex === stages.length) {
+            bracketChampion = selected;
+            isChoosing = false;
+            renderMatch([bracketChampion, activeTheme.wildcard], true);
+          }
           else { isChoosing = false; renderMatch(); }
         }, 200);
       }, 700);
@@ -381,6 +393,7 @@ const worldCupThemes = {
       stageIndex = 0;
       selections = 0;
       isChoosing = false;
+      bracketChampion = null;
       foodCupRanking.classList.add("hidden");
       renderMatch();
     }
