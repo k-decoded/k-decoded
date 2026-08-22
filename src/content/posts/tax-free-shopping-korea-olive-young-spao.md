@@ -32,18 +32,17 @@ Same 10% VAT, two different systems. Here's the difference.
 
 ## Korean phrases you need to know
 
-**Q:** <a href="/vocab#myeonse" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">면세되나요?</a>
-(*myeonse doenayo?*) — "Is this tax-free?"
-**A:** 네, <a href="/vocab#yeogwon" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">여권</a>
-주세요 (*ne, yeogwon juseyo*) — "Yes, please give me your passport" (instant refund store)
+**Q:** <a href="/vocab#myeonse" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">면세되나요?</a> (*myeonse doenayo?*) — "Is this tax-free?"
+
+**A:** 네, <a href="/vocab#yeogwon" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">여권</a> 주세요 (*ne, yeogwon juseyo*) — "Yes, please give me your passport" (instant refund store)
 
 **Q:** 면세 되나요? (*myeonse doenayo?*) — "Is this tax-free?"
+
 **A:** 저희 면세 안되요 (*jeohui myeonse an-doeyo*) — "We don't do tax-free" (no refund available here)
 
 **Q:** 면세 되나요? (*myeonse doenayo?*) — "Is this tax-free?"
-**A:** 네, <a href="/vocab#gonghang" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">공항</a>에서
-<a href="/vocab#hwan-geup" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">환급</a>받으시면
-되요 (*ne, gonghang-eseo hwan-geup badeusimyeon doeyo*) — "Yes, you can get the refund at the airport" (standard refund store)
+
+**A:** 네, <a href="/vocab#gonghang" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">공항</a>에서 <a href="/vocab#hwan-geup" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">환급</a>받으시면 되요 (*ne, gonghang-eseo hwan-geup badeusimyeon doeyo*) — "Yes, you can get the refund at the airport" (standard refund store)
 
 ## The two systems
 
