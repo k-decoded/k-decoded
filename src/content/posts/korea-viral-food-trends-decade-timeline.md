@@ -60,6 +60,8 @@ culture you see all over Instagram today.
 
 ## 2017: The corn dog comeback
 
+<img src="/images/posts/korea-food-trends-corn-dog.webp" alt="A sugar-dusted Korean corn dog drizzled with ketchup and mustard, cheese pull visible at the bottom, with a second corn dog in the background" class="not-prose my-8 w-full rounded-xl object-cover" />
+
 <a href="/vocab#myeongnang-hatdogeu" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">명랑핫도그</a>
 (*Myeongrang Hotdog*) took the humble corn dog, rolled it in sugar, and
 somehow made it a street food icon. Suddenly every market and shopping
