@@ -36,6 +36,14 @@ const productInfo = z.object({
   cons: z.array(z.string()),
 });
 
+// Overrides the Quick Decode card on the post page. Only needed for
+// "roundup" posts covering many unrelated things, where showing a single
+// vocab word (the default) wouldn't represent the post as a whole.
+const quickDecode = z.object({
+  title: z.string(),
+  summary: z.string(),
+});
+
 const posts = defineCollection({
   // "content" tells Astro these are Markdown/MDX files with a body,
   // not just data files.
@@ -48,6 +56,7 @@ const posts = defineCollection({
     heroImage: z.string().optional(), // optional thumbnail, e.g. "/images/posts/my-post.jpg"
     draft: z.boolean().default(false), // set true to hide a post from all listings while you draft it
     vocab: z.array(vocabEntry).default([]),
+    quickDecode: quickDecode.optional(),
     isReview: z.boolean().default(false),
     product: productInfo.optional(),
   }),

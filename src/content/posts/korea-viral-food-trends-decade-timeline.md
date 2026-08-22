@@ -4,6 +4,9 @@ description: "From bubble tea to Dubai chocolate cookies, a year-by-year timelin
 date: 2026-08-22
 tags: ["food", "snacks", "culture"]
 draft: false
+quickDecode:
+  title: "One viral trend per year"
+  summary: "From whipped-up dalgona coffee to candy-shelled fruit skewers — the snack that took over Korea each year, and how much faster the hype burns out every time."
 vocab:
   - hangul: "버블티"
     romanization: "beobeulti"

@@ -5,6 +5,9 @@ date: 2026-08-19
 tags: ["food", "snacks", "culture"]
 heroImage: "/images/posts/korean-market-blog-hero-bright.png"
 draft: false
+quickDecode:
+  title: "A full Korean food adventure"
+  summary: "Street snacks, comforting bowls, sweet treats and coffee finds—there is a flavour here for every craving."
 vocab:
   - hangul: "떡"
     romanization: "tteok"

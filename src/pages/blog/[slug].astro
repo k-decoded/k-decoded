@@ -30,7 +30,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, date, tags, vocab, isReview, product, heroImage } = post.data;
+const { title, description, date, tags, vocab, quickDecode, isReview, product, heroImage } = post.data;
 
 // post.render() compiles the Markdown body into a renderable <Content />
 // component — this is how the actual post text gets onto the page.
@@ -84,13 +84,13 @@ const relatedPosts = allPosts
     {isReview && product && <ProductReview product={product} />}
     {isReview && <ReviewHelper />}
 
-    {vocab.length > 0 && (
+    {(quickDecode || vocab.length > 0) && (
       <aside class="quick-decode not-prose mb-8 rounded-2xl p-5">
         <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">Quick decode</p>
-        {vocab.length > 4 ? (
+        {quickDecode ? (
           <>
-            <p class="mt-2 text-xl font-bold text-gray-900">{title}</p>
-            <p class="mt-1 text-sm leading-6 text-gray-700">{description}</p>
+            <p class="mt-2 text-xl font-bold text-gray-900">{quickDecode.title}</p>
+            <p class="mt-1 text-sm leading-6 text-gray-700">{quickDecode.summary}</p>
           </>
         ) : (
           <>
