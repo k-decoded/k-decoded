@@ -27,16 +27,64 @@ const supportingPosts = featuredPosts.slice(1, 10);
 const quizWords = allPosts.flatMap((post) => post.data.vocab);
 const wordOfTheWeek = quizWords[0];
 const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-const foodCupFoods = [
-  { name: "Tteokbokki", hangul: "떡볶이", rate: 78 },
-  { name: "Korean Fried Chicken", hangul: "치킨", rate: 76 },
-  { name: "Kimchi Jjigae", hangul: "김치찌개", rate: 69 },
-  { name: "Bibimbap", hangul: "비빔밥", rate: 72 },
-  { name: "Kimbap", hangul: "김밥", rate: 65 },
-  { name: "Japchae", hangul: "잡채", rate: 61 },
-  { name: "Hotteok", hangul: "호떡", rate: 58 },
-  { name: "Bingsu", hangul: "빙수", rate: 55 },
-];
+const worldCupThemes = {
+  food: {
+    tab: "Korean Food",
+    title: "Korean Food Mini World Cup",
+    description: "Seven quick choices. One champion.",
+    category: "Korean Food",
+    accent: { label: "text-brand-600", tab: ["border-brand-300", "bg-brand-100", "text-brand-800"], bar: "bg-teal-500" },
+    community: { matchupSeed: 341, rankingLabel: "Community favourites" },
+    entries: [
+      { name: "Tteokbokki", hangul: "떡볶이", rankPercentage: 78 }, { name: "Korean Fried Chicken", hangul: "치킨", rankPercentage: 76 },
+      { name: "Kimchi Jjigae", hangul: "김치찌개", rankPercentage: 69 }, { name: "Bibimbap", hangul: "비빔밥", rankPercentage: 72 },
+      { name: "Kimbap", hangul: "김밥", rankPercentage: 65 }, { name: "Japchae", hangul: "잡채", rankPercentage: 61 },
+      { name: "Hotteok", hangul: "호떡", rankPercentage: 58 }, { name: "Bingsu", hangul: "빙수", rankPercentage: 55 },
+    ],
+  },
+  kpop: {
+    tab: "K-pop Groups",
+    title: "K-pop Groups Mini World Cup",
+    description: "Pick the group on repeat. One champion awaits.",
+    category: "K-pop Groups",
+    accent: { label: "text-violet-700", tab: ["border-violet-300", "bg-violet-100", "text-violet-800"], bar: "bg-violet-500" },
+    community: { matchupSeed: 617, rankingLabel: "Community favourites" },
+    entries: [
+      { name: "BTS", hangul: "방탄소년단", rankPercentage: 82 }, { name: "BLACKPINK", hangul: "블랙핑크", rankPercentage: 79 },
+      { name: "TWICE", hangul: "트와이스", rankPercentage: 73 }, { name: "Stray Kids", hangul: "스트레이 키즈", rankPercentage: 75 },
+      { name: "SEVENTEEN", hangul: "세븐틴", rankPercentage: 71 }, { name: "NewJeans", hangul: "뉴진스", rankPercentage: 70 },
+      { name: "aespa", hangul: "에스파", rankPercentage: 66 }, { name: "LE SSERAFIM", hangul: "르세라핌", rankPercentage: 64 },
+    ],
+  },
+  beauty: {
+    tab: "K-Beauty",
+    title: "K-Beauty Mini World Cup",
+    description: "Your everyday essentials go head to head.",
+    category: "K-Beauty",
+    accent: { label: "text-orange-700", tab: ["border-orange-300", "bg-orange-100", "text-orange-800"], bar: "bg-orange-500" },
+    community: { matchupSeed: 829, rankingLabel: "Community favourites" },
+    entries: [
+      { name: "Sheet Mask", hangul: "시트 마스크", rankPercentage: 77 }, { name: "Lip Tint", hangul: "립 틴트", rankPercentage: 80 },
+      { name: "Cushion Foundation", hangul: "쿠션 파운데이션", rankPercentage: 74 }, { name: "Sunscreen", hangul: "선크림", rankPercentage: 82 },
+      { name: "Cleansing Oil", hangul: "클렌징 오일", rankPercentage: 68 }, { name: "Snail Mucin Serum", hangul: "달팽이 점액 세럼", rankPercentage: 71 },
+      { name: "Essence", hangul: "에센스", rankPercentage: 65 }, { name: "Pimple Patch", hangul: "여드름 패치", rankPercentage: 63 },
+    ],
+  },
+  landmarks: {
+    tab: "Seoul Landmarks",
+    title: "Seoul Landmarks Mini World Cup",
+    description: "Choose the stop that belongs at the top of your itinerary.",
+    category: "Seoul Landmarks",
+    accent: { label: "text-teal-700", tab: ["border-teal-300", "bg-teal-100", "text-teal-800"], bar: "bg-teal-500" },
+    community: { matchupSeed: 1009, rankingLabel: "Community favourites" },
+    entries: [
+      { name: "Gyeongbokgung Palace", hangul: "경복궁", rankPercentage: 81 }, { name: "N Seoul Tower", hangul: "N서울타워", rankPercentage: 75 },
+      { name: "Bukchon Hanok Village", hangul: "북촌한옥마을", rankPercentage: 73 }, { name: "Han River", hangul: "한강", rankPercentage: 78 },
+      { name: "Myeongdong", hangul: "명동", rankPercentage: 70 }, { name: "Hongdae", hangul: "홍대", rankPercentage: 72 },
+      { name: "Ikseon-dong", hangul: "익선동", rankPercentage: 68 }, { name: "Dongdaemun Design Plaza", hangul: "동대문디자인플라자", rankPercentage: 66 },
+    ],
+  },
+};
 ---
 
 <BaseLayout
@@ -100,10 +148,23 @@ const foodCupFoods = [
       <div class="relative">
         <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-brand-600">A small delicious decision</p>
-            <h2 id="food-cup-title" class="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl">Korean Food Mini World Cup</h2>
+            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-brand-600" data-food-cup-category>Korean Food</p>
+            <h2 id="food-cup-title" class="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl" data-food-cup-title>Korean Food Mini World Cup</h2>
           </div>
-          <p class="text-sm text-gray-600">Seven quick choices. One champion.</p>
+          <p class="text-sm text-gray-600" data-food-cup-description>Seven quick choices. One champion.</p>
+        </div>
+        <div class="mt-5 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="World Cup theme" data-food-cup-themes>
+          {Object.entries(worldCupThemes).map(([key, theme], index) => (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={index === 0 ? "true" : "false"}
+              class:list={["shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2", index === 0 ? "border-brand-300 bg-brand-100 text-brand-800" : "border-brand-200 bg-white text-gray-600 hover:border-brand-300 hover:bg-brand-50"]}
+              data-food-cup-theme={key}
+            >
+              {theme.tab}
+            </button>
+          ))}
         </div>
         <div class="mt-5 border-t border-brand-100 pt-4" data-food-cup>
           <div class="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-[0.13em]">
@@ -114,7 +175,7 @@ const foodCupFoods = [
           <div class="mt-4" data-food-cup-match aria-live="polite"></div>
           <p class="mt-3 min-h-5 text-sm text-gray-600" data-food-cup-community aria-live="polite"></p>
           <section class="mt-5 hidden border-t border-brand-100 pt-5" data-food-cup-ranking aria-labelledby="food-cup-ranking-title">
-            <h3 id="food-cup-ranking-title" class="text-base font-bold text-gray-900">Community favourites</h3>
+            <h3 id="food-cup-ranking-title" class="text-base font-bold text-gray-900" data-food-cup-ranking-title>Community favourites</h3>
             <p class="mt-1 text-xs leading-5 text-gray-500">Illustrative community-style results, seeded for this visit. Real aggregate votes can replace this data later.</p>
             <ol class="mt-4 grid gap-2" data-food-cup-ranking-list></ol>
           </section>
@@ -201,25 +262,33 @@ const foodCupFoods = [
   </section>
 </BaseLayout>
 
-<script define:vars={{ quizWords, foodCupFoods }}>
+<script define:vars={{ quizWords, worldCupThemes }}>
   const foodCup = document.querySelector("[data-food-cup]");
+  const foodCupTitle = document.querySelector("[data-food-cup-title]");
+  const foodCupDescription = document.querySelector("[data-food-cup-description]");
+  const foodCupCategory = document.querySelector("[data-food-cup-category]");
+  const foodCupThemeButtons = document.querySelectorAll("[data-food-cup-theme]");
   const foodCupMatch = document.querySelector("[data-food-cup-match]");
   const foodCupProgress = document.querySelector("[data-food-cup-progress]");
   const foodCupStage = document.querySelector("[data-food-cup-stage]");
   const foodCupSteps = document.querySelector("[data-food-cup-steps]");
   const foodCupCommunity = document.querySelector("[data-food-cup-community]");
   const foodCupRanking = document.querySelector("[data-food-cup-ranking]");
+  const foodCupRankingTitle = document.querySelector("[data-food-cup-ranking-title]");
   const foodCupRankingList = document.querySelector("[data-food-cup-ranking-list]");
 
-  if (foodCup && foodCupMatch && foodCupProgress && foodCupStage && foodCupSteps && foodCupCommunity && foodCupRanking && foodCupRankingList) {
+  if (foodCup && foodCupTitle && foodCupDescription && foodCupCategory && foodCupMatch && foodCupProgress && foodCupStage && foodCupSteps && foodCupCommunity && foodCupRanking && foodCupRankingTitle && foodCupRankingList) {
     const stages = ["Quarterfinal", "Semifinal", "Final"];
     const matchupRates = new Map();
+    let activeThemeKey = "food";
+    let activeTheme = worldCupThemes[activeThemeKey];
     let round = [];
     let winners = [];
     let matchIndex = 0;
     let stageIndex = 0;
     let selections = 0;
     let isChoosing = false;
+    const accentClasses = ["text-brand-600", "text-violet-700", "text-orange-700", "text-teal-700", "border-brand-300", "bg-brand-100", "text-brand-800", "border-violet-300", "bg-violet-100", "text-violet-800", "border-orange-300", "bg-orange-100", "text-orange-800", "border-teal-300", "bg-teal-100", "text-teal-800"];
 
     const shuffle = (items) => {
       const shuffled = [...items];
@@ -233,7 +302,7 @@ const foodCupFoods = [
     const matchupRate = (pair, selected) => {
       const key = pair.map((food) => food.name).sort().join("|");
       if (!matchupRates.has(key)) {
-        const seed = [...key].reduce((total, letter) => total + letter.charCodeAt(0), 0);
+        const seed = [...key].reduce((total, letter) => total + letter.charCodeAt(0), activeTheme.community.matchupSeed);
         matchupRates.set(key, { favourite: seed % 2, rate: 56 + (seed % 19) });
       }
       const result = matchupRates.get(key);
@@ -245,12 +314,13 @@ const foodCupFoods = [
     };
 
     const renderRanking = () => {
-      foodCupRankingList.innerHTML = [...foodCupFoods].sort((a, b) => b.rate - a.rate).map((food, index) => `
+      foodCupRankingTitle.textContent = activeTheme.community.rankingLabel;
+      foodCupRankingList.innerHTML = [...activeTheme.entries].sort((a, b) => b.rankPercentage - a.rankPercentage).map((food, index) => `
         <li class="grid grid-cols-[1.25rem_minmax(0,1fr)_2.5rem] items-center gap-x-2 text-xs">
           <span class="font-semibold text-brand-700">${index + 1}</span>
           <span class="min-w-0 font-medium text-gray-700">${food.name} <span class="font-korean text-gray-500">${food.hangul}</span></span>
-          <span class="text-right font-semibold text-gray-700">${food.rate}%</span>
-          <span class="col-span-2 col-start-2 mt-1 h-1 overflow-hidden rounded-full bg-brand-100"><span class="block h-full rounded-full bg-teal-500" style="width:${food.rate}%"></span></span>
+          <span class="text-right font-semibold text-gray-700">${food.rankPercentage}%</span>
+          <span class="col-span-2 col-start-2 mt-1 h-1 overflow-hidden rounded-full bg-brand-100"><span class="block h-full rounded-full ${activeTheme.accent.bar}" style="width:${food.rankPercentage}%"></span></span>
         </li>`).join("");
     };
 
@@ -259,7 +329,7 @@ const foodCupFoods = [
       foodCupStage.textContent = "Champion";
       renderSteps();
       foodCupCommunity.textContent = "";
-      foodCupMatch.innerHTML = `<div class="animate-fade-in-up py-2"><p class="text-sm font-semibold uppercase tracking-[0.14em] text-brand-600">Your Korean Food Champion</p><h3 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">${champion.name}</h3><p class="mt-1 font-korean text-lg font-semibold text-teal-700">${champion.hangul}</p><button type="button" class="mt-5 rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-restart>Play again</button></div>`;
+      foodCupMatch.innerHTML = `<div class="animate-fade-in-up py-2"><p class="text-sm font-semibold uppercase tracking-[0.14em] ${activeTheme.accent.label}">Your ${activeTheme.category} Champion</p><h3 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">${champion.name}</h3><p class="mt-1 font-korean text-lg font-semibold text-teal-700">${champion.hangul}</p><button type="button" class="mt-5 rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-restart>Play again</button></div>`;
       foodCupRanking.classList.remove("hidden");
       foodCupMatch.querySelector("[data-food-cup-restart]")?.addEventListener("click", startFoodCup);
     };
@@ -302,7 +372,7 @@ const foodCupFoods = [
     };
 
     function startFoodCup() {
-      const foods = shuffle(foodCupFoods);
+      const foods = shuffle(activeTheme.entries);
       round = foods.reduce((pairs, food, index) => index % 2 === 0 ? [...pairs, [food, foods[index + 1]]] : pairs, []);
       winners = [];
       matchIndex = 0;
@@ -312,6 +382,30 @@ const foodCupFoods = [
       foodCupRanking.classList.add("hidden");
       renderMatch();
     }
+
+    foodCupThemeButtons.forEach((button) => button.addEventListener("click", () => {
+      const themeKey = button.dataset.foodCupTheme;
+      if (!themeKey || themeKey === activeThemeKey || !worldCupThemes[themeKey]) return;
+      activeThemeKey = themeKey;
+      activeTheme = worldCupThemes[activeThemeKey];
+      matchupRates.clear();
+      foodCupTitle.textContent = activeTheme.title;
+      foodCupDescription.textContent = activeTheme.description;
+      foodCupCategory.textContent = activeTheme.category;
+      foodCupCategory.classList.remove(...accentClasses);
+      foodCupCategory.classList.add(activeTheme.accent.label);
+      foodCupThemeButtons.forEach((themeButton) => {
+        const isActive = themeButton === button;
+        themeButton.setAttribute("aria-selected", String(isActive));
+        themeButton.classList.remove(...accentClasses);
+        if (isActive) themeButton.classList.add(...activeTheme.accent.tab);
+        themeButton.classList.toggle("border-brand-200", !isActive);
+        themeButton.classList.toggle("bg-white", !isActive);
+        themeButton.classList.toggle("text-gray-600", !isActive);
+      });
+      renderRanking();
+      startFoodCup();
+    }));
 
     renderRanking();
     startFoodCup();
