@@ -3,6 +3,7 @@ title: "South Korea's Food Trend Time Machine: A Decade of Going Viral, One Bite
 description: "From bubble tea to Dubai chocolate cookies, a year-by-year timeline of the snacks and drinks that took over Korea — and how fast each one came and went."
 date: 2026-08-22
 tags: ["food", "snacks", "culture"]
+heroImage: "/images/posts/korea-food-trends-hero.webp"
 draft: false
 quickDecode:
   title: "One viral trend per year"
