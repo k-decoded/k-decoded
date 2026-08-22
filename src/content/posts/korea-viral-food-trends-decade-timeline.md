@@ -121,6 +121,10 @@ the sticker, and toss the bread. Iconic.
 
 ## 2023: Candy-coated chaos
 
+<img src="/images/posts/korea-food-trends-tanghulu.jpg" alt="Rows of tanghulu fruit skewers — candied cherry tomatoes, grapes, mandarin segments, dates, strawberries, and more, each coated in a glossy hard candy shell" class="not-prose my-8 w-full rounded-xl object-cover" />
+
+<p class="not-prose -mt-4 mb-8 text-xs text-gray-400">Photo: <a href="https://blog.naver.com/onmaeum_weekcare/223868645851" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-600">Naver blog — onmaeum_weekcare</a>.</p>
+
 <a href="/vocab#tanghuru" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">탕후루</a>
 (*tanghulu*) — Chinese-style fruit skewers dipped in a hard candy shell —
 became the single biggest food story of the year. One franchise reportedly
@@ -130,6 +134,10 @@ of the defining street images of 2023.
 
 ## 2024: Dubai chocolate fever
 
+<img src="/images/posts/korea-food-trends-dubai-chocolate.jpg" alt="A Dubai chocolate bar sliced open, showing the pistachio-cream and crispy kadayif filling, with pistachios and shredded kadayif on the plate" class="not-prose my-8 w-full max-w-sm mx-auto rounded-xl object-cover" />
+
+<p class="not-prose -mt-4 mb-8 text-xs text-gray-400">Product image: <a href="https://smartstore.naver.com/darlingd/products/12920413460" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-600">Naver Smart Store listing</a>.</p>
+
 The pistachio-cream, crispy-kadayif Dubai chocolate bar went viral
 worldwide, and Korea caught the fever just as hard as everywhere else.
 Cafés scrambled to make their own versions, TikTok and Instagram were
@@ -137,6 +145,10 @@ flooded with ASMR chocolate-cracking videos, and pistachio cream briefly
 became the most requested flavor in the country.
 
 ## 2025–2026: The Dubai chocolate sequel nobody saw coming
+
+<img src="/images/posts/korea-food-trends-dujjonku.jpg" alt="A gift box of chocolate-coated cookie truffles with pistachio-kadayif filling, one sliced open to show the green pistachio-cream center" class="not-prose my-8 w-full rounded-xl object-cover" />
+
+<p class="not-prose -mt-4 mb-8 text-xs text-gray-400">Photo: <a href="https://blog.naver.com/rich2305/224168349708" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-600">Naver blog — rich2305</a>.</p>
 
 Just when Dubai chocolate started to fade, Korea did what Korea does best —
 remixed it. Enter
