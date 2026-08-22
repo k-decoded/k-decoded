@@ -48,6 +48,8 @@ chaos. Here's a decade of Korea's yummiest obsessions, one year at a time.
 
 ## Early 2010s: The bubble tea boom
 
+<img src="/images/posts/korea-food-trends-bubble-tea.webp" alt="Five bubble tea cups in different flavors — brown sugar, mango, black tea, matcha, and strawberry — lined up on a café counter, each with tapioca pearls and a colorful straw" class="not-prose my-8 w-full rounded-xl object-cover" />
+
 Before it was a global staple, <a href="/vocab#beobeulti" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">버블티</a>
 (*beobeulti*) and Gong Cha (공차) swept through Korea and never really left.
 Around the same time, sweet crispy fried chicken bites
