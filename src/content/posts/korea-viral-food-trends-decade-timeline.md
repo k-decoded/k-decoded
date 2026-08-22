@@ -68,6 +68,8 @@ certified national craving.
 
 ## 2019: The year of spice and crunch
 
+<img src="/images/posts/korea-food-trends-malatang.webp" alt="A bowl of steaming malatang with ramyeon-style noodles lifted by chopsticks, pork slices, bok choy, enoki mushrooms, and a soft-boiled egg in spicy red broth" class="not-prose my-8 w-full rounded-xl object-cover" />
+
 This one's a triple threat.
 <a href="/vocab#malatang" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">마라탕</a>
 (*mala tang*), mala xiang guo, and hot pot (마라샹궈 / 훠궈) landed hard, and
@@ -81,6 +83,8 @@ year. Very different flavors, all equally unstoppable.
 
 ## 2020: Dalgona takes over the world
 
+<img src="/images/posts/korea-food-trends-dalgona-coffee.webp" alt="Two glasses of dalgona coffee with whipped coffee foam layered over milk, one being topped with a fresh spoonful of the foam" class="not-prose my-8 w-full rounded-xl object-cover" />
+
 If you were online in 2020, you already know.
 <a href="/vocab#dalgona-keopi" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">달고나커피</a>
 (*dalgona keopi*) — instant coffee whipped with sugar and water until it
@@ -90,6 +94,8 @@ on how long to whip it, and everyone's feed looked the same for a solid few
 months.
 
 ## 2021: Pink sauce, big feelings
+
+<img src="/images/posts/korea-food-trends-rose-tteokbokki.webp" alt="A bowl of creamy rosé pasta with rigatoni, wide noodles, and sliced sausage in a pink cream sauce, garnished with herbs" class="not-prose my-8 w-full rounded-xl object-cover" />
 
 Rosé sauce swept the nation.
 <a href="/vocab#roje-tteokbokki" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">로제떡볶이</a>
