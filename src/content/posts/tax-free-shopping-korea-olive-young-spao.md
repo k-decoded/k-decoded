@@ -3,6 +3,7 @@ title: "Tax-Free Shopping in Korea: Why Olive Young Feels Instant and SPAO Sends
 description: "Same 10% VAT, two different refund systems. Here's why some stores deduct tax at checkout while others hand you a paper receipt to redeem at the airport — plus the Korean phrases to ask which one you're getting."
 date: 2026-08-22
 tags: ["travel", "language", "shopping"]
+heroImage: "/images/posts/tax-free-shopping-korea-hero.webp"
 draft: false
 vocab:
   - hangul: "면세"
@@ -56,6 +57,8 @@ Stores without the instant-refund terminal print you a tax-free receipt
 instead. You process it yourself later — at a downtown kiosk or at the
 airport before checking your bag.
 
+<img src="/images/posts/tax-free-shopping-korea-checkout.webp" alt="A cashier hands a customer a folded tax-free receipt across the counter, with a payment terminal and a paper shopping bag in view" class="not-prose my-8 w-full rounded-xl object-cover" />
+
 ## Why some stores don't offer instant
 
 It's about whether the store installed the refund-operator POS software.
@@ -79,6 +82,8 @@ envelope. Before checking your bag at Incheon or Gimpo, scan your passport
 and receipts at the customs kiosk to get paid out. A downtown kiosk can pay
 you earlier, but you'll still need to tap your passport at the airport
 before departure.
+
+<img src="/images/posts/tax-free-shopping-korea-airport-kiosk.webp" alt="A traveler with a rolling suitcase scans a receipt at a self-service tax refund kiosk in the airport terminal" class="not-prose my-8 w-full rounded-xl object-cover" />
 
 ## Takeaway
 
