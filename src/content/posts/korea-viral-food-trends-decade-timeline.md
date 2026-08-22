@@ -106,6 +106,10 @@ pink, and everywhere.
 
 ## 2022: The sticker economy
 
+<img src="/images/posts/korea-food-trends-pokemon-bread.jpg" alt="A bag of Samlip Pokémon bread featuring a Squirtle design" class="not-prose my-8 w-full max-w-sm mx-auto rounded-xl object-cover" />
+
+<p class="not-prose -mt-4 mb-8 text-xs text-gray-400">Product image: <a href="https://smartstore.naver.com/gs-sangin92/products/13476506331" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-600">Naver Smart Store listing</a> — © Samlip.</p>
+
 Technically this was a bread trend. Realistically, nobody cared about the
 bread.
 <a href="/vocab#poketmon-ppang" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">포켓몬빵</a>
