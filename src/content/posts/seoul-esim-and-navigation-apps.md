@@ -23,6 +23,10 @@ vocab:
     meaning: "taxi"
 ---
 
+This is part of our ongoing Seoul travel guide series — if you
+haven't already, check out our posts on <a href="/blog/incheon-airport-limousine-bus-to-seoul">taking the limousine bus in from Incheon Airport</a>
+and <a href="/blog/tax-free-shopping-korea-olive-young-spao">tax-free shopping at Olive Young and SPAO</a>.
+
 Before you worry about what to see or eat in Seoul, there are two
 things worth sorting out before you even land: how you'll get
 <a href="/vocab#deiteo" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">데이터</a>
