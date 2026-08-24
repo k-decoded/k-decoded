@@ -4,7 +4,7 @@ description: "Two different pre-arrival systems, easily confused and easy to ove
 date: 2026-08-24
 tags: ["travel", "language"]
 heroImage: "/images/posts/korea-entry-paperwork-hero.png"
-draft: true
+draft: false
 vocab:
   - hangul: "입국"
     romanization: "ipguk"
