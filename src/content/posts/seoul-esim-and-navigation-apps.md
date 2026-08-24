@@ -143,5 +143,5 @@ the one to actually use.
 Set up your eSIM before you fly, download Naver Map for getting
 around once you land, and keep Kakao T on hand for taxis. With those
 three sorted, you're ready for the next piece: actually getting around
-the city — transportation and walking routes, coming up next in this
-series.
+the city — subway, bus, taxi, and bikes, covered in our
+<a href="/blog/getting-around-seoul-transportation-guide">Seoul transportation guide</a>.
