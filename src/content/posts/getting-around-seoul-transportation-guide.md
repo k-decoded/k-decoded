@@ -4,7 +4,7 @@ description: "Subway, bus, taxi, and bike share, broken down by cost and when to
 date: 2026-08-25
 tags: ["travel", "language"]
 heroImage: "/images/posts/getting-around-seoul-hero.png"
-draft: true
+draft: false
 vocab:
   - hangul: "지하철"
     romanization: "jihacheol"
