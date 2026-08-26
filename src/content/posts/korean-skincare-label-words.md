@@ -4,7 +4,7 @@ description: "Essence, ampoule, jin-jeong, su-bun — the Konglish and Korean vo
 date: 2026-08-27
 tags: ["skincare", "language"]
 heroImage: "/images/posts/korean-skincare-label-words-hero.png"
-draft: true
+draft: false
 vocab:
   - hangul: "에센스"
     romanization: "esenseu"
