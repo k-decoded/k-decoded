@@ -118,7 +118,7 @@ how these words might actually come up in conversation:
 <div><strong>Clerk:</strong> <span class="font-korean font-semibold text-brand-600">피부가 좀 예민하신가요?</span> <em>(pibuga jom yeminhasin-gayo?)</em><br>"Is your skin a bit sensitive?"</div>
 <div><strong>You:</strong> <span class="font-korean font-semibold text-brand-600">네, 저자극 제품을 찾고 있어요.</span> <em>(ne, jeojageuk jepumeul chatgo isseoyo.)</em><br>"Yes, I'm looking for a low-irritation/gentle product."</div>
 <div><strong>Clerk:</strong> <span class="font-korean font-semibold text-brand-600">이 제품은 진정 효과가 있어요.</span> <em>(i jepumeun jinjeong hyogwaga isseoyo.)</em><br>"This product has a soothing/calming effect."</div>
-<div><strong>You:</strong> <span class="font-korean font-semibold text-brand-600">좋아요, 수분도 많이 주나요?</span> <em>(joayo, subundo mani junayo?)</em><br>"Great, does it also give a lot of moisture/hydration?"</div>
+<div><strong>You:</strong> <span class="font-korean font-semibold text-brand-600">보습효과는 어떤가요?</span> <em>(boseup hyogwaneun eotteonga-yo?)</em><br>"How's the moisturizing effect?"</div>
 <div><strong>Clerk:</strong> <span class="font-korean font-semibold text-brand-600">네, 에센스 타입이라 흡수가 빨라요.</span> <em>(ne, esenseu taibira heupsuga ppallayo.)</em><br>"Yes, it's an essence type, so it absorbs quickly."</div>
 <div><strong>You:</strong> <span class="font-korean font-semibold text-brand-600">미백 효과도 있는 제품 있어요?</span> <em>(mibaek hyogwado inneun jepum isseoyo?)</em><br>"Do you have one with a brightening effect too?"</div>
 <div><strong>Clerk:</strong> <span class="font-korean font-semibold text-brand-600">이 앰플 한번 써보세요, 탄력에도 좋아요.</span> <em>(i aempul hanbeon sseobose-yo, tallyeogedo joayo.)</em><br>"Try this ampoule — it's also good for elasticity/firmness."</div>
