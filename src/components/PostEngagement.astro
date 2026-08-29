@@ -81,7 +81,8 @@ const REACTIONS = [
       const reactedKey = `reacted:${slug}:${key}`;
       const reacted = localStorage.getItem(reactedKey) === "1";
       button.dataset.active = String(reacted);
-      countEl.textContent = String(Number(localStorage.getItem(countKey) ?? 0));
+      const renderCount = (count: number) => { countEl.textContent = count > 0 ? ` ${count}` : ""; };
+      renderCount(Number(localStorage.getItem(countKey) ?? 0));
 
       button.addEventListener("click", () => {
         const wasReacted = button.dataset.active === "true";
@@ -89,7 +90,7 @@ const REACTIONS = [
         const next = Math.max(0, current + (wasReacted ? -1 : 1));
 
         localStorage.setItem(countKey, String(next));
-        countEl.textContent = String(next);
+        renderCount(next);
         button.dataset.active = String(!wasReacted);
 
         if (wasReacted) {

@@ -11,6 +11,7 @@ import ProductReview from "../../components/ProductReview.astro";
 import ReviewHelper from "../../components/ReviewHelper.astro";
 import ShareButtons from "../../components/ShareButtons.astro";
 import PostEngagement from "../../components/PostEngagement.astro";
+import LearningSheetsWaitlist from "../../components/LearningSheetsWaitlist.astro";
 import { getTagColor } from "../../lib/tagColors";
 
 export async function getStaticPaths() {
@@ -50,6 +51,16 @@ const allPosts = await getCollection("posts", ({ data }) => data.draft !== true)
 const relatedPosts = allPosts
   .filter((candidate) => candidate.slug !== post.slug && candidate.data.tags.some((tag) => tags.includes(tag)))
   .slice(0, 3);
+const readingMinutes = Math.max(1, Math.ceil((post.body?.trim().split(/\s+/).length ?? 0) / 220));
+const articleTakeaways = tags.includes("travel")
+  ? ["Choose the option that fits your trip", "Learn the Korean terms that make it easier", "Avoid the common first-timer mistakes"]
+  : tags.includes("skincare") || tags.includes("makeup")
+    ? ["Understand the routine without the hype", "Know what each product step does", "Pick up useful Korean beauty vocabulary"]
+    : ["Get the essential context", "Pick up useful Korean words", "Know where to explore next"];
+const helpTopic = tags.includes("travel") ? "travel" : "beauty";
+const helpPrompt = tags.includes("travel")
+  ? "Planning a Korea trip? Ask readers what they would do."
+  : "Trying this routine or choosing a product? Ask readers for practical help.";
 ---
 
 <BaseLayout title={title} description={description} image={heroImage}>
@@ -58,6 +69,7 @@ const relatedPosts = allPosts
       <time datetime={date.toISOString()} class="text-xs uppercase tracking-wide text-gray-400">
         {formattedDate}
       </time>
+      <span class="ml-3 text-xs font-medium text-gray-500">⏱ {readingMinutes} min read</span>
       <h1 class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">{title}</h1>
       <p class="mt-3 text-gray-600">{description}</p>
 
@@ -80,6 +92,13 @@ const relatedPosts = allPosts
     {heroImage && (
       <img src={heroImage} alt={title} class="mb-8 w-full rounded-xl object-cover" />
     )}
+
+    <aside class="not-prose mb-8 rounded-2xl border border-brand-100 bg-brand-50/60 p-5">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">In this guide</p>
+      <ul class="mt-3 grid gap-2 text-sm text-gray-700 sm:grid-cols-3">
+        {articleTakeaways.map((takeaway) => <li class="flex gap-2"><span class="text-brand-600" aria-hidden="true">✓</span>{takeaway}</li>)}
+      </ul>
+    </aside>
 
     {isReview && product && <ProductReview product={product} />}
     {isReview && <ReviewHelper />}
@@ -104,9 +123,23 @@ const relatedPosts = allPosts
     <!-- `prose` (from @tailwindcss/typography) styles the raw Markdown
          output — headings, paragraphs, lists — without us hand-styling
          every element the post body might contain. -->
-    <div class="prose prose-brand max-w-none">
+    <nav class="not-prose mb-8 hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm" aria-label="On this page" data-article-toc>
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">On this page</p>
+      <ol class="mt-3 grid gap-2 text-sm" data-article-toc-list></ol>
+    </nav>
+
+    <div class="article-body prose prose-brand max-w-none">
       <Content />
     </div>
+
+    <aside class="not-prose mt-10 flex flex-col gap-4 rounded-2xl border border-teal-100 bg-teal-50/70 p-6 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-teal-700">Ask K-Decoded</p>
+        <h2 class="mt-1 text-xl font-bold text-gray-900">{helpPrompt}</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">Start a focused question and get useful answers from the K-Decoded community.</p>
+      </div>
+      <a href={`/community/${helpTopic}`} class="shrink-0 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-teal-800 shadow-sm ring-1 ring-teal-200 transition hover:bg-teal-100">Ask a question →</a>
+    </aside>
 
     {relatedPosts.length > 0 && (
       <aside class="not-prose mt-10 rounded-2xl border border-brand-100 bg-brand-50/50 p-6">
@@ -129,5 +162,21 @@ const relatedPosts = allPosts
     <VocabCard vocab={vocab} />
 
     <PostEngagement slug={post.slug} tags={tags} />
+
+    <div class="mt-8"><LearningSheetsWaitlist /></div>
   </article>
 </BaseLayout>
+
+<script>
+  const toc = document.querySelector<HTMLElement>("[data-article-toc]");
+  const tocList = document.querySelector<HTMLOListElement>("[data-article-toc-list]");
+  const headings = [...document.querySelectorAll<HTMLElement>(".article-body h2")];
+  if (toc && tocList && headings.length > 1) {
+    headings.forEach((heading, index) => {
+      const id = heading.id || `section-${index + 1}`;
+      heading.id = id;
+      tocList.insertAdjacentHTML("beforeend", `<li><a class="text-brand-700 hover:underline" href="#${id}">${heading.textContent}</a></li>`);
+    });
+    toc.classList.remove("hidden");
+  }
+</script>

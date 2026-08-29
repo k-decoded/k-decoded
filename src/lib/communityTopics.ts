@@ -18,20 +18,8 @@ export const COMMUNITY_TOPICS: CommunityTopic[] = [
   },
   {
     slug: "travel",
-    label: "Travel",
+    label: "Korea Trip Help",
     emoji: "✈️",
-    description: "Itineraries, transit questions, neighborhood recs, trip planning.",
-  },
-  {
-    slug: "language",
-    label: "Language Exchange",
-    emoji: "🗣️",
-    description: "Practice Korean, ask about phrases from a post, swap study tips.",
-  },
-  {
-    slug: "general",
-    label: "General Chat",
-    emoji: "💬",
-    description: "Anything Korea-related that doesn't fit the other boards — friendship, culture, random finds.",
+    description: "Itineraries, transit questions, neighbourhood recs, and trip planning.",
   },
 ];

@@ -9,22 +9,22 @@ import Discussion from "../../components/Discussion.astro";
 ---
 
 <BaseLayout
-  title="Community"
-  description="Join the K-Decoded community — talk K-beauty, travel, language, and more with other readers."
+  title="Ask K-Decoded"
+  description="Get practical K-beauty and Korea-trip help from K-Decoded readers and editors."
 >
   <section class="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-16">
     <div class="featured-story relative overflow-hidden rounded-3xl border border-brand-200 px-6 py-9 shadow-sm sm:px-10">
       <span class="absolute right-8 top-5 text-5xl opacity-30" aria-hidden="true">💬</span>
-      <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand-700">K-Decoded Community</p>
-      <h1 class="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Find your people, share what you know.</h1>
-      <p class="mt-4 max-w-xl text-base leading-7 text-gray-600">Swap K-beauty discoveries, trip wisdom, language questions, and the little Korea finds worth passing on.</p>
+      <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand-700">Ask K-Decoded</p>
+      <h1 class="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Practical Korea help, without the guesswork.</h1>
+      <p class="mt-4 max-w-xl text-base leading-7 text-gray-600">Ask a K-beauty or Korea-trip question, share a useful tip, or help another reader make a confident choice.</p>
     </div>
 
     <div class="mt-10 grid gap-7 lg:grid-cols-[0.9fr_2.1fr]">
       <aside class="space-y-5">
         <div class="pastel-note rounded-2xl border border-teal-100 p-5">
-          <p class="font-heading text-lg font-bold text-gray-900">Browse a corner</p>
-          <p class="mt-1 text-sm leading-6 text-gray-600">Pick a topic, or browse every current conversation.</p>
+          <p class="font-heading text-lg font-bold text-gray-900">Choose your question</p>
+          <p class="mt-1 text-sm leading-6 text-gray-600">Two focused places to get useful answers.</p>
           <ul class="mt-4 grid gap-2">
       {COMMUNITY_TOPICS.map((topic) => (
         <li>
@@ -41,8 +41,8 @@ import Discussion from "../../components/Discussion.astro";
           </ul>
         </div>
         <div class="rounded-2xl border border-brand-100 bg-white p-5 text-sm text-gray-600 shadow-sm">
-          <p class="font-semibold text-gray-900">A kind little corner</p>
-          <p class="mt-2 leading-6">Guests are welcome to read. Sign in with email to start a discussion or reply; admins can lock or remove harmful content.</p>
+          <p class="font-semibold text-gray-900">A useful, kind corner</p>
+          <p class="mt-2 leading-6">Read freely. You can start drafting a question before signing in; we only ask for an email link when you are ready to post.</p>
           <a href="/community/guidelines" class="mt-3 inline-block font-semibold text-brand-700 hover:underline">Read the community guidelines →</a>
         </div>
       </aside>

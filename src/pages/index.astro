@@ -6,6 +6,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PostCard from "../components/PostCard.astro";
 import Sketch from "../components/Sketch.astro";
+import LearningSheetsWaitlist from "../components/LearningSheetsWaitlist.astro";
 import { getCollection } from "astro:content";
 
 // getCollection reads every file in src/content/posts/, validates it
@@ -23,7 +24,18 @@ const featuredPosts = allPosts
   .slice(0, 10);
 
 const leadPost = featuredPosts[0];
-const supportingPosts = featuredPosts.slice(1, 10);
+// A flagship evergreen guide makes a stronger first impression than simply
+// promoting whichever news item was published most recently.
+const heroPost = allPosts.find((post) => post.slug === "glass-skin-101-routine-breakdown") ?? leadPost;
+// Keep the curated hero out of the grid, rather than accidentally removing
+// the chronologically newest post when the two are different guides.
+const supportingPosts = featuredPosts.filter((post) => post.slug !== heroPost?.slug).slice(0, 9);
+const discoveryPaths = [
+  { label: "K-Beauty", description: "Routines, products & ingredients", href: "/tags/skincare", icon: "✦", tone: "border-brand-200 bg-brand-50 hover:border-brand-400" },
+  { label: "Plan a Korea trip", description: "Seoul tips that make travel easier", href: "/tags/travel", icon: "✈", tone: "border-teal-200 bg-teal-50 hover:border-teal-400" },
+  { label: "Learn Korean", description: "Useful words, without the homework", href: "/vocab", icon: "한", tone: "border-violet-200 bg-violet-50 hover:border-violet-400" },
+  { label: "Take a culture break", description: "Play a quick Mini World Cup", href: "/play", icon: "◌", tone: "border-orange-200 bg-orange-50 hover:border-orange-400" },
+];
 const quizWords = allPosts.flatMap((post) => post.data.vocab);
 const wordOfTheWeek = quizWords[0];
 const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -97,7 +109,7 @@ const worldCupThemes = {
 >
   <!-- A compact, benefit-led introduction gets visitors to useful content
        quickly while keeping the soft K-beauty visual character. -->
-  <section class="relative overflow-hidden bg-gradient-to-br from-brand-50 via-orange-50 to-brand-100 py-12 sm:py-16">
+  <section class="relative overflow-hidden bg-gradient-to-br from-brand-50 via-orange-50 to-brand-100 py-10 sm:py-14">
     <!-- Soft blurred color blobs, slowly drifting — the "cosmetic swatch"
          feel. pointer-events-none so they never intercept clicks/taps. -->
     <div class="pointer-events-none absolute -left-16 -top-16 h-64 w-64 animate-float rounded-full bg-brand-200 opacity-40 blur-3xl" aria-hidden="true"></div>
@@ -111,79 +123,53 @@ const worldCupThemes = {
     <Sketch type="food" class="pointer-events-none absolute right-[13%] top-16 h-9 w-9" color="text-orange-400" delay={0.8} />
     <Sketch type="flag" class="pointer-events-none absolute bottom-10 left-[15%] h-8 w-11" color="text-teal-500" delay={1.5} />
 
-    <div class="relative z-10 mx-auto max-w-5xl animate-fade-in-up px-4 text-center sm:px-6">
-      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">
-        K-Decoded
-      </p>
-      <h1 class="mx-auto mt-2 max-w-3xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-        Decode Korean beauty, fashion &amp; everyday culture
-      </h1>
-      <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-gray-600 sm:text-lg">
-        Clear, useful guides to Korean products, places, and the words behind them.
-      </p>
-      <div class="mt-7 flex flex-col items-center">
-        <a
-          href="/blog"
-          class="rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg"
-        >
-          Explore the blog
-        </a>
-        <div class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-          <a
-            href="/community"
-            class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors hover:text-brand-900"
-          >
-            Join the community
+    <div class="relative z-10 mx-auto grid max-w-5xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
+      <div class="animate-fade-in-up text-center lg:text-left">
+        <p class="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">K-Decoded</p>
+        <h1 class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+          Decode Korean beauty, fashion &amp; everyday culture
+        </h1>
+        <p class="mt-4 max-w-xl text-base leading-7 text-gray-600 sm:text-lg lg:mx-0">
+          Clear, useful guides to Korean products, places, and the words behind them.
+        </p>
+        <div class="mt-7 flex flex-col items-center lg:items-start">
+          <a href="/blog" class="rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg">
+            Explore the blog
           </a>
-          <a
-            href="/vocab"
-            class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors hover:text-brand-900"
-          >
-            Browse the vocab glossary
-          </a>
+          <div class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 lg:justify-start">
+            <a href="/community" class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors hover:text-brand-900">Ask K-Decoded</a>
+          </div>
         </div>
       </div>
+      {heroPost && (
+        <a href={`/blog/${heroPost.slug}`} class="group relative mx-auto block w-full max-w-xl overflow-hidden rounded-3xl border border-white/80 bg-white/80 shadow-xl shadow-brand-900/10 transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
+          <div class="relative aspect-[16/10] overflow-hidden">
+            {heroPost.data.heroImage && <img src={heroPost.data.heroImage} alt={heroPost.data.title} class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />}
+            <span class="k-stamp absolute right-5 top-5" aria-hidden="true">K·D</span>
+          </div>
+          <div class="p-5 sm:p-6">
+            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-brand-700">Start here</p>
+            <h2 class="mt-2 text-xl font-bold leading-tight text-gray-900 sm:text-2xl">{heroPost.data.title}</h2>
+            <span class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-brand-800">Read the guide <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      )}
     </div>
   </section>
 
-  <section class="mx-auto max-w-5xl px-4 pt-10 sm:px-6" aria-labelledby="food-cup-title">
-    <div class="relative overflow-hidden rounded-3xl border border-brand-100 bg-gradient-to-r from-brand-50 via-white to-orange-50 px-5 py-6 shadow-sm sm:px-9 sm:py-8">
-      <div class="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-orange-200/50 blur-2xl" aria-hidden="true"></div>
-      <div class="relative">
-        <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-brand-600" data-food-cup-category>Korean Food</p>
-            <h2 id="food-cup-title" class="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl" data-food-cup-title>Korean Food Mini World Cup</h2>
-          </div>
-          <p class="text-sm text-gray-600" data-food-cup-description>Eight quick choices. One champion.</p>
-        </div>
-        <div class="mt-5 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="World Cup theme" data-food-cup-themes>
-          {Object.entries(worldCupThemes).map(([key, theme], index) => (
-            <button
-              type="button"
-              role="tab"
-              aria-selected={index === 0 ? "true" : "false"}
-              class:list={["shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2", index === 0 ? "border-brand-300 bg-brand-100 text-brand-800" : "border-brand-200 bg-white text-gray-600 hover:border-brand-300 hover:bg-brand-50"]}
-              data-food-cup-theme={key}
-            >
-              {theme.tab}
-            </button>
-          ))}
-        </div>
-        <div class="mt-5 border-t border-brand-100 pt-4" data-food-cup>
-          <div class="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-[0.13em]">
-            <span class="text-gray-600" data-food-cup-progress>Round 1 of 8</span>
-            <span class="text-brand-700" data-food-cup-stage>Quarterfinal</span>
-          </div>
-          <div class="mt-3 flex gap-1" aria-hidden="true" data-food-cup-steps></div>
-          <div class="mt-4" data-food-cup-match aria-live="polite"></div>
-          <p class="mt-3 min-h-5 text-sm text-gray-600" data-food-cup-community aria-live="polite"></p>
-          <section class="mt-5 hidden border-t border-brand-100 pt-5" data-food-cup-ranking aria-labelledby="food-cup-ranking-title">
-            <h3 id="food-cup-ranking-title" class="text-base font-bold text-gray-900" data-food-cup-ranking-title>Community favourites</h3>
-            <p class="mt-1 text-xs leading-5 text-gray-500">Illustrative community-style results, seeded for this visit. Real aggregate votes can replace this data later.</p>
-            <ol class="mt-4 grid gap-2" data-food-cup-ranking-list></ol>
-          </section>
-        </div>
+  <section class="mx-auto max-w-5xl px-4 pt-8 sm:px-6" aria-labelledby="choose-path-title">
+    <div class="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm sm:p-7">
+      <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand-600">Make it yours</p>
+      <h2 id="choose-path-title" class="mt-1 text-2xl font-bold text-gray-900">What brings you to Korea?</h2>
+      <p class="mt-2 text-sm leading-6 text-gray-600">Choose a path and jump straight to the useful stuff.</p>
+      <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {discoveryPaths.map((path) => (
+          <a href={path.href} class:list={["group rounded-2xl border p-4 transition duration-200 hover:-translate-y-0.5 hover:shadow-md", path.tone]}>
+            <span class="text-xl" aria-hidden="true">{path.icon}</span>
+            <h3 class="mt-3 text-sm font-bold text-gray-900">{path.label} <span class="text-brand-700 transition-transform group-hover:translate-x-0.5">→</span></h3>
+            <p class="mt-1 text-xs leading-5 text-gray-600">{path.description}</p>
+          </a>
+        ))}
       </div>
     </div>
   </section>
@@ -200,23 +186,6 @@ const worldCupThemes = {
       </div>
       <a href="/blog" class="text-sm font-semibold text-brand-700 transition-colors hover:text-brand-900">View all posts <span aria-hidden="true">→</span></a>
     </div>
-    {leadPost && (
-      <a href={`/blog/${leadPost.slug}`} class="featured-story group mt-6 grid overflow-hidden rounded-3xl border border-brand-100 bg-brand-50/50 transition-shadow hover:shadow-xl lg:grid-cols-[1.15fr_0.85fr]" data-post-tags={leadPost.data.tags.join(",")}>
-        <div class="relative min-h-72 overflow-hidden lg:order-2 lg:min-h-full">
-          {leadPost.data.heroImage && (
-            <img src={leadPost.data.heroImage} alt={leadPost.data.title} class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-          )}
-          <span class="k-stamp absolute bottom-5 right-5" aria-hidden="true">K·D</span>
-        </div>
-        <div class="flex flex-col justify-center p-7 sm:p-10 lg:order-1">
-          <p class="text-xs font-semibold uppercase tracking-[0.16em] text-brand-700">Featured guide</p>
-          <h3 class="mt-3 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl">{leadPost.data.title}</h3>
-          <p class="mt-4 max-w-xl leading-7 text-gray-600">{leadPost.data.description}</p>
-          <span class="mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-brand-800">Read the guide <span aria-hidden="true">→</span></span>
-        </div>
-      </a>
-    )}
-
     <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {supportingPosts.map((post) => <PostCard post={post} />)}
     </div>
@@ -261,6 +230,10 @@ const worldCupThemes = {
         </div>
       </section>
     )}
+
+    <div class="mt-10">
+      <LearningSheetsWaitlist />
+    </div>
 
     <p class="mt-8 text-center text-sm text-gray-500" data-seasonal-phrase>🌷 A little Korean discovery for every season.</p>
   </section>
