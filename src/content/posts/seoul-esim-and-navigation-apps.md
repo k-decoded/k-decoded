@@ -32,8 +32,9 @@ things worth sorting out before you even land: how you'll get
 <a href="/vocab#deiteo" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">데이터</a>
 (*deiteo*), data, and how you'll get around. Get these two right and
 the rest of your trip runs a lot smoother. Here's exactly what to set
-up — every app and recommendation below is unsponsored, just what
-actually worked for us.
+up — every app and recommendation below is what actually worked for
+us (the Byte SIM link includes our affiliate code, but the
+recommendation itself isn't paid placement).
 
 ## eSIM: skip the airport kiosk line
 
@@ -55,7 +56,7 @@ want to share one connection across several devices, or if your phone
 isn't eSIM-compatible, it can still make sense. But for solo or couple
 travel, eSIM is far less hassle.
 
-**How I set mine up (using Byte SIM):**
+**How I set mine up (using <a href="https://bytesim.com/products/16056040705357953307120459?source_type=sales_plugin_af&slt=sales_plugin_af&referral_code=4W5ZZ4FUJ97P&utm_source=4W5ZZ4FUJ97P&utm_medium=affiliate&utm_campaign=affiliate&utm_content=Thi%20My%20Tran" target="_blank" rel="noopener noreferrer sponsored" class="text-brand-700 underline">Byte SIM</a>):**
 
 1. Download the app
 2. Search for Korea
