@@ -1,7 +1,7 @@
 ---
 title: "Glass Skin 101: The Routine, Broken Down"
 description: "The K-beauty routine behind 'glass skin,' step by step — double cleansing, toner layering, targeted treatment, and barrier care — with real product picks and the Korean terms behind each step."
-date: 2026-09-03
+date: 2026-08-29
 tags: ["skincare", "language"]
 heroImage: "/images/posts/glass-skin-101-hero.png"
 draft: false

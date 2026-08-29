@@ -1,7 +1,7 @@
 ---
 title: "Hanbok Pikachu Is Coming to Seoul: Inside the Pokémon Autumn Pop-Up"
 description: "Pokémon Korea's Hanbok Pikachu pop-up lands at Seoul's Hiker Ground this fall, paired with an in-game Pokémon GO event — what it is, where to find it, and the Korean vocab to know before you go."
-date: 2026-09-10
+date: 2026-08-28
 tags: ["travel", "culture", "media"]
 heroImage: "/images/posts/pokemon-go-hanbok-pikachu-autumn-picnic-banner.png"
 draft: false
