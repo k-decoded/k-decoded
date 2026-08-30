@@ -24,11 +24,7 @@ const featuredPosts = allPosts
   .slice(0, 10);
 
 const leadPost = featuredPosts[0];
-// A flagship evergreen guide makes a stronger first impression than simply
-// promoting whichever news item was published most recently.
-const heroPost = allPosts.find((post) => post.slug === "glass-skin-101-routine-breakdown") ?? leadPost;
-// Keep the curated hero out of the grid, rather than accidentally removing
-// the chronologically newest post when the two are different guides.
+const heroPost = leadPost;
 const supportingPosts = featuredPosts.filter((post) => post.slug !== heroPost?.slug).slice(0, 9);
 const discoveryPaths = [
   { label: "K-Beauty", description: "Routines, products & ingredients", href: "/tags/skincare", icon: "✦", tone: "border-brand-200 bg-brand-50 hover:border-brand-400" },
