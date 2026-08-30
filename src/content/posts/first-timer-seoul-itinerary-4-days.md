@@ -1,7 +1,7 @@
 ---
 title: "First-Timer's Seoul Itinerary: 4 Days, No Wasted Time"
 description: "A day-by-day Seoul itinerary balancing palaces, trendy neighborhoods, night views, and markets — routed so you're never doubling back across the city, plus the practical tips and Korean terms worth knowing before you go."
-date: 2026-09-15
+date: 2026-08-30
 tags: ["travel", "language"]
 heroImage: "/images/posts/first-timer-seoul-itinerary-hero.png"
 draft: false
