@@ -46,6 +46,26 @@ Every item is a <a href="/vocab#hanjeongpan" class="font-korean rounded bg-brand
 limited, and past collabs like this haven't gotten restocks once
 they're gone.
 
+## The goods
+
+Plenty of sets bundle in <a href="/vocab#gudeu" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">굿즈</a>
+(*gudeu*), branded merch — hair clips, pouches, keyrings, luggage
+tags, stickers, and puff cases — alongside full-size and mini product
+<a href="/vocab#seteu" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">세트</a>
+(*seteu*), sets. For a lot of buyers, the merch is as much the draw as
+the product itself — these are the pieces showing up most in TikTok
+haul videos.
+
+<img src="/images/posts/olive-young-sanrio-goods-lineup.avif" alt="A grid of Olive Young x Sanrio goods, including a leopard-print pouch, keyrings shaped like raincoat-wearing characters, hair clips, and travel-size sets" class="not-prose my-8 w-full rounded-xl object-cover" />
+
+Pictured above is a small sample of the goods — leopard-print pouches,
+raincoat keyrings, hair clips — and some of these specific pieces look
+tied to Olive Young's Seongsu pop-up rather than general stock, so
+don't be surprised if a particular keyring is harder to track down
+outside of it. That doesn't take away from the rest of the lineup,
+though — the actual skincare and makeup sets are stocked at Olive
+Young stores all across Korea, not just one location.
+
 ## The concept: Sanrio characters touring Korea
 
 Instead of just slapping character art on existing packaging, City
@@ -107,26 +127,6 @@ That LABO-H set is worth flagging if you already know the brand — we
 <a href="/blog/labo-h-scalp-strengthening-roll-on-serum-review" class="text-brand-700 underline">reviewed their scalp roll-on serum</a>
 separately, and this is the same scalp-care line in Sanrio packaging
 rather than a new formula.
-
-## The goods
-
-Plenty of sets bundle in <a href="/vocab#gudeu" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">굿즈</a>
-(*gudeu*), branded merch — hair clips, pouches, keyrings, luggage
-tags, stickers, and puff cases — alongside full-size and mini product
-<a href="/vocab#seteu" class="font-korean rounded bg-brand-50 px-1 font-semibold text-brand-700 no-underline hover:bg-brand-100">세트</a>
-(*seteu*), sets. For a lot of buyers, the merch is as much the draw as
-the product itself — these are the pieces showing up most in TikTok
-haul videos.
-
-<img src="/images/posts/olive-young-sanrio-goods-lineup.avif" alt="A grid of Olive Young x Sanrio goods, including a leopard-print pouch, keyrings shaped like raincoat-wearing characters, hair clips, and travel-size sets" class="not-prose my-8 w-full rounded-xl object-cover" />
-
-Pictured above is a small sample of the goods — leopard-print pouches,
-raincoat keyrings, hair clips — and some of these specific pieces look
-tied to Olive Young's Seongsu pop-up rather than general stock, so
-don't be surprised if a particular keyring is harder to track down
-outside of it. That doesn't take away from the rest of the lineup,
-though — the actual skincare and makeup sets are stocked at Olive
-Young stores all across Korea, not just one location.
 
 ## Why it's blowing up right now
 
