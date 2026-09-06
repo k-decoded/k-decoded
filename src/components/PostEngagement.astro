@@ -25,7 +25,7 @@ const REACTIONS = [
 ---
 
 <div
-  class="not-prose flex flex-wrap items-center gap-4 border-t border-gray-100 py-6"
+  class="not-prose border-t border-ink-400/10 pt-8"
   data-slug={slug}
   data-tags={tags.join(",")}
   data-hero-image={heroImage}
@@ -33,31 +33,35 @@ const REACTIONS = [
   data-supabase-url={supabaseUrl}
   data-supabase-key={supabaseKey}
 >
-  <span class="text-sm text-gray-500">
-    👁️ <span id="view-count">–</span> views
-  </span>
+  <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">Save this for Korea</p>
+  <div class="mt-3 flex flex-wrap gap-3">
+    <button type="button" class="bookmark-btn rounded-md border border-brand-300 bg-brand-50 px-4 py-2.5 text-sm font-semibold text-brand-800 transition-colors hover:bg-brand-100" aria-label="Save this guide to My Korea">
+      ♡ SAVE TO MY KOREA
+    </button>
+    {tags.includes("travel") && (
+      <button type="button" class="seoul-list-btn rounded-md border border-brand-300 bg-brand-50 px-4 py-2.5 text-sm font-semibold text-brand-800 transition-colors hover:bg-brand-100" aria-label="Add this place to My Korea">
+        + Add to My Korea
+      </button>
+    )}
+  </div>
 
-  <div class="flex flex-wrap gap-2">
+  <!-- De-emphasized: view count, reaction pills, share links. Still
+       fully functional, just visually quiet compared to the save
+       buttons above — per the "reduce prominence, don't remove"
+       instruction behind this reorg. -->
+  <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-ink-400">
+    <span>👁️ <span id="view-count">–</span> views</span>
     {REACTIONS.map((r) => (
       <button
         type="button"
-        class="reaction-btn rounded-full border border-brand-200 px-3 py-1.5 text-sm transition-colors hover:bg-brand-50 data-[active=true]:bg-brand-100 data-[active=true]:border-brand-400"
+        class="reaction-btn font-medium transition-colors hover:text-brand-700 data-[active=true]:text-brand-700"
         data-key={r.key}
         data-active="false"
       >
-        {r.emoji} {r.label} <span class="reaction-count">–</span>
+        {r.emoji} {r.label} <span class="reaction-count"></span>
       </button>
     ))}
   </div>
-
-  <button type="button" class="bookmark-btn ml-auto rounded-full border border-teal-200 bg-teal-50 px-3 py-1.5 text-sm font-semibold text-teal-800 transition-colors hover:bg-teal-100" aria-label="Save this guide to My Korea">
-    ♡ SAVE
-  </button>
-  {tags.includes("travel") && (
-    <button type="button" class="seoul-list-btn rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-sm font-semibold text-orange-800 transition-colors hover:bg-orange-100" aria-label="Add this place to your My Korea Seoul list">
-      + Add to Seoul list
-    </button>
-  )}
 </div>
 
 <script>
@@ -111,7 +115,7 @@ const REACTIONS = [
     function renderBookmark() {
       if (!bookmarkButton) return;
       const saved = isReadSaved(slug!);
-      bookmarkButton.textContent = saved ? "♥ SAVED" : "♡ SAVE";
+      bookmarkButton.textContent = saved ? "♥ SAVED TO MY KOREA" : "♡ SAVE TO MY KOREA";
       bookmarkButton.setAttribute("aria-pressed", String(saved));
       bookmarkButton.setAttribute("aria-label", saved ? "Saved to My Korea" : "Save this guide to My Korea");
     }
@@ -125,9 +129,9 @@ const REACTIONS = [
     function renderSeoulList() {
       if (!seoulButton) return;
       const saved = isOnSeoulList(slug!);
-      seoulButton.textContent = saved ? "✓ On your Seoul list" : "+ Add to Seoul list";
+      seoulButton.textContent = saved ? "✓ Added to My Korea" : "+ Add to My Korea";
       seoulButton.setAttribute("aria-pressed", String(saved));
-      seoulButton.setAttribute("aria-label", saved ? "On your My Korea Seoul list" : "Add this place to your My Korea Seoul list");
+      seoulButton.setAttribute("aria-label", saved ? "Added to My Korea" : "Add this place to My Korea");
     }
     renderSeoulList();
     seoulButton?.addEventListener("click", () => {

@@ -1,12 +1,12 @@
 <aside class="not-prose border-t border-ink-400/10 pt-10">
   <div class="max-w-2xl">
-    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">Coming soon</p>
-    <h2 class="mt-3 font-display text-3xl font-semibold text-ink sm:text-4xl">Korean learning sheets, made to keep.</h2>
-    <p class="mt-3 leading-7 text-ink-400">Printable PDF learning sheets for useful words, travel moments, and K-beauty vocabulary—designed for quick, practical study.</p>
+    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">The Korea Decode</p>
+    <h2 class="mt-3 font-display text-3xl font-semibold text-ink sm:text-4xl">One useful Korea email each week.</h2>
+    <p class="mt-3 leading-7 text-ink-400">Travel ideas. Korean phrases. Beauty finds. Places worth saving. New K-Decoded guides. First up: printable Korean learning sheets, made to keep.</p>
     <form class="mt-6 flex max-w-xl flex-col gap-3 sm:flex-row sm:flex-wrap" data-learning-waitlist>
       <label class="sr-only" for="learning-sheet-email">Email address</label>
       <input id="learning-sheet-email" type="email" name="email" autocomplete="email" required placeholder="you@example.com" class="min-w-0 flex-1 border-b border-ink-400/30 bg-transparent px-1 py-3 text-sm text-ink outline-none transition focus:border-brand-600" />
-      <button type="submit" class="flex-shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700 transition-colors hover:text-brand-900 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2">Join early access →</button>
+      <button type="submit" class="flex-shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700 transition-colors hover:text-brand-900 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2">Decode Korea with me →</button>
       <label class="flex w-full items-start gap-2 text-xs leading-5 text-ink-400"><input type="checkbox" name="consent" required class="mt-0.5" />I agree that K-Decoded may email me about the learning-sheet launch and related updates. I can unsubscribe anytime.</label>
     </form>
     <p class="mt-3 hidden text-sm font-medium" data-learning-waitlist-status aria-live="polite"></p>
@@ -35,7 +35,7 @@
         status.classList.add("text-red-700");
         status.textContent = "We couldn’t save your spot. Please try again.";
         submit?.removeAttribute("disabled");
-        if (submit) submit.textContent = "Join early access";
+        if (submit) submit.textContent = "Decode Korea with me →";
       } else {
         status.classList.add("text-green-700");
         status.textContent = "You’re on the early-access list—thank you!";

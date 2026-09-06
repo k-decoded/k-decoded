@@ -10,8 +10,6 @@
 // or with a hand-picked subset:
 //   <VocabCard vocab={[{ hangul: "선크림", romanization: "seonkeurim", meaning: "sunscreen" }]} />
 
-import Sketch from "./Sketch.astro";
-
 interface VocabEntry {
   hangul: string;
   romanization: string;
@@ -23,22 +21,18 @@ interface Props {
   title?: string;
 }
 
-const { vocab, title = "Vocab you just picked up" } = Astro.props;
+const { vocab, title = "Korean you just learned" } = Astro.props;
 ---
 
 {vocab.length > 0 && (
-  <aside class="not-prose relative my-8 overflow-hidden rounded-xl border border-brand-200 bg-gradient-to-br from-brand-50 via-orange-50 to-teal-50 p-5">
-    <Sketch type="flag" class="pointer-events-none absolute right-4 top-4 h-6 w-8" color="text-orange-400" />
-    <p class="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-brand-700">
-      <span aria-hidden="true">🇰🇷</span>
-      {title}
-    </p>
-    <ul class="space-y-3">
+  <aside class="not-prose my-10 rounded-md border border-ink-400/10 bg-cream-200 p-5">
+    <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">{title}</p>
+    <ul class="mt-3 space-y-3">
       {vocab.map((entry) => (
-        <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-brand-100 pb-3 last:border-0 last:pb-0">
-          <span class="font-korean text-xl font-bold text-brand-800">{entry.hangul}</span>
-          <span class="text-sm italic text-brand-600">{entry.romanization}</span>
-          <span class="text-sm text-gray-700">— {entry.meaning}</span>
+        <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-ink-400/10 pb-3 last:border-0 last:pb-0">
+          <span class="font-korean font-display text-xl font-semibold text-ink">{entry.hangul}</span>
+          <span class="text-sm italic text-ink-400">{entry.romanization}</span>
+          <span class="text-sm text-ink-700">— {entry.meaning}</span>
         </li>
       ))}
     </ul>

@@ -52,11 +52,6 @@ const relatedPosts = allPosts
   .filter((candidate) => candidate.slug !== post.slug && candidate.data.tags.some((tag) => tags.includes(tag)))
   .slice(0, 3);
 const readingMinutes = Math.max(1, Math.ceil((post.body?.trim().split(/\s+/).length ?? 0) / 220));
-const articleTakeaways = tags.includes("travel")
-  ? ["Choose the option that fits your trip", "Learn the Korean terms that make it easier", "Avoid the common first-timer mistakes"]
-  : tags.includes("skincare") || tags.includes("makeup")
-    ? ["Understand the routine without the hype", "Know what each product step does", "Pick up useful Korean beauty vocabulary"]
-    : ["Get the essential context", "Pick up useful Korean words", "Know where to explore next"];
 const helpTopic = tags.includes("travel") ? "travel" : "beauty";
 const helpPrompt = tags.includes("travel")
   ? "Planning a Korea trip? Ask readers what they would do."
@@ -65,105 +60,110 @@ const helpPrompt = tags.includes("travel")
 
 <BaseLayout title={title} description={description} image={heroImage}>
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-    <header class="mb-8">
-      <time datetime={date.toISOString()} class="text-xs uppercase tracking-wide text-gray-400">
-        {formattedDate}
-      </time>
-      <span class="ml-3 text-xs font-medium text-gray-500">⏱ {readingMinutes} min read</span>
-      <h1 class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">{title}</h1>
-      <p class="mt-3 text-gray-600">{description}</p>
+    <div class="mx-auto max-w-2xl">
+      <header class="mb-8">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-brand-700">
+          {tags[0] ?? "Guide"}
+        </p>
+        <h1 class="mt-2 font-display text-4xl font-semibold leading-tight text-ink sm:text-5xl">{title}</h1>
+        <p class="mt-3 text-lg leading-7 text-ink-400">{description}</p>
+        <p class="mt-4 text-xs uppercase tracking-wide text-ink-400">
+          <time datetime={date.toISOString()}>{formattedDate}</time>
+          <span class="mx-1.5">·</span>
+          {readingMinutes} min read
+        </p>
 
-      {tags.length > 0 && (
-        <ul class="mt-4 flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <li>
-              <a
-                href={`/tags/${tag}`}
-                class:list={["rounded-full px-2.5 py-1 text-xs font-medium transition-opacity hover:opacity-80", getTagColor(tag)]}
-              >
-                {tag}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-    </header>
-
-    {heroImage && (
-      <img src={heroImage} alt={title} class="mb-8 w-full rounded-xl object-cover" />
-    )}
-
-    <aside class="not-prose mb-8 rounded-2xl border border-brand-100 bg-brand-50/60 p-5">
-      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">In this guide</p>
-      <ul class="mt-3 grid gap-2 text-sm text-gray-700 sm:grid-cols-3">
-        {articleTakeaways.map((takeaway) => <li class="flex gap-2"><span class="text-brand-600" aria-hidden="true">✓</span>{takeaway}</li>)}
-      </ul>
-    </aside>
-
-    {isReview && product && <ProductReview product={product} />}
-    {isReview && <ReviewHelper />}
-
-    {(quickDecode || vocab.length > 0) && (
-      <aside class="quick-decode not-prose mb-8 rounded-2xl p-5">
-        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">Quick decode</p>
-        {quickDecode ? (
-          <>
-            <p class="mt-2 text-xl font-bold text-gray-900">{quickDecode.title}</p>
-            <p class="mt-1 text-sm leading-6 text-gray-700">{quickDecode.summary}</p>
-          </>
-        ) : (
-          <>
-            <p class="mt-2 font-korean text-xl font-bold text-gray-900">{vocab[0].hangul} <span class="font-body text-sm font-medium text-gray-500">{vocab[0].romanization}</span></p>
-            <p class="mt-1 text-sm leading-6 text-gray-700">{vocab[0].meaning}</p>
-          </>
+        {tags.length > 0 && (
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <li>
+                <a
+                  href={`/tags/${tag}`}
+                  class:list={["rounded-full px-2.5 py-1 text-xs font-medium transition-opacity hover:opacity-80", getTagColor(tag)]}
+                >
+                  {tag}
+                </a>
+              </li>
+            ))}
+          </ul>
         )}
-      </aside>
-    )}
-
-    <!-- `prose` (from @tailwindcss/typography) styles the raw Markdown
-         output — headings, paragraphs, lists — without us hand-styling
-         every element the post body might contain. -->
-    <nav class="not-prose mb-8 hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm" aria-label="On this page" data-article-toc>
-      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">On this page</p>
-      <ol class="mt-3 grid gap-2 text-sm" data-article-toc-list></ol>
-    </nav>
-
-    <div class="article-body prose prose-brand max-w-none">
-      <Content />
+      </header>
     </div>
 
-    <aside class="not-prose mt-10 flex flex-col gap-4 rounded-2xl border border-teal-100 bg-teal-50/70 p-6 sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-teal-700">Ask K-Decoded</p>
-        <h2 class="mt-1 text-xl font-bold text-gray-900">{helpPrompt}</h2>
-        <p class="mt-1 text-sm leading-6 text-gray-600">Start a focused question and get useful answers from the K-Decoded community.</p>
-      </div>
-      <a href={`/community/${helpTopic}`} class="shrink-0 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-teal-800 shadow-sm ring-1 ring-teal-200 transition hover:bg-teal-100">Ask a question →</a>
-    </aside>
-
-    {relatedPosts.length > 0 && (
-      <aside class="not-prose mt-10 rounded-2xl border border-brand-100 bg-brand-50/50 p-6">
-        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">Decode next</p>
-        <h2 class="mt-1 text-2xl font-bold text-gray-900">More to explore</h2>
-        <ul class="mt-4 grid gap-3 sm:grid-cols-3">
-          {relatedPosts.map((related) => (
-            <li>
-              <a href={`/blog/${related.slug}`} class="block rounded-xl bg-white p-4 text-sm font-semibold leading-5 text-gray-800 shadow-sm transition-transform hover:-translate-y-0.5 hover:text-brand-700">
-                {related.data.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </aside>
+    {heroImage && (
+      <img src={heroImage} alt={title} loading="eager" class="mb-8 w-full rounded-md object-cover" />
     )}
 
-    <ShareButtons title={title} url={absolutePageURL} image={absoluteImageURL} />
+    <div class="mx-auto max-w-2xl">
+      <!-- Real table of contents, built from the article's actual h2
+           headings by the script below — not hardcoded per post. -->
+      <nav class="not-prose mb-8 hidden rounded-md border border-ink-400/10 bg-white p-5" aria-label="In this guide" data-article-toc>
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">In this guide</p>
+        <ol class="mt-3 grid gap-2 text-sm" data-article-toc-list></ol>
+      </nav>
 
-    <VocabCard vocab={vocab} />
+      {isReview && product && <ProductReview product={product} />}
+      {isReview && <ReviewHelper />}
 
-    <PostEngagement slug={post.slug} tags={tags} heroImage={heroImage} description={description} />
+      {(quickDecode || vocab.length > 0) && (
+        <aside class="not-prose mb-8 rounded-md border border-brand-200 bg-cream-200 p-5">
+          <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">K·D — Quick Decode</p>
+          {quickDecode ? (
+            <>
+              <p class="mt-2 font-display text-2xl font-semibold text-ink">{quickDecode.title}</p>
+              <p class="mt-1 text-sm leading-6 text-ink-700">{quickDecode.summary}</p>
+            </>
+          ) : (
+            <>
+              <p class="mt-2 font-korean font-display text-2xl font-semibold text-ink">{vocab[0].hangul} <span class="font-body text-sm font-medium text-ink-400">{vocab[0].romanization}</span></p>
+              <p class="mt-1 text-sm leading-6 text-ink-700">{vocab[0].meaning}</p>
+            </>
+          )}
+        </aside>
+      )}
 
-    <div class="mt-8"><LearningSheetsWaitlist /></div>
+      <!-- `prose` (from @tailwindcss/typography) styles the raw Markdown
+           output — headings, paragraphs, lists — without us hand-styling
+           every element the post body might contain. Color variables for
+           this are set on .article-body in global.css. -->
+      <div class="article-body prose max-w-none">
+        <Content />
+      </div>
+    </div>
+
+    <div class="mx-auto max-w-2xl">
+      <PostEngagement slug={post.slug} tags={tags} heroImage={heroImage} description={description} />
+
+      <VocabCard vocab={vocab} />
+
+      {relatedPosts.length > 0 && (
+        <aside class="not-prose mt-10">
+          <h2 class="font-display text-2xl font-semibold text-ink">Decode Next</h2>
+          <ul class="mt-4 grid gap-4 sm:grid-cols-3">
+            {relatedPosts.map((related) => (
+              <li>
+                <a href={`/blog/${related.slug}`} class="group block">
+                  {related.data.heroImage && (
+                    <div class="aspect-[4/3] overflow-hidden rounded-md">
+                      <img src={related.data.heroImage} alt="" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    </div>
+                  )}
+                  <p class="mt-2 text-sm font-semibold leading-5 text-ink group-hover:text-brand-700">{related.data.title}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
+
+      <p class="not-prose mt-8 text-sm text-ink-400">
+        {helpPrompt} <a href={`/community/${helpTopic}`} class="font-semibold text-brand-700 hover:underline">Ask a question →</a>
+      </p>
+
+      <div class="mt-10"><ShareButtons title={title} url={absolutePageURL} image={absoluteImageURL} /></div>
+
+      <div class="mt-10"><LearningSheetsWaitlist /></div>
+    </div>
   </article>
 </BaseLayout>
 
@@ -175,7 +175,11 @@ const helpPrompt = tags.includes("travel")
     headings.forEach((heading, index) => {
       const id = heading.id || `section-${index + 1}`;
       heading.id = id;
-      tocList.insertAdjacentHTML("beforeend", `<li><a class="text-brand-700 hover:underline" href="#${id}">${heading.textContent}</a></li>`);
+      const number = String(index + 1).padStart(2, "0");
+      tocList.insertAdjacentHTML(
+        "beforeend",
+        `<li><a class="flex gap-2 text-ink-700 hover:text-brand-700" href="#${id}"><span class="text-brand-700" aria-hidden="true">${number} —</span>${heading.textContent}</a></li>`
+      );
     });
     toc.classList.remove("hidden");
   }

@@ -11,7 +11,26 @@ html {
 }
 
 body {
-  @apply bg-white text-gray-800 antialiased font-body;
+  @apply bg-cream text-ink antialiased font-body;
+}
+
+/* Article body copy uses Tailwind Typography's `prose` class, which
+   ships its own default (grey) palette via these CSS custom
+   properties. Overriding them here — scoped to .article-body only —
+   is how the article template picks up the site's real ink/brand
+   tokens without registering a whole new typography "modifier" in
+   tailwind.config.mjs for what's a same-page-only concern. */
+.article-body {
+  --tw-prose-body: theme(colors.ink.700);
+  --tw-prose-headings: theme(colors.ink.DEFAULT);
+  --tw-prose-bold: theme(colors.ink.DEFAULT);
+  --tw-prose-links: theme(colors.brand.700);
+  --tw-prose-quotes: theme(colors.ink.700);
+  --tw-prose-quote-borders: theme(colors.brand.200);
+}
+
+.article-body img {
+  border-radius: 0.375rem;
 }
 
 /* A subtle paper-like texture makes the pastel surfaces feel tactile without
