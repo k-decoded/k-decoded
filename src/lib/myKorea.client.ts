@@ -13,6 +13,8 @@
 // file existed — nothing here changes what a returning visitor's
 // existing saved data looks like.
 
+import { BEAUTY_TAGS, FOOD_TAGS } from "./categoryBuckets";
+
 export type TripDay = "day1" | "day2" | "day3" | "day4" | "day5" | "unscheduled";
 
 export const TRIP_DAYS: TripDay[] = ["day1", "day2", "day3", "day4", "day5", "unscheduled"];
@@ -80,17 +82,18 @@ export function removeSavedRead(slug: string) {
 }
 
 // Maps a post's existing frontmatter tags onto the Seoul List's fixed
-// filter chips (All/Places/Food/Cafés/Beauty/Shopping). No post is
-// tagged "beauty" or "cafes" today, so those buckets stay empty until a
-// post exists for them — the chips still render either way. "travel" is
-// the fallback bucket, matching how the Seoul-list button itself is
-// already gated on `tags.includes("travel")`.
+// filter chips (All/Places/Food/Cafés/Beauty/Shopping). Beauty/food tag
+// lists are shared with the site nav's Beauty/Food category pages (see
+// ./categoryBuckets) so the two don't drift into different taxonomies.
+// "shopping" and the "places" fallback are My Korea-specific, so they
+// stay local here rather than living in the shared file. No post is
+// tagged "cafes" today, so that bucket stays empty until one exists —
+// the chip still renders either way. "travel" is the fallback bucket,
+// matching how the Seoul-list button itself is already gated on
+// `tags.includes("travel")`.
 const CATEGORY_TAG_MAP: Record<string, string> = {
-  food: "food",
-  snacks: "food",
-  skincare: "beauty",
-  makeup: "beauty",
-  haircare: "beauty",
+  ...Object.fromEntries(FOOD_TAGS.map((tag) => [tag, "food"])),
+  ...Object.fromEntries(BEAUTY_TAGS.map((tag) => [tag, "beauty"])),
   shopping: "shopping",
 };
 

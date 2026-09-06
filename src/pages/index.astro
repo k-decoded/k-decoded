@@ -1,436 +1,312 @@
 ---
 // src/pages/index.astro
-// The homepage. In Astro, any .astro file under src/pages/ automatically
-// becomes a route — this file is served at "/".
+// The homepage — editorial redesign. Cream background, serif display
+// headlines, magazine-style hierarchy. Nav/Footer chrome changed
+// site-wide (see Nav.astro/Footer.astro); everything below is scoped
+// to this page only. See the homepage redesign plan for the full
+// rationale behind each section's content choices.
 
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PostCard from "../components/PostCard.astro";
-import Sketch from "../components/Sketch.astro";
 import LearningSheetsWaitlist from "../components/LearningSheetsWaitlist.astro";
 import { getCollection } from "astro:content";
 
-// getCollection reads every file in src/content/posts/, validates it
-// against the schema in src/content/config.ts, and returns it as data.
-const allPosts = await getCollection("posts", ({ data }) => {
-  // Hide drafts from the live site while still letting you preview them
-  // locally by visiting their URL directly.
-  return data.draft !== true;
-});
+const allPosts = await getCollection("posts", ({ data }) => data.draft !== true);
 
-// Sort newest-first, then take the top 10 for the homepage: one featured
-// guide plus nine supporting posts in the three-column grid below.
 const featuredPosts = allPosts
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 10);
 
-const leadPost = featuredPosts[0];
-const heroPost = leadPost;
-const supportingPosts = featuredPosts.filter((post) => post.slug !== heroPost?.slug).slice(0, 9);
-const discoveryPaths = [
-  { label: "K-Beauty", description: "Routines, products & ingredients", href: "/tags/skincare", icon: "✦", tone: "border-brand-200 bg-brand-50 hover:border-brand-400" },
-  { label: "Plan a Korea trip", description: "Seoul tips that make travel easier", href: "/tags/travel", icon: "✈", tone: "border-teal-200 bg-teal-50 hover:border-teal-400" },
-  { label: "Learn Korean", description: "Useful words, without the homework", href: "/vocab", icon: "한", tone: "border-violet-200 bg-violet-50 hover:border-violet-400" },
-  { label: "Take a culture break", description: "Play a quick Mini World Cup", href: "/play", icon: "◌", tone: "border-orange-200 bg-orange-50 hover:border-orange-400" },
-];
+const heroPost = featuredPosts[0];
+const editSupporting = featuredPosts.slice(1, 4);
+
+// "Korean of the Day" — a date-seeded pick instead of always the same
+// word, so it actually rotates daily rather than being permanently
+// stuck on whichever vocab entry happened to load first.
 const quizWords = allPosts.flatMap((post) => post.data.vocab);
-const wordOfTheWeek = quizWords[0];
-const wordAnchor = wordOfTheWeek?.romanization.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-const worldCupThemes = {
-  food: {
-    tab: "Korean Food",
-    title: "Korean Food Mini World Cup",
-    description: "Eight quick choices. One champion.",
-    category: "Korean Food",
-    accent: { label: "text-brand-600", tab: ["border-brand-300", "bg-brand-100", "text-brand-800"], bar: "bg-teal-500" },
-    community: { matchupSeed: 341, rankingLabel: "Community favourites" },
-    wildcard: { name: "Korean BBQ", hangul: "불고기", descriptor: "Smoky and savoury", rankPercentage: 74 },
-    entries: [
-      { name: "Tteokbokki", hangul: "떡볶이", descriptor: "Spicy rice cakes", rankPercentage: 78 }, { name: "Korean Fried Chicken", hangul: "치킨", rankPercentage: 76 },
-      { name: "Kimchi Jjigae", hangul: "김치찌개", rankPercentage: 69 }, { name: "Bibimbap", hangul: "비빔밥", rankPercentage: 72 },
-      { name: "Kimbap", hangul: "김밥", rankPercentage: 65 }, { name: "Japchae", hangul: "잡채", rankPercentage: 61 },
-      { name: "Hotteok", hangul: "호떡", rankPercentage: 58 }, { name: "Bingsu", hangul: "빙수", rankPercentage: 55 },
-    ],
-  },
-  kpop: {
-    tab: "K-pop Groups",
-    title: "K-pop Groups Mini World Cup",
-    description: "Pick the group on repeat. One champion awaits.",
-    category: "K-pop Groups",
-    accent: { label: "text-violet-700", tab: ["border-violet-300", "bg-violet-100", "text-violet-800"], bar: "bg-violet-500" },
-    community: { matchupSeed: 617, rankingLabel: "Community favourites" },
-    wildcard: { name: "EXO", hangul: "엑소", descriptor: "K-pop powerhouse", rankPercentage: 69 },
-    entries: [
-      { name: "BTS", hangul: "방탄소년단", descriptor: "Global icons", rankPercentage: 82 }, { name: "BLACKPINK", hangul: "블랙핑크", rankPercentage: 79 },
-      { name: "TWICE", hangul: "트와이스", rankPercentage: 73 }, { name: "Stray Kids", hangul: "스트레이 키즈", rankPercentage: 75 },
-      { name: "SEVENTEEN", hangul: "세븐틴", rankPercentage: 71 }, { name: "NewJeans", hangul: "뉴진스", rankPercentage: 70 },
-      { name: "aespa", hangul: "에스파", rankPercentage: 66 }, { name: "LE SSERAFIM", hangul: "르세라핌", rankPercentage: 64 },
-    ],
-  },
-  beauty: {
-    tab: "K-Beauty",
-    title: "K-Beauty Mini World Cup",
-    description: "Your everyday essentials go head to head.",
-    category: "K-Beauty",
-    accent: { label: "text-orange-700", tab: ["border-orange-300", "bg-orange-100", "text-orange-800"], bar: "bg-orange-500" },
-    community: { matchupSeed: 829, rankingLabel: "Community favourites" },
-    wildcard: { name: "Toner", hangul: "토너", descriptor: "Prep and balance", rankPercentage: 70 },
-    entries: [
-      { name: "Sheet Mask", hangul: "시트 마스크", descriptor: "Instant hydration", rankPercentage: 77 }, { name: "Lip Tint", hangul: "립 틴트", rankPercentage: 80 },
-      { name: "Cushion Foundation", hangul: "쿠션 파운데이션", rankPercentage: 74 }, { name: "Sunscreen", hangul: "선크림", rankPercentage: 82 },
-      { name: "Cleansing Oil", hangul: "클렌징 오일", rankPercentage: 68 }, { name: "Snail Mucin Serum", hangul: "달팽이 점액 세럼", rankPercentage: 71 },
-      { name: "Essence", hangul: "에센스", rankPercentage: 65 }, { name: "Pimple Patch", hangul: "여드름 패치", rankPercentage: 63 },
-    ],
-  },
-  landmarks: {
-    tab: "Seoul Landmarks",
-    title: "Seoul Landmarks Mini World Cup",
-    description: "Choose the stop that belongs at the top of your itinerary.",
-    category: "Seoul Landmarks",
-    accent: { label: "text-teal-700", tab: ["border-teal-300", "bg-teal-100", "text-teal-800"], bar: "bg-teal-500" },
-    community: { matchupSeed: 1009, rankingLabel: "Community favourites" },
-    wildcard: { name: "Lotte World Tower", hangul: "롯데월드타워", descriptor: "Sky-high views", rankPercentage: 74 },
-    entries: [
-      { name: "Gyeongbokgung Palace", hangul: "경복궁", descriptor: "Royal palace", rankPercentage: 81 }, { name: "N Seoul Tower", hangul: "N서울타워", rankPercentage: 75 },
-      { name: "Bukchon Hanok Village", hangul: "북촌한옥마을", rankPercentage: 73 }, { name: "Han River", hangul: "한강", rankPercentage: 78 },
-      { name: "Myeongdong", hangul: "명동", rankPercentage: 70 }, { name: "Hongdae", hangul: "홍대", rankPercentage: 72 },
-      { name: "Ikseon-dong", hangul: "익선동", rankPercentage: 68 }, { name: "Dongdaemun Design Plaza", hangul: "동대문디자인플라자", rankPercentage: 66 },
-    ],
-  },
-};
+const dayOfYear = Math.floor(
+  (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
+);
+const wordOfTheDay = quizWords.length ? quizWords[dayOfYear % quizWords.length] : undefined;
+
+// Seasonal feature — same technique the site already used for its
+// seasonal-phrase rotator, just computed server-side so the right
+// season is in the initial HTML (no client-side flash of the wrong one).
+const seasons = [
+  { name: "Winter", photo: "/images/posts/gyeongbokgung-palace.png" },
+  { name: "Spring", photo: "/images/posts/gamcheon-village-busan-mural-cherry-blossom-window.jpg" },
+  { name: "Summer", photo: "/images/posts/haeundae-beach-busan.png" },
+  { name: "Autumn", photo: "/images/posts/bukchon-hanok-village-alley.png" },
+];
+const season = seasons[Math.floor(new Date().getMonth() / 3)];
+
+// "What are you here for?" — five real destinations, five real photos.
+const tiles = [
+  { label: "Plan Korea", href: "/tags/travel", photo: "/images/posts/first-timer-seoul-itinerary-hero.png" },
+  { label: "K-Beauty", href: "/category/beauty", photo: "/images/posts/glass-skin-101-hero.png" },
+  { label: "Eat Korea", href: "/category/food", photo: "/images/posts/korea-food-trends-tanghulu.jpg" },
+  { label: "Learn Korean", href: "/vocab", photo: "/images/posts/korean-shopping-flatlay.webp" },
+  { label: "Seoul Life", href: "/category/culture", photo: "/images/posts/ihwa-mural-village-seoul.png" },
+];
+
+// "Plan Your Korea Trip" — links to real posts only. "Where to stay"
+// is omitted: no accommodation guide exists yet, and a confident 4
+// links beats a 5th that goes nowhere useful.
+const planLinks = [
+  { label: "First-timer's guide", href: "/blog/first-timer-seoul-itinerary-4-days" },
+  { label: "Seoul itineraries", href: "/tags/travel" },
+  { label: "Transport", href: "/blog/getting-around-seoul-transportation-guide" },
+  { label: "Korean phrases", href: "/tags/language" },
+];
+
+// "Beauty Decoded" — same rule: real posts only, closest honest match
+// where an exact topic post doesn't exist yet (skincare clinics).
+const beautyLinks = [
+  { label: "Personal Color Analysis", href: "/blog/personal-color-analysis-seoul-guide" },
+  { label: "Korean Skincare Clinics", href: "/blog/k-beauty-tourism-boom-2026" },
+  { label: "Olive Young Shopping", href: "/blog/tax-free-shopping-korea-olive-young-spao" },
+  { label: "Korean Makeup", href: "/blog/fwee-rose-obsession-lip-tint-review" },
+  { label: "Hair & Beauty Experiences", href: "/blog/labo-h-scalp-strengthening-roll-on-serum-review" },
+];
+
+const seoulListPreview = ["Beauty", "Food", "Cafés", "Shopping", "Places"];
 ---
 
 <BaseLayout
   title="Home"
-  description="K-Decoded translates Korean beauty, fashion, and makeup for people who can't read Korean — and teaches you the language along the way."
+  description="K-Decoded is a Korea travel and lifestyle guide — practical, editorial guides to Seoul neighbourhoods, Korean beauty, food, and the language behind them."
 >
-  <!-- A compact, benefit-led introduction gets visitors to useful content
-       quickly while keeping the soft K-beauty visual character. -->
-  <section class="relative overflow-hidden bg-gradient-to-br from-brand-50 via-orange-50 to-brand-100 py-10 sm:py-14">
-    <!-- Soft blurred color blobs, slowly drifting — the "cosmetic swatch"
-         feel. pointer-events-none so they never intercept clicks/taps. -->
-    <div class="pointer-events-none absolute -left-16 -top-16 h-64 w-64 animate-float rounded-full bg-brand-200 opacity-40 blur-3xl" aria-hidden="true"></div>
-    <div class="pointer-events-none absolute -right-10 top-10 h-72 w-72 animate-float rounded-full bg-orange-200 opacity-40 blur-3xl" style="animation-delay: 2s" aria-hidden="true"></div>
-    <div class="pointer-events-none absolute bottom-0 left-1/3 h-56 w-56 animate-float rounded-full bg-teal-200 opacity-30 blur-3xl" style="animation-delay: 4s" aria-hidden="true"></div>
-
-    <!-- Line-sketch accents scattered around the headline — literal
-         K-beauty/Korea cues (lipstick, food, the flag) instead of
-         abstract stars, with a gentle idle wiggle. -->
-    <Sketch type="lipstick" class="pointer-events-none absolute left-[10%] top-12 h-8 w-8" color="text-brand-400" delay={0} />
-    <Sketch type="food" class="pointer-events-none absolute right-[13%] top-16 h-9 w-9" color="text-orange-400" delay={0.8} />
-    <Sketch type="flag" class="pointer-events-none absolute bottom-10 left-[15%] h-8 w-11" color="text-teal-500" delay={1.5} />
-
-    <div class="relative z-10 mx-auto grid max-w-5xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
-      <div class="animate-fade-in-up text-center lg:text-left">
-        <p class="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">K-Decoded</p>
-        <h1 class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Decode Korean beauty, fashion &amp; everyday culture
-        </h1>
-        <p class="mt-4 max-w-xl text-base leading-7 text-gray-600 sm:text-lg lg:mx-0">
-          Clear, useful guides to Korean products, places, and the words behind them.
-        </p>
-        <div class="mt-7 flex flex-col items-center lg:items-start">
-          <a href="/blog" class="rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg">
-            Explore the blog
-          </a>
-          <div class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 lg:justify-start">
-            <a href="/community" class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition-colors hover:text-brand-900">Ask K-Decoded</a>
+  <div class="bg-cream">
+    <!-- Hero — one photo, one headline, minimal else. -->
+    <section class="relative">
+      <div class="relative h-[70vh] min-h-[420px] w-full overflow-hidden">
+        <img
+          src="/images/posts/gyeongbokgung-palace.png"
+          alt="Geunjeongjeon, the main throne hall of Gyeongbokgung Palace, Seoul"
+          class="h-full w-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-4 pb-12 sm:px-6 sm:pb-16">
+          <p class="text-xs font-semibold uppercase tracking-[0.22em] text-cream-100">Korea • Travel • Beauty • Culture</p>
+          <h1 class="mt-3 font-display text-5xl font-light leading-[1.05] text-cream-50 sm:text-7xl">Korea,<br />decoded.</h1>
+          <p class="mt-5 max-w-lg text-base leading-7 text-cream-100 sm:text-lg">
+            Practical guides to experiencing Korea — from Seoul neighbourhoods and Korean beauty to food, language and everyday culture.
+          </p>
+          <div class="mt-7 flex flex-wrap items-center gap-x-8 gap-y-3">
+            <a href="#plan-korea" class="text-xs font-semibold uppercase tracking-[0.16em] text-cream-50 underline decoration-brand-300 underline-offset-8 transition hover:decoration-cream-50">Plan your Korea trip →</a>
+            <a href="/blog" class="text-xs font-semibold uppercase tracking-[0.16em] text-cream-100 transition hover:text-cream-50">Explore the latest →</a>
           </div>
         </div>
       </div>
-      {heroPost && (
-        <a href={`/blog/${heroPost.slug}`} class="group relative mx-auto block w-full max-w-xl overflow-hidden rounded-3xl border border-white/80 bg-white/80 shadow-xl shadow-brand-900/10 transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
-          <div class="relative aspect-[16/10] overflow-hidden">
-            {heroPost.data.heroImage && <img src={heroPost.data.heroImage} alt={heroPost.data.title} class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />}
-            <span class="k-stamp absolute right-5 top-5" aria-hidden="true">K·D</span>
-          </div>
-          <div class="p-5 sm:p-6">
-            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-brand-700">Start here</p>
-            <h2 class="mt-2 text-xl font-bold leading-tight text-gray-900 sm:text-2xl">{heroPost.data.title}</h2>
-            <span class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-brand-800">Read the guide <span aria-hidden="true">→</span></span>
-          </div>
-        </a>
-      )}
-    </div>
-  </section>
+    </section>
 
-  <section class="mx-auto max-w-5xl px-4 pt-8 sm:px-6" aria-labelledby="choose-path-title">
-    <div class="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm sm:p-7">
-      <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand-600">Make it yours</p>
-      <h2 id="choose-path-title" class="mt-1 text-2xl font-bold text-gray-900">What brings you to Korea?</h2>
-      <p class="mt-2 text-sm leading-6 text-gray-600">Choose a path and jump straight to the useful stuff.</p>
-      <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {discoveryPaths.map((path) => (
-          <a href={path.href} class:list={["group rounded-2xl border p-4 transition duration-200 hover:-translate-y-0.5 hover:shadow-md", path.tone]}>
-            <span class="text-xl" aria-hidden="true">{path.icon}</span>
-            <h3 class="mt-3 text-sm font-bold text-gray-900">{path.label} <span class="text-brand-700 transition-transform group-hover:translate-x-0.5">→</span></h3>
-            <p class="mt-1 text-xs leading-5 text-gray-600">{path.description}</p>
+    <!-- What are you here for? -->
+    <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="font-display text-3xl font-semibold text-ink sm:text-4xl">What are you here for?</h2>
+      <div class="mt-8 grid grid-cols-2 gap-px overflow-hidden bg-ink-400/10 sm:grid-cols-5">
+        {tiles.map((tile, index) => (
+          <a href={tile.href} class:list={["group relative flex aspect-[3/4] items-end overflow-hidden bg-cream", index === tiles.length - 1 && "col-span-2 sm:col-span-1"]}>
+            <img src={tile.photo} alt="" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/0 to-transparent"></div>
+            <span class="relative z-10 p-4 text-xs font-semibold uppercase tracking-[0.14em] text-cream-50">{tile.label}</span>
           </a>
         ))}
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Featured posts -->
-  <section class="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-    <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-      <div>
-        <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand-600">Fresh from Korea</p>
-        <h2 class="mt-1 flex items-center gap-2 text-2xl font-bold text-gray-900">
-          <span class="h-6 w-1.5 rounded-full bg-gradient-to-b from-brand-500 to-orange-400" aria-hidden="true"></span>
-          Latest posts
-        </h2>
-      </div>
-      <a href="/blog" class="text-sm font-semibold text-brand-700 transition-colors hover:text-brand-900">View all posts <span aria-hidden="true">→</span></a>
-    </div>
-    <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {supportingPosts.map((post) => <PostCard post={post} />)}
-    </div>
-    {featuredPosts.length === 0 && (
-      <p class="mt-6 text-gray-500">
-        No posts yet — add a Markdown file to <code>src/content/posts/</code> to get started.
-      </p>
-    )}
+    <!-- The K-Decoded Edit -->
+    {heroPost && (
+      <section class="mx-auto max-w-6xl border-t border-ink-400/10 px-4 py-16 sm:px-6 sm:py-20">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">The K-Decoded Edit</p>
+        <div class="mt-6 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+          <a href={`/blog/${heroPost.slug}`} class="group block">
+            {heroPost.data.heroImage && (
+              <div class="aspect-[16/10] overflow-hidden">
+                <img src={heroPost.data.heroImage} alt={heroPost.data.title} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              </div>
+            )}
+            <h2 class="mt-5 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">{heroPost.data.title}</h2>
+            <p class="mt-3 max-w-xl leading-7 text-ink-400">{heroPost.data.description}</p>
+            <span class="mt-4 inline-block text-xs font-semibold uppercase tracking-[0.14em] text-brand-700 group-hover:text-brand-900">Read the guide →</span>
+          </a>
 
-    <aside class="pastel-note mt-12 grid gap-6 rounded-3xl border border-teal-100 p-6 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:p-8">
-      <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-3xl shadow-sm" aria-hidden="true">한</div>
-      <div>
-        <p class="text-sm font-semibold uppercase tracking-[0.14em] text-teal-700">Korean word of the week</p>
-        {wordOfTheWeek ? (
-          <>
-            <h2 class="mt-1 font-korean text-2xl font-bold text-gray-900">{wordOfTheWeek.hangul} <span class="font-body text-base font-medium text-gray-500">{wordOfTheWeek.romanization}</span></h2>
-            <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">{wordOfTheWeek.meaning}</p>
-          </>
-        ) : (
-          <>
-            <h2 class="mt-1 text-xl font-bold text-gray-900">Pick up Korean words with every guide.</h2>
-            <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">Explore the glossary or practise a few Hangul characters whenever you have a minute.</p>
-          </>
-        )}
-      </div>
-      <div class="flex flex-wrap gap-3">
-        <a href={wordAnchor ? `/vocab#${wordAnchor}` : "/vocab"} class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-teal-800 shadow-sm ring-1 ring-teal-200 transition-colors hover:bg-teal-100">Learn this word</a>
-        <a href="/flashcards" class="rounded-full px-4 py-2 text-sm font-semibold text-teal-800 transition-colors hover:text-teal-950">Try flashcards <span aria-hidden="true">→</span></a>
-      </div>
-    </aside>
-
-    {wordOfTheWeek && (
-      <section class="mt-6 grid gap-6 rounded-3xl border border-violet-100 bg-violet-50/70 p-6 sm:grid-cols-[1fr_auto] sm:items-center sm:p-8">
-        <div>
-          <p class="text-sm font-semibold uppercase tracking-[0.14em] text-violet-700">Today’s two-tap quiz</p>
-          <h2 class="mt-1 text-xl font-bold text-gray-900">What does <span class="font-korean text-2xl text-violet-800" data-word-question>{wordOfTheWeek.hangul}</span> mean?</h2>
-          <p class="mt-2 hidden text-sm leading-6 text-gray-700" data-word-answer><span class="font-semibold" data-word-romanization>{wordOfTheWeek.romanization}</span> — <span data-word-meaning>{wordOfTheWeek.meaning}</span></p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <button type="button" data-word-reveal class="rounded-full bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105">Reveal answer</button>
-          {quizWords.length > 1 && <button type="button" data-word-shuffle class="rounded-full border border-violet-200 bg-white px-5 py-2.5 text-sm font-semibold text-violet-800 transition-colors hover:bg-violet-100">Shuffle question</button>}
+          <div class="space-y-8 divide-y divide-ink-400/10 lg:border-l lg:border-ink-400/10 lg:pl-10">
+            {editSupporting.map((post) => (
+              <a href={`/blog/${post.slug}`} class="group block pt-8 first:pt-0">
+                <time datetime={post.data.date.toISOString()} class="text-xs uppercase tracking-wide text-ink-400">
+                  {post.data.date.toLocaleDateString("en-US", { month: "long", day: "numeric" })}
+                </time>
+                <h3 class="mt-2 font-display text-xl font-semibold leading-snug text-ink group-hover:text-brand-700">{post.data.title}</h3>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
     )}
 
-    <div class="mt-10">
-      <LearningSheetsWaitlist />
-    </div>
+    <!-- Plan Your Korea Trip -->
+    <section id="plan-korea" class="scroll-mt-20 border-t border-ink-400/10 bg-cream-200">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+        <div class="grid gap-10 lg:grid-cols-2">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">Plan your Korea trip</p>
+            <h2 class="mt-3 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">Going to Korea?<br />Start here.</h2>
+            <p class="mt-4 max-w-md leading-7 text-ink-400">Everything you need before landing — itineraries, transport, neighbourhoods, seasonal guides and the Korean phrases you'll actually use.</p>
+          </div>
+          <div>
+            <ul class="divide-y divide-ink-400/10 border-t border-ink-400/10">
+              {planLinks.map((link) => (
+                <li>
+                  <a href={link.href} class="flex items-center justify-between py-4 text-sm font-medium text-ink transition-colors hover:text-brand-700">
+                    {link.label} <span aria-hidden="true">→</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a href="/my-korea#seoul-list" class="mt-6 inline-block text-xs font-semibold uppercase tracking-[0.16em] text-brand-700 hover:text-brand-900">Build my Korea list →</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <p class="mt-8 text-center text-sm text-gray-500" data-seasonal-phrase>🌷 A little Korean discovery for every season.</p>
-  </section>
+    <!-- Beauty Decoded -->
+    <section class="border-t border-ink-400/10">
+      <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-2">
+        <div class="aspect-[4/5] overflow-hidden lg:order-2">
+          <img src="/images/posts/personal-color-analysis-hero.png" alt="A consultant holding warm and cool color swatches against a client's face during a personal color analysis session in Seoul" class="h-full w-full object-cover" />
+        </div>
+        <div class="lg:order-1">
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">Beauty decoded</p>
+          <h2 class="mt-3 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">Beauty experiences worth booking in Seoul.</h2>
+          <ul class="mt-6 divide-y divide-ink-400/10 border-t border-ink-400/10">
+            {beautyLinks.map((link) => (
+              <li>
+                <a href={link.href} class="flex items-center justify-between py-4 text-sm font-medium text-ink transition-colors hover:text-brand-700">
+                  {link.label} <span aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a href="/category/beauty" class="mt-6 inline-block text-xs font-semibold uppercase tracking-[0.16em] text-brand-700 hover:text-brand-900">Explore K-beauty →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Korean of the Day -->
+    {wordOfTheDay && (
+      <section class="border-t border-ink-400/10 bg-cream-200">
+        <div class="mx-auto max-w-2xl px-4 py-16 text-center sm:px-6 sm:py-20">
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">Korean of the day</p>
+          <p class="mt-6 font-korean text-5xl font-bold text-ink" data-word-hangul>{wordOfTheDay.hangul}</p>
+          <p class="mt-2 text-lg italic text-ink-400" data-word-romanization>{wordOfTheDay.romanization}</p>
+
+          <button
+            type="button"
+            data-word-reveal
+            aria-expanded="false"
+            class="mt-6 text-xs font-semibold uppercase tracking-[0.16em] text-brand-700 underline decoration-brand-300 underline-offset-4 hover:text-brand-900"
+          >
+            Tap to reveal meaning
+          </button>
+          <p class="mt-3 hidden text-base leading-7 text-ink" data-word-meaning aria-live="polite">{wordOfTheDay.meaning}</p>
+
+          <div class="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+            <button type="button" data-word-hear class="hidden text-xs font-semibold uppercase tracking-[0.14em] text-ink-700 hover:text-brand-700">Hear it</button>
+            <button type="button" data-word-save aria-pressed="false" class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-700 hover:text-brand-700">♡ Save word</button>
+            <a href="/vocab" class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-700 hover:text-brand-700">Learn more Korean →</a>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- The Seoul List -->
+    <section class="border-t border-ink-400/10">
+      <div class="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">The Seoul list</p>
+        <h2 class="mt-3 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">Save it for Seoul.</h2>
+        <p class="mt-4 leading-7 text-ink-400">
+          Found a café, neighbourhood, beauty treatment or restaurant you don't want to forget? Save places and guides to your personal Korea list — no account required.
+        </p>
+        <ul class="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          {seoulListPreview.map((label) => (
+            <li class="text-sm font-medium text-ink-700">♡ {label}</li>
+          ))}
+        </ul>
+        <a href="/my-korea" class="mt-7 inline-block text-xs font-semibold uppercase tracking-[0.16em] text-brand-700 hover:text-brand-900">View my Korea →</a>
+      </div>
+    </section>
+
+    <!-- Seasonal feature -->
+    <section class="relative border-t border-ink-400/10">
+      <div class="relative h-[50vh] min-h-[340px] w-full overflow-hidden">
+        <img src={season.photo} alt="" class="h-full w-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-4 pb-12 sm:px-6 sm:pb-16">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-cream-100">Korea in {season.name.toLowerCase()}</p>
+          <h2 class="mt-2 font-display text-4xl font-light text-cream-50 sm:text-5xl">Korea in {season.name}</h2>
+          <a href="/tags/travel" class="mt-5 inline-block text-xs font-semibold uppercase tracking-[0.16em] text-cream-50 underline decoration-brand-300 underline-offset-8">
+            See travel guides →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Email signup -->
+    <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <LearningSheetsWaitlist />
+    </section>
+  </div>
 </BaseLayout>
 
-<script define:vars={{ quizWords, worldCupThemes }}>
-  const foodCup = document.querySelector("[data-food-cup]");
-  const foodCupTitle = document.querySelector("[data-food-cup-title]");
-  const foodCupDescription = document.querySelector("[data-food-cup-description]");
-  const foodCupCategory = document.querySelector("[data-food-cup-category]");
-  const foodCupThemeButtons = document.querySelectorAll("[data-food-cup-theme]");
-  const foodCupMatch = document.querySelector("[data-food-cup-match]");
-  const foodCupProgress = document.querySelector("[data-food-cup-progress]");
-  const foodCupStage = document.querySelector("[data-food-cup-stage]");
-  const foodCupSteps = document.querySelector("[data-food-cup-steps]");
-  const foodCupCommunity = document.querySelector("[data-food-cup-community]");
-  const foodCupRanking = document.querySelector("[data-food-cup-ranking]");
-  const foodCupRankingTitle = document.querySelector("[data-food-cup-ranking-title]");
-  const foodCupRankingList = document.querySelector("[data-food-cup-ranking-list]");
+<script define:vars={{ wordOfTheDayHangul: wordOfTheDay?.hangul ?? null }}>
+  window.__wordOfTheDayHangul = wordOfTheDayHangul;
+</script>
 
-  if (foodCup && foodCupTitle && foodCupDescription && foodCupCategory && foodCupMatch && foodCupProgress && foodCupStage && foodCupSteps && foodCupCommunity && foodCupRanking && foodCupRankingTitle && foodCupRankingList) {
-    const stages = ["Quarterfinal", "Semifinal", "Final"];
-    const matchupRates = new Map();
-    let activeThemeKey = "food";
-    let activeTheme = worldCupThemes[activeThemeKey];
-    let round = [];
-    let winners = [];
-    let matchIndex = 0;
-    let stageIndex = 0;
-    let selections = 0;
-    let isChoosing = false;
-    let bracketChampion = null;
-    const accentClasses = ["text-brand-600", "text-violet-700", "text-orange-700", "text-teal-700", "border-brand-300", "bg-brand-100", "text-brand-800", "border-violet-300", "bg-violet-100", "text-violet-800", "border-orange-300", "bg-orange-100", "text-orange-800", "border-teal-300", "bg-teal-100", "text-teal-800"];
+<script>
+  import { toggleSavedWord, isWordSaved } from "../lib/myKorea.client";
 
-    const shuffle = (items) => {
-      const shuffled = [...items];
-      for (let index = shuffled.length - 1; index > 0; index -= 1) {
-        const nextIndex = Math.floor(Math.random() * (index + 1));
-        [shuffled[index], shuffled[nextIndex]] = [shuffled[nextIndex], shuffled[index]];
-      }
-      return shuffled;
-    };
-
-    const matchupRate = (pair, selected) => {
-      const key = pair.map((food) => food.name).sort().join("|");
-      if (!matchupRates.has(key)) {
-        const seed = [...key].reduce((total, letter) => total + letter.charCodeAt(0), activeTheme.community.matchupSeed);
-        matchupRates.set(key, { favourite: seed % 2, rate: 56 + (seed % 19) });
-      }
-      const result = matchupRates.get(key);
-      return pair[result.favourite] === selected ? result.rate : 100 - result.rate;
-    };
-
-    const renderSteps = () => {
-      foodCupSteps.innerHTML = Array.from({ length: 8 }, (_, index) => `<span class="h-1 flex-1 rounded-full ${index < selections ? "bg-brand-500" : index === selections ? "bg-orange-400" : "bg-brand-100"}"></span>`).join("");
-    };
-
-    const renderRanking = () => {
-      foodCupRankingTitle.textContent = activeTheme.community.rankingLabel;
-      foodCupRankingList.innerHTML = [...activeTheme.entries, activeTheme.wildcard].sort((a, b) => b.rankPercentage - a.rankPercentage).map((food, index) => `
-        <li class="grid grid-cols-[1.25rem_minmax(0,1fr)_2.5rem] items-center gap-x-2 text-xs">
-          <span class="font-semibold text-brand-700">${index + 1}</span>
-          <span class="min-w-0 font-medium text-gray-700">${food.name} <span class="font-korean text-gray-500">${food.hangul}</span></span>
-          <span class="text-right font-semibold text-gray-700">${food.rankPercentage}%</span>
-          <span class="col-span-2 col-start-2 mt-1 h-1 overflow-hidden rounded-full bg-brand-100"><span class="block h-full rounded-full ${activeTheme.accent.bar}" style="width:${food.rankPercentage}%"></span></span>
-        </li>`).join("");
-    };
-
-    const showWinner = (champion) => {
-      foodCupProgress.textContent = "8 choices complete";
-      foodCupStage.textContent = "Champion";
-      renderSteps();
-      foodCupCommunity.textContent = "";
-      foodCupMatch.innerHTML = `<div class="animate-fade-in-up py-2"><p class="text-sm font-semibold uppercase tracking-[0.14em] ${activeTheme.accent.label}">Your ${activeTheme.category} Champion</p><h3 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">${champion.name}</h3><p class="mt-1 font-korean text-lg font-semibold text-teal-700">${champion.hangul}</p><button type="button" class="mt-5 rounded-full bg-gradient-to-r from-brand-600 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-restart>Play again</button></div>`;
-      foodCupRanking.classList.remove("hidden");
-      foodCupMatch.querySelector("[data-food-cup-restart]")?.addEventListener("click", startFoodCup);
-    };
-
-    const entryContent = (food) => `<span class="block text-base font-bold leading-tight text-gray-900 sm:text-lg">${food.name}</span><span lang="ko" class="mt-2 block font-korean text-sm font-semibold text-teal-700">${food.hangul}</span>${food.descriptor ? `<span class="mt-1 block text-xs text-gray-500">${food.descriptor}</span>` : ""}`;
-
-    const renderMatch = (pair = round[matchIndex], wildcard = false) => {
-      foodCupProgress.textContent = `Round ${selections + 1} of 8`;
-      foodCupStage.textContent = wildcard ? "Wildcard Challenge" : stages[stageIndex];
-      foodCupCommunity.textContent = "";
-      renderSteps();
-      foodCupMatch.innerHTML = `<div class="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-2 animate-fade-in-up sm:gap-3" data-food-cup-options><button type="button" class="min-h-32 rounded-2xl border border-brand-200 bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-400 hover:bg-brand-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-choice="0" aria-label="Choose ${pair[0].name}">${entryContent(pair[0])}</button><span class="self-center text-sm font-semibold italic text-gray-400" aria-hidden="true">vs</span><button type="button" class="min-h-32 rounded-2xl border border-brand-200 bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-400 hover:bg-brand-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" data-food-cup-choice="1" aria-label="Choose ${pair[1].name}">${entryContent(pair[1])}</button></div>`;
-      foodCupMatch.querySelectorAll("[data-food-cup-choice]").forEach((button) => button.addEventListener("click", () => chooseFood(pair, Number(button.dataset.foodCupChoice), button, wildcard)));
-    };
-
-    const chooseFood = (pair, choiceIndex, button, wildcard = false) => {
-      if (isChoosing) return;
-      isChoosing = true;
-      const selected = pair[choiceIndex];
-      const options = foodCupMatch.querySelector("[data-food-cup-options]");
-      button.classList.add("border-brand-500", "bg-brand-50");
-      foodCupMatch.querySelectorAll("button").forEach((choice) => { choice.disabled = true; });
-      foodCupCommunity.innerHTML = `<span class="font-semibold text-teal-700">${matchupRate(pair, selected)}% of players</span> chose ${selected.name}.`;
-      winners.push(selected);
-      selections += 1;
-
-      window.setTimeout(() => {
-        options?.classList.add("opacity-0", "translate-y-2");
-        window.setTimeout(() => {
-          if (wildcard) {
-            showWinner(selected);
-            return;
-          }
-          matchIndex += 1;
-          if (matchIndex >= round.length) {
-            round = winners.reduce((pairs, winner, index) => index % 2 === 0 ? [...pairs, [winner, winners[index + 1]]] : pairs, []);
-            winners = [];
-            matchIndex = 0;
-            stageIndex += 1;
-          }
-          if (stageIndex === stages.length) {
-            bracketChampion = selected;
-            isChoosing = false;
-            renderMatch([bracketChampion, activeTheme.wildcard], true);
-          }
-          else { isChoosing = false; renderMatch(); }
-        }, 200);
-      }, 700);
-    };
-
-    function startFoodCup() {
-      const foods = shuffle(activeTheme.entries);
-      round = foods.reduce((pairs, food, index) => index % 2 === 0 ? [...pairs, [food, foods[index + 1]]] : pairs, []);
-      winners = [];
-      matchIndex = 0;
-      stageIndex = 0;
-      selections = 0;
-      isChoosing = false;
-      bracketChampion = null;
-      foodCupRanking.classList.add("hidden");
-      renderMatch();
-    }
-
-    foodCupThemeButtons.forEach((button) => button.addEventListener("click", () => {
-      const themeKey = button.dataset.foodCupTheme;
-      if (!themeKey || themeKey === activeThemeKey || !worldCupThemes[themeKey]) return;
-      activeThemeKey = themeKey;
-      activeTheme = worldCupThemes[activeThemeKey];
-      matchupRates.clear();
-      foodCupTitle.textContent = activeTheme.title;
-      foodCupDescription.textContent = activeTheme.description;
-      foodCupCategory.textContent = activeTheme.category;
-      foodCupCategory.classList.remove(...accentClasses);
-      foodCupCategory.classList.add(activeTheme.accent.label);
-      foodCupThemeButtons.forEach((themeButton) => {
-        const isActive = themeButton === button;
-        themeButton.setAttribute("aria-selected", String(isActive));
-        themeButton.classList.remove(...accentClasses);
-        if (isActive) themeButton.classList.add(...activeTheme.accent.tab);
-        themeButton.classList.toggle("border-brand-200", !isActive);
-        themeButton.classList.toggle("bg-white", !isActive);
-        themeButton.classList.toggle("text-gray-600", !isActive);
-      });
-      renderRanking();
-      startFoodCup();
-    }));
-
-    renderRanking();
-    startFoodCup();
-  }
-
-  const revealButton = document.querySelector("[data-word-reveal]");
-  const answer = document.querySelector("[data-word-answer]");
-  const shuffleButton = document.querySelector("[data-word-shuffle]");
-  const question = document.querySelector("[data-word-question]");
-  const romanization = document.querySelector("[data-word-romanization]");
-  const meaning = document.querySelector("[data-word-meaning]");
-  let currentQuizIndex = 0;
-
-  function renderQuiz(index) {
-    const word = quizWords[index];
-    if (!word) return;
-    if (question) question.textContent = word.hangul;
-    if (romanization) romanization.textContent = word.romanization;
-    if (meaning) meaning.textContent = word.meaning;
-    answer?.classList.add("hidden");
-    if (revealButton) {
-      revealButton.textContent = "Reveal answer";
-      revealButton.disabled = false;
+  declare global {
+    interface Window {
+      __wordOfTheDayHangul?: string | null;
     }
   }
 
+  const hangul = window.__wordOfTheDayHangul;
+
+  // Reveal
+  const revealButton = document.querySelector<HTMLButtonElement>("[data-word-reveal]");
+  const meaning = document.querySelector<HTMLElement>("[data-word-meaning]");
   revealButton?.addEventListener("click", () => {
-    answer?.classList.remove("hidden");
-    revealButton.textContent = "Answer revealed";
-    revealButton.disabled = true;
-  });
-  shuffleButton?.addEventListener("click", () => {
-    if (quizWords.length < 2) return;
-    let nextIndex = currentQuizIndex;
-    while (nextIndex === currentQuizIndex) nextIndex = Math.floor(Math.random() * quizWords.length);
-    currentQuizIndex = nextIndex;
-    renderQuiz(currentQuizIndex);
+    meaning?.classList.remove("hidden");
+    revealButton.setAttribute("aria-expanded", "true");
+    revealButton.textContent = "Meaning revealed";
   });
 
-  const phrase = document.querySelector("[data-seasonal-phrase]");
-  const month = new Date().getMonth();
-  const seasonalPhrases = ["❄️ Winter is for warm cafés and cosy Korean skincare.", "🌷 Spring is for new words and fresh Seoul discoveries.", "☀️ Summer is for cool snacks and city adventures.", "🍂 Autumn is for layers, markets, and language practice."];
-  if (phrase) phrase.textContent = seasonalPhrases[Math.floor(month / 3)];
+  // Hear it — browser-native speech synthesis, no audio-file infra.
+  // Pronunciation quality depends on the visitor's OS/browser Korean
+  // voice support, so the button simply doesn't render if unsupported
+  // rather than showing a control that silently does nothing.
+  const hearButton = document.querySelector<HTMLButtonElement>("[data-word-hear]");
+  if (hearButton && hangul && "speechSynthesis" in window) {
+    hearButton.classList.remove("hidden");
+    hearButton.addEventListener("click", () => {
+      const utterance = new SpeechSynthesisUtterance(hangul);
+      utterance.lang = "ko-KR";
+      speechSynthesis.speak(utterance);
+    });
+  }
+
+  // Save word — real integration with My Korea, not a mock.
+  const saveButton = document.querySelector<HTMLButtonElement>("[data-word-save]");
+  if (saveButton && hangul) {
+    function renderSaveButton() {
+      const saved = isWordSaved(hangul!);
+      saveButton!.textContent = saved ? "♥ Saved" : "♡ Save word";
+      saveButton!.setAttribute("aria-pressed", String(saved));
+    }
+    renderSaveButton();
+    saveButton.addEventListener("click", () => {
+      toggleSavedWord(hangul!);
+      renderSaveButton();
+    });
+  }
 </script>

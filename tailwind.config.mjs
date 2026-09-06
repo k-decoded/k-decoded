@@ -20,6 +20,11 @@ export default {
         // font that actually has those glyphs, falling back to Work
         // Sans for any Latin characters mixed into the same string.
         korean: ['"Noto Sans KR"', '"Work Sans"', "sans-serif"],
+        // Editorial display serif — used explicitly via `font-display`
+        // wherever the homepage/Nav/Footer redesign wants a magazine
+        // headline. NOT applied globally (unlike `heading` above), so
+        // every other page's h1–h6 stay Fredoka exactly as before.
+        display: ['"Fraunces"', "ui-serif", "Georgia", "serif"],
       },
       colors: {
         // A soft dusty-rose accent fits a K-beauty brand — muted rather
@@ -37,6 +42,30 @@ export default {
           700: "#904058",
           800: "#713347",
           900: "#562737",
+        },
+        // Editorial palette additions — warm-neutral (slight brown/
+        // yellow undertone) rather than cool grey, so they read as
+        // "warm cream / deep charcoal" instead of generic SaaS
+        // greyscale. Used by the site-wide Nav/Footer redesign and the
+        // homepage's editorial sections.
+        cream: {
+          DEFAULT: "#faf6f0",
+          50: "#fdfbf8",
+          100: "#faf6f0",
+          200: "#f3ebe0",
+        },
+        ink: {
+          DEFAULT: "#211f1d",
+          700: "#3a3733",
+          400: "#7a746c",
+        },
+        // Optional secondary accent (dividers, small tags) — brand
+        // pink stays the one primary accent color.
+        sage: {
+          50: "#f4f6f1",
+          200: "#dbe3d3",
+          400: "#a9b99a",
+          600: "#7c9268",
         },
       },
     },

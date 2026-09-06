@@ -1,0 +1,63 @@
+---
+// src/pages/category/[bucket].astro
+// Aggregate landing pages for the homepage nav's Beauty/Food/Culture
+// links — each spans several of the site's real granular tags (see
+// ../../lib/categoryBuckets), unlike ../tags/[tag].astro which matches
+// exactly one tag. Structurally a near-copy of that file, intersecting
+// a tag array instead of checking a single tag.
+
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { CATEGORY_BUCKETS } from "../../lib/categoryBuckets";
+
+const BUCKET_LABELS: Record<string, string> = {
+  beauty: "K-Beauty",
+  food: "Eat Korea",
+  culture: "Seoul Life",
+};
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => data.draft !== true);
+
+  return Object.entries(CATEGORY_BUCKETS).map(([bucket, tags]) => {
+    const matchingPosts = posts.filter((post) => post.data.tags.some((tag) => tags.includes(tag)));
+    return {
+      params: { bucket },
+      props: { bucket, posts: matchingPosts },
+    };
+  });
+}
+
+const { bucket, posts } = Astro.props;
+const label = BUCKET_LABELS[bucket] ?? bucket;
+const sortedPosts = posts.sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout
+  title={label}
+  description={`Every K-Decoded guide on ${label}.`}
+>
+  <section class="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+    {bucket === "culture" && (
+      <p class="mb-6">
+        <a href="/play" class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 hover:text-brand-900">Play the Mini World Cup →</a>
+      </p>
+    )}
+    <p class="text-sm font-medium uppercase tracking-wide text-brand-600">Category</p>
+    <h1 class="mt-1 text-3xl font-bold text-gray-900">{label}</h1>
+
+    {sortedPosts.length > 0 ? (
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {sortedPosts.map((post) => <PostCard post={post} />)}
+      </div>
+    ) : (
+      <p class="mt-8 text-gray-500">
+        No posts here yet — check back soon, or browse
+        {" "}<a href="/blog" class="text-brand-600 underline">all posts</a> instead.
+      </p>
+    )}
+  </section>
+</BaseLayout>

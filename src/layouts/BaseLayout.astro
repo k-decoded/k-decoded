@@ -38,12 +38,15 @@ const { title, description, image } = Astro.props;
     </script>
 
     <!-- Google Fonts: Fredoka (headings), Work Sans (body), Noto Sans KR
-         (Korean text). preconnect warms up the connection before the
-         stylesheet request, shaving a bit of load time. -->
+         (Korean text), Fraunces (editorial display serif — used
+         explicitly via `font-display` by the Nav/Footer redesign and
+         homepage sections; every other page's h1-h6 stay on Fredoka).
+         preconnect warms up the connection before the stylesheet
+         request, shaving a bit of load time. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Work+Sans:wght@400;500&family=Noto+Sans+KR:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600&family=Fredoka:wght@500;600;700&family=Work+Sans:wght@400;500&family=Noto+Sans+KR:wght@400;500&display=swap"
       rel="stylesheet"
     />
 
