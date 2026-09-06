@@ -149,6 +149,21 @@ of regular use before you see the compounding effect. Resist the urge
 to switch products every week chasing instant results; the routine
 works because it's repeated, not because any single bottle is magic.
 
+## Want it taught hands-on?
+
+If you're actually in Seoul and would rather have someone walk you
+through this in person than piece it together from a blog post, Klook
+runs a 90-minute **K-Beauty Masterclass: Achieve Glass Skin**
+experience at CYoung Makeup Studio in Seocho-gu — a personalized skin
+consultation paired with a full glass-skin routine walkthrough, taught
+by CYoung, a Seoul-based makeup artist who's run the class for over
+30,000 guests since 2017.
+
+<div class="not-prose my-4 text-center">
+  <a href="https://affiliate.klook.com/sl/GT28iyx" target="_blank" rel="noopener noreferrer sponsored" class="inline-block rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700">Book the K-Beauty Masterclass on Klook →</a>
+  <p class="mt-2 text-xs text-gray-400">Affiliate link — we may earn a small commission at no extra cost to you.</p>
+</div>
+
 *Shopping note: all products mentioned are available through Olive
 Young's US site, which now ships domestically with no added tariff
 fees.*
