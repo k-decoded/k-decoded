@@ -41,6 +41,14 @@ body {
   border-radius: 0.375rem;
 }
 
+/* Shared editorial color grade for the homepage "What are you here for?"
+   tiles — one identical filter applied to all five photos so a phone
+   shot, a food photo, and a flatlay read as one cohesive shoot instead
+   of five different sources, without tinting any of them pink/beige. */
+.tile-photo {
+  filter: saturate(0.88) contrast(0.94) brightness(0.98);
+}
+
 /* A subtle paper-like texture makes the pastel surfaces feel tactile without
    competing with article photography or copy. */
 .featured-story,
