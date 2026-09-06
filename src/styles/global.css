@@ -68,11 +68,11 @@ body {
   justify-content: center;
   min-width: 2.75rem;
   min-height: 2.75rem;
-  border: 1px solid rgb(179 83 110 / 0.32);
+  border: 1px solid rgb(185 127 138 / 0.35);
   border-radius: 9999px;
-  background: rgb(255 255 255 / 0.8);
-  box-shadow: 0 4px 14px rgb(86 39 55 / 0.12);
-  color: rgb(144 64 88);
+  background: rgb(255 253 252 / 0.85);
+  box-shadow: 0 4px 14px rgb(42 38 36 / 0.12);
+  color: rgb(185 127 138);
   font-family: "Fredoka", ui-sans-serif, system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 700;
