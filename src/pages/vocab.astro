@@ -5,50 +5,14 @@
 // add a `vocab` entry to any post's frontmatter and it shows up here
 // automatically on the next build.
 
-import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-
-const posts = await getCollection("posts", ({ data }) => data.draft !== true);
+import { getVocabGlossary, slugifyRomanization as slugify } from "../lib/vocabGlossary";
 
 // De-duplicate vocab entries by hangul: if the same word appears in
 // multiple posts, show it once with links to every post that uses it.
-type GlossaryEntry = {
-  hangul: string;
-  romanization: string;
-  meaning: string;
-  tags: Set<string>;
-  sources: { title: string; slug: string }[];
-};
-
-const glossaryMap = new Map<string, GlossaryEntry>();
-
-for (const post of posts) {
-  for (const entry of post.data.vocab) {
-    const existing = glossaryMap.get(entry.hangul);
-    if (existing) {
-      existing.sources.push({ title: post.data.title, slug: post.slug });
-      post.data.tags.forEach((tag) => existing.tags.add(tag));
-    } else {
-      glossaryMap.set(entry.hangul, {
-        ...entry,
-        tags: new Set(post.data.tags),
-        sources: [{ title: post.data.title, slug: post.slug }],
-      });
-    }
-  }
-}
-
-const glossary = Array.from(glossaryMap.values()).sort((a, b) =>
-  a.romanization.localeCompare(b.romanization)
-);
-
-// Turns a romanization like "jaoeseon chadanje" into a URL-safe anchor id
-// like "jaoeseon-chadanje". Post bodies link to /vocab#<this> so an inline
-// Korean word jumps straight to its glossary entry (and from there, to
-// every other post that uses the same word).
-function slugify(romanization: string) {
-  return romanization.trim().toLowerCase().replace(/\s+/g, "-");
-}
+// (Aggregation itself lives in ../lib/vocabGlossary so /my-korea can
+// reuse it to look up a saved word's meaning without duplicating this.)
+const glossary = await getVocabGlossary();
 
 // Every unique tag across the whole glossary, for the filter chips below.
 const allTags = Array.from(
@@ -116,7 +80,10 @@ const allTags = Array.from(
             <span class="text-sm italic text-brand-600">{entry.romanization}</span>
             <span class="text-sm text-gray-700">— {entry.meaning}</span>
           </div>
-          <button type="button" class="vocab-known-btn mt-2 rounded-full border border-teal-200 px-2.5 py-1 text-xs font-semibold text-teal-800 transition-colors hover:bg-teal-50" data-word={entry.hangul}>Mark as known</button>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <button type="button" class="vocab-save-btn rounded-full border border-brand-200 px-2.5 py-1 text-xs font-semibold text-brand-700 transition-colors hover:bg-brand-50" data-word={entry.hangul} aria-label={`Save ${entry.hangul} to My Korea`}>♡ SAVE</button>
+            <button type="button" class="vocab-known-btn rounded-full border border-teal-200 px-2.5 py-1 text-xs font-semibold text-teal-800 transition-colors hover:bg-teal-50" data-word={entry.hangul}>Mark as known</button>
+          </div>
           <p class="mt-1 text-xs text-gray-400">
             From:{" "}
             {entry.sources.map((source, i) => (
@@ -168,6 +135,8 @@ const allTags = Array.from(
   // view so the page doesn't just keep growing as more posts add vocab.
   // Runs entirely in the browser after the static HTML loads — no
   // server, no framework, no build step of its own.
+  import { toggleSavedWord, isWordSaved } from "../lib/myKorea.client";
+
   const PAGE_SIZE = 15;
 
   const searchInput = document.getElementById("vocab-search") as HTMLInputElement | null;
@@ -200,6 +169,26 @@ const allTags = Array.from(
       renderKnownWords();
     });
   });
+
+  function renderSaveButtons() {
+    document.querySelectorAll<HTMLButtonElement>(".vocab-save-btn").forEach((button) => {
+      const word = button.dataset.word ?? "";
+      const saved = isWordSaved(word);
+      button.textContent = saved ? "♥ SAVED" : "♡ SAVE";
+      button.setAttribute("aria-pressed", String(saved));
+      button.setAttribute("aria-label", saved ? `${word} saved to My Korea` : `Save ${word} to My Korea`);
+    });
+  }
+
+  document.querySelectorAll<HTMLButtonElement>(".vocab-save-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      const word = button.dataset.word;
+      if (!word) return;
+      toggleSavedWord(word);
+      renderSaveButtons();
+    });
+  });
+  renderSaveButtons();
 
   let activeTag = "all";
   let currentPage = 1;

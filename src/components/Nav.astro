@@ -9,7 +9,7 @@ import { getTagColor } from "../lib/tagColors";
 // "Home" isn't listed separately — the logo itself links to "/".
 const navItems = [
   { label: "Play", href: "/play" },
-  { label: "Saved", href: "/saved" },
+  { label: "My Korea", href: "/my-korea" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
@@ -70,6 +70,7 @@ const currentPath = Astro.url.pathname;
         <li>
           <a
             href={item.href}
+            data-my-korea-link={item.href === "/my-korea" ? "true" : undefined}
             class:list={[
               "text-sm font-medium transition-colors hover:text-brand-600",
               currentPath === item.href ? "text-brand-600" : "text-gray-600",
@@ -149,3 +150,16 @@ const currentPath = Astro.url.pathname;
     </div>
   </div>
 </header>
+
+<script>
+  // Returning-visit treatment (no popup, just a text swap): once the
+  // visitor has saved anything to My Korea, the nav link quietly grows a
+  // count instead of staying a plain label.
+  import { getTotalSavedCount } from "../lib/myKorea.client";
+
+  const link = document.querySelector<HTMLAnchorElement>("[data-my-korea-link]");
+  const count = getTotalSavedCount();
+  if (link && count > 0) {
+    link.textContent = `♡ My Korea · ${count} saved`;
+  }
+</script>
