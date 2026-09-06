@@ -73,8 +73,8 @@ const DAY_LABELS: Record<string, string> = {
 >
   <section class="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
     <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand-700">My Korea</p>
-    <h1 class="mt-2 text-4xl font-bold tracking-tight text-gray-900">Your Korea trip,<br />all in one place.</h1>
-    <p class="mt-3 max-w-xl leading-7 text-gray-600">
+    <h1 class="mt-2 font-display text-4xl font-semibold leading-tight tracking-tight text-ink sm:text-5xl">Your Korea trip,<br />all in one place.</h1>
+    <p class="mt-3 max-w-xl leading-7 text-ink-400">
       Save places, beauty experiences, food, guides and Korean phrases while you plan.
     </p>
 
@@ -84,7 +84,7 @@ const DAY_LABELS: Record<string, string> = {
         <button
           type="button"
           data-tab={tab.key}
-          class="tab-btn rounded-full px-4 py-2.5 text-sm font-medium transition-colors data-[active=true]:bg-brand-600 data-[active=true]:text-white data-[active=false]:bg-gray-100 data-[active=false]:text-gray-600 data-[active=false]:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
+          class="tab-btn rounded-md px-4 py-2.5 text-sm font-medium transition-colors data-[active=true]:bg-brand-600 data-[active=true]:text-white data-[active=false]:bg-cream-200 data-[active=false]:text-ink-400 data-[active=false]:hover:bg-cream-100 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
           data-active="false"
         >
           {tab.label}
@@ -95,25 +95,25 @@ const DAY_LABELS: Record<string, string> = {
     <!-- ==================== OVERVIEW ==================== -->
     <section data-panel="overview" class="mt-8 space-y-8">
       <div class="grid grid-cols-2 gap-3 sm:grid-cols-4" id="overview-stats">
-        <div class="rounded-xl border border-gray-100 p-4 text-center">
-          <p class="text-2xl font-bold text-gray-900" data-stat="places">0</p>
-          <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500">Places</p>
+        <div class="rounded-md border border-ink-400/10 p-4 text-center">
+          <p class="text-2xl font-bold text-ink" data-stat="places">0</p>
+          <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-ink-400">Places</p>
         </div>
-        <div class="rounded-xl border border-gray-100 p-4 text-center">
-          <p class="text-2xl font-bold text-gray-900" data-stat="guides">0</p>
-          <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500">Guides</p>
+        <div class="rounded-md border border-ink-400/10 p-4 text-center">
+          <p class="text-2xl font-bold text-ink" data-stat="guides">0</p>
+          <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-ink-400">Guides</p>
         </div>
-        <div class="rounded-xl border border-gray-100 p-4 text-center">
-          <p class="text-2xl font-bold text-gray-900" data-stat="korean">0</p>
-          <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500">Korean words</p>
+        <div class="rounded-md border border-ink-400/10 p-4 text-center">
+          <p class="text-2xl font-bold text-ink" data-stat="korean">0</p>
+          <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-ink-400">Korean words</p>
         </div>
-        <div class="rounded-xl border border-gray-100 p-4 text-center">
-          <p class="text-2xl font-bold text-gray-900" data-stat="checklist">0/0</p>
-          <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500">Trip tasks</p>
+        <div class="rounded-md border border-ink-400/10 p-4 text-center">
+          <p class="text-2xl font-bold text-ink" data-stat="checklist">0/0</p>
+          <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-ink-400">Trip tasks</p>
         </div>
       </div>
 
-      <p id="overview-empty" class="hidden rounded-2xl border border-brand-100 bg-brand-50 p-6 text-sm leading-6 text-gray-600">
+      <p id="overview-empty" class="hidden rounded-md border border-brand-200 bg-cream-200 p-6 text-sm leading-6 text-ink-400">
         Nothing saved yet. Look for <strong>♡ SAVE</strong> on any guide, or <strong>+ Add to Seoul list</strong> on a
         travel post, and it'll start showing up here. <a href="/blog" class="font-semibold text-brand-700 hover:underline">Explore K-Decoded →</a>
       </p>
@@ -121,12 +121,12 @@ const DAY_LABELS: Record<string, string> = {
       <!-- Account sync — reuses the existing Supabase magic-link auth, not a new backend. -->
       <div
         id="sync-card"
-        class="rounded-2xl border border-brand-200 bg-brand-50 p-5"
+        class="rounded-md border border-brand-200 bg-cream-200 p-5"
         data-supabase-url={supabaseUrl}
         data-supabase-key={supabaseKey}
       >
-        <h2 class="text-lg font-bold text-gray-900">Want to keep your Korea list across devices?</h2>
-        <p class="mt-1 text-sm leading-6 text-gray-600">
+        <h2 class="font-display text-lg font-semibold text-ink">Want to keep your Korea list across devices?</h2>
+        <p class="mt-1 text-sm leading-6 text-ink-400">
           Your list is saved on this device right now. Create a free account and we'll email you a sign-in link — no password to remember.
         </p>
         <div id="sync-form" class="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
@@ -135,12 +135,12 @@ const DAY_LABELS: Record<string, string> = {
             id="sync-email"
             type="email"
             placeholder="you@example.com"
-            class="rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            class="rounded-md border border-ink-400/30 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
           <button
             type="button"
             id="sync-submit"
-            class="rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
+            class="rounded-md bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
           >
             Create free account →
           </button>
@@ -157,7 +157,7 @@ const DAY_LABELS: Record<string, string> = {
             type="button"
             data-category={f.key}
             data-active={f.key === "all" ? "true" : "false"}
-            class="category-btn rounded-full px-3 py-1.5 text-xs font-medium transition-colors data-[active=true]:bg-brand-600 data-[active=true]:text-white data-[active=false]:bg-gray-100 data-[active=false]:text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
+            class="category-btn rounded-md px-3 py-1.5 text-xs font-medium transition-colors data-[active=true]:bg-brand-600 data-[active=true]:text-white data-[active=false]:bg-cream-200 data-[active=false]:text-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
           >
             {f.label}
           </button>
@@ -166,9 +166,9 @@ const DAY_LABELS: Record<string, string> = {
 
       <div class="mt-6 grid gap-4 sm:grid-cols-2" id="seoul-list-cards"></div>
 
-      <div id="seoul-list-empty" class="hidden rounded-2xl border border-brand-100 bg-brand-50 p-6">
-        <h2 class="text-xl font-bold text-gray-900" data-empty-title>Your Seoul list</h2>
-        <p class="mt-2 text-sm leading-6 text-gray-600" data-empty-body>
+      <div id="seoul-list-empty" class="hidden rounded-md border border-brand-200 bg-cream-200 p-6">
+        <h2 class="font-display text-xl font-semibold text-ink" data-empty-title>Your Seoul list</h2>
+        <p class="mt-2 text-sm leading-6 text-ink-400" data-empty-body>
           Nothing saved yet. Start collecting places you don't want to forget.
         </p>
         <a href="/tags/travel" class="mt-4 inline-block text-sm font-semibold text-brand-700 hover:underline" data-empty-cta>Explore Seoul →</a>
@@ -177,9 +177,9 @@ const DAY_LABELS: Record<string, string> = {
 
     <!-- ==================== MY TRIP ==================== -->
     <section data-panel="trip" class="mt-8 hidden">
-      <p class="text-sm text-gray-600">Assign places from your Seoul list to a day, then reorder or move them here.</p>
+      <p class="text-sm text-ink-400">Assign places from your Seoul list to a day, then reorder or move them here.</p>
       <div class="mt-6 space-y-6" id="trip-days"></div>
-      <p id="trip-empty" class="hidden rounded-2xl border border-brand-100 bg-brand-50 p-6 text-sm leading-6 text-gray-600">
+      <p id="trip-empty" class="hidden rounded-md border border-brand-200 bg-cream-200 p-6 text-sm leading-6 text-ink-400">
         Nothing planned yet. Save a place, then use <strong>+ Add to trip</strong> in your Seoul list to give it a day.
       </p>
     </section>
@@ -187,9 +187,9 @@ const DAY_LABELS: Record<string, string> = {
     <!-- ==================== MY READS ==================== -->
     <section data-panel="reads" class="mt-8 hidden">
       <div class="grid gap-3" id="reads-list"></div>
-      <div id="reads-empty" class="hidden rounded-2xl border border-brand-100 bg-brand-50 p-6">
-        <h2 class="text-xl font-bold text-gray-900">Your reads</h2>
-        <p class="mt-2 text-sm leading-6 text-gray-600">Nothing saved yet. Tap "♡ SAVE" at the end of a guide, and it'll appear here.</p>
+      <div id="reads-empty" class="hidden rounded-md border border-brand-200 bg-cream-200 p-6">
+        <h2 class="font-display text-xl font-semibold text-ink">Your reads</h2>
+        <p class="mt-2 text-sm leading-6 text-ink-400">Nothing saved yet. Tap "♡ SAVE" at the end of a guide, and it'll appear here.</p>
         <a href="/blog" class="mt-4 inline-block text-sm font-semibold text-brand-700 hover:underline">Explore the blog →</a>
       </div>
     </section>
@@ -197,19 +197,19 @@ const DAY_LABELS: Record<string, string> = {
     <!-- ==================== MY KOREAN ==================== -->
     <section data-panel="korean" class="mt-8 hidden">
       <div class="flex flex-wrap items-center justify-between gap-3">
-        <p class="text-lg font-bold text-gray-900"><span data-korean-count>0</span> words saved</p>
+        <p class="text-lg font-bold text-ink"><span data-korean-count>0</span> words saved</p>
         <button
           type="button"
           id="review-btn"
-          class="rounded-full border border-teal-200 bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-800 transition-colors hover:bg-teal-100 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
+          class="rounded-md border border-sage-400 bg-sage-50 px-4 py-2 text-sm font-semibold text-ink-700 transition-colors hover:bg-cream-100 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
         >
           Review 5 words →
         </button>
       </div>
       <div class="mt-6 grid gap-3" id="korean-list"></div>
-      <div id="korean-empty" class="hidden rounded-2xl border border-brand-100 bg-brand-50 p-6">
-        <h2 class="text-xl font-bold text-gray-900">Your Korean words</h2>
-        <p class="mt-2 text-sm leading-6 text-gray-600">No words saved yet. Save a word from any guide's vocab list and review it here.</p>
+      <div id="korean-empty" class="hidden rounded-md border border-brand-200 bg-cream-200 p-6">
+        <h2 class="font-display text-xl font-semibold text-ink">Your Korean words</h2>
+        <p class="mt-2 text-sm leading-6 text-ink-400">No words saved yet. Save a word from any guide's vocab list and review it here.</p>
         <a href="/vocab" class="mt-4 inline-block text-sm font-semibold text-brand-700 hover:underline">Explore the vocab glossary →</a>
       </div>
     </section>
@@ -224,11 +224,11 @@ const DAY_LABELS: Record<string, string> = {
           type="text"
           maxlength="60"
           placeholder="Add my own item"
-          class="flex-1 rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          class="flex-1 rounded-md border border-ink-400/30 px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
         />
         <button
           type="submit"
-          class="flex-shrink-0 rounded-full border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-100 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
+          class="flex-shrink-0 rounded-md border border-brand-200 bg-cream-200 px-4 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-100 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2"
         >
           + Add my own item
         </button>
@@ -238,8 +238,8 @@ const DAY_LABELS: Record<string, string> = {
     <!-- ==================== BEFORE YOUR TRIP ==================== -->
     <section data-panel="before-trip" class="mt-8 hidden">
       <div id="before-trip-content">
-        <h2 class="text-xl font-bold text-gray-900">Going to Seoul?</h2>
-        <p class="mt-1 text-sm text-gray-600">You might need:</p>
+        <h2 class="font-display text-xl font-semibold text-ink">Going to Seoul?</h2>
+        <p class="mt-1 text-sm text-ink-400">You might need:</p>
         <ul class="mt-4 space-y-2">
           {beforeTripLinks.map((link) => (
             <li>
@@ -248,7 +248,7 @@ const DAY_LABELS: Record<string, string> = {
           ))}
         </ul>
       </div>
-      <p id="before-trip-empty" class="hidden rounded-2xl border border-brand-100 bg-brand-50 p-6 text-sm leading-6 text-gray-600">
+      <p id="before-trip-empty" class="hidden rounded-md border border-brand-200 bg-cream-200 p-6 text-sm leading-6 text-ink-400">
         Save a place to your Seoul list first, and we'll surface the practical guides worth reading before you go.
       </p>
     </section>
@@ -336,7 +336,7 @@ const DAY_LABELS: Record<string, string> = {
     const meta = getSeoulListMeta(slug);
     const title = getSeoulTitle(slug);
     const image = meta?.image
-      ? `<img src="${meta.image}" alt="" class="h-40 w-full rounded-t-xl object-cover" loading="lazy" />`
+      ? `<img src="${meta.image}" alt="" class="h-40 w-full rounded-t-md object-cover" loading="lazy" />`
       : "";
     const categories = meta?.categories?.length
       ? meta.categories.map((c) => `<span class="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700">${c}</span>`).join("")
@@ -347,20 +347,20 @@ const DAY_LABELS: Record<string, string> = {
     ).join("");
 
     return `
-      <article class="overflow-hidden rounded-xl border border-gray-100 bg-white" data-seoul-card="${slug}">
+      <article class="overflow-hidden rounded-md border border-ink-400/10 bg-white" data-seoul-card="${slug}">
         ${image}
         <div class="p-4">
           <div class="flex flex-wrap gap-1.5">${categories}</div>
-          <h3 class="mt-2 font-bold text-gray-900">${title}</h3>
-          <p class="mt-1 line-clamp-2 text-sm text-gray-600">${meta?.description ?? "Saved from K-Decoded."}</p>
+          <h3 class="mt-2 font-bold text-ink">${title}</h3>
+          <p class="mt-1 line-clamp-2 text-sm text-ink-400">${meta?.description ?? "Saved from K-Decoded."}</p>
           <p class="mt-2 text-xs font-semibold text-brand-700">♥ SAVED</p>
           <div class="mt-3 flex flex-wrap items-center gap-2">
             <a href="/blog/${slug}" class="text-sm font-semibold text-brand-700 hover:underline">View guide →</a>
             <label class="sr-only" for="day-${slug}">Add ${title} to trip day</label>
-            <select id="day-${slug}" data-day-select="${slug}" class="ml-auto rounded-full border border-gray-200 px-2 py-1.5 text-xs focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+            <select id="day-${slug}" data-day-select="${slug}" class="ml-auto rounded-md border border-ink-400/20 px-2 py-1.5 text-xs focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
               ${dayOptions}
             </select>
-            <button type="button" data-remove-seoul="${slug}" class="rounded-full border border-gray-200 px-2.5 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" aria-label="Remove ${title} from Seoul list">Remove</button>
+            <button type="button" data-remove-seoul="${slug}" class="rounded-md border border-ink-400/20 px-2.5 py-1.5 text-xs font-semibold text-ink-400 hover:bg-cream-100 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2" aria-label="Remove ${title} from Seoul list">Remove</button>
           </div>
         </div>
       </article>`;
@@ -433,11 +433,11 @@ const DAY_LABELS: Record<string, string> = {
   function tripItemHTML(slug: string, day: TripDay, index: number, count: number): string {
     const title = getSeoulTitle(slug);
     return `
-      <li draggable="true" data-trip-item="${slug}" data-day="${day}" class="flex items-center gap-2 rounded-lg border border-gray-100 bg-white p-3">
-        <span class="flex-1 text-sm font-medium text-gray-900">${title}</span>
-        <button type="button" data-move-up="${slug}" data-day="${day}" ${index === 0 ? "disabled" : ""} class="rounded-full border border-gray-200 px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-label="Move ${title} up">↑</button>
-        <button type="button" data-move-down="${slug}" data-day="${day}" ${index === count - 1 ? "disabled" : ""} class="rounded-full border border-gray-200 px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-label="Move ${title} down">↓</button>
-        <button type="button" data-remove-trip="${slug}" class="rounded-full border border-gray-200 px-2.5 py-1 text-xs font-semibold text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-label="Remove ${title} from trip">Remove</button>
+      <li draggable="true" data-trip-item="${slug}" data-day="${day}" class="flex items-center gap-2 rounded-md border border-ink-400/10 bg-white p-3">
+        <span class="flex-1 text-sm font-medium text-ink">${title}</span>
+        <button type="button" data-move-up="${slug}" data-day="${day}" ${index === 0 ? "disabled" : ""} class="rounded-md border border-ink-400/20 px-2 py-1 text-xs text-ink-400 hover:bg-cream-100 disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-label="Move ${title} up">↑</button>
+        <button type="button" data-move-down="${slug}" data-day="${day}" ${index === count - 1 ? "disabled" : ""} class="rounded-md border border-ink-400/20 px-2 py-1 text-xs text-ink-400 hover:bg-cream-100 disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-label="Move ${title} down">↓</button>
+        <button type="button" data-remove-trip="${slug}" class="rounded-md border border-ink-400/20 px-2.5 py-1 text-xs font-semibold text-ink-400 hover:bg-cream-100 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-label="Remove ${title} from trip">Remove</button>
       </li>`;
   }
 
@@ -453,8 +453,8 @@ const DAY_LABELS: Record<string, string> = {
       const items = order.map((slug, i) => tripItemHTML(slug, day, i, order.length)).join("");
       return `
         <div>
-          <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">${dayLabels[day] ?? day}</h3>
-          <ul class="mt-2 space-y-2" data-day-list="${day}">${items || '<li class="text-sm text-gray-400">Nothing yet.</li>'}</ul>
+          <h3 class="text-sm font-semibold uppercase tracking-wide text-ink-400">${dayLabels[day] ?? day}</h3>
+          <ul class="mt-2 space-y-2" data-day-list="${day}">${items || '<li class="text-sm text-ink-400">Nothing yet.</li>'}</ul>
         </div>`;
     }).join("");
 
@@ -514,10 +514,10 @@ const DAY_LABELS: Record<string, string> = {
     container.innerHTML = reads.map((slug) => {
       const title = getReadTitle(slug);
       return `
-        <div class="flex items-center gap-3 rounded-xl border border-gray-100 bg-white p-4">
-          <a href="/blog/${slug}" class="flex-1 text-sm font-semibold text-gray-900 hover:text-brand-700">${title}</a>
+        <div class="flex items-center gap-3 rounded-md border border-ink-400/10 bg-white p-4">
+          <a href="/blog/${slug}" class="flex-1 text-sm font-semibold text-ink hover:text-brand-700">${title}</a>
           <a href="/blog/${slug}" class="text-sm font-semibold text-brand-700 hover:underline">Read →</a>
-          <button type="button" data-remove-read="${slug}" class="rounded-full border border-gray-200 px-2.5 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-label="Remove ${title} from My Reads">Remove</button>
+          <button type="button" data-remove-read="${slug}" class="rounded-md border border-ink-400/20 px-2.5 py-1.5 text-xs font-semibold text-ink-400 hover:bg-cream-100 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-label="Remove ${title} from My Reads">Remove</button>
         </div>`;
     }).join("");
 
@@ -538,12 +538,12 @@ const DAY_LABELS: Record<string, string> = {
     const entry = glossaryByHangul.get(hangul);
     const known = isWordKnown(hangul);
     return `
-      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-gray-100 bg-white p-4">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border border-ink-400/10 bg-white p-4">
         <span class="font-korean text-lg font-bold text-brand-800">${hangul}</span>
         <span class="text-sm italic text-brand-600">${entry?.romanization ?? ""}</span>
-        <span class="text-sm text-gray-700">${entry?.meaning ?? ""}</span>
-        <button type="button" data-known="${hangul}" class="ml-auto rounded-full border border-teal-200 px-2.5 py-1 text-xs font-semibold text-teal-800 hover:bg-teal-50 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-pressed="${known}">${known ? "✓ Known" : "Mark as known"}</button>
-        <button type="button" data-unsave-word="${hangul}" class="rounded-full border border-gray-200 px-2.5 py-1 text-xs font-semibold text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-label="Remove ${hangul} from saved words">Remove</button>
+        <span class="text-sm text-ink-700">${entry?.meaning ?? ""}</span>
+        <button type="button" data-known="${hangul}" class="ml-auto rounded-md border border-sage-400 px-2.5 py-1 text-xs font-semibold text-ink-700 hover:bg-sage-50 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-pressed="${known}">${known ? "✓ Known" : "Mark as known"}</button>
+        <button type="button" data-unsave-word="${hangul}" class="rounded-md border border-ink-400/20 px-2.5 py-1 text-xs font-semibold text-ink-400 hover:bg-cream-100 focus:outline-none focus:ring-2 focus:ring-brand-400" aria-label="Remove ${hangul} from saved words">Remove</button>
       </div>`;
   }
 
@@ -583,8 +583,8 @@ const DAY_LABELS: Record<string, string> = {
     const container = document.getElementById("checklist-items")!;
     container.innerHTML = items.map((item) => `
       <li class="flex items-center gap-3">
-        <input type="checkbox" id="check-${item.id}" data-checklist-item="${item.id}" ${checked.has(item.id) ? "checked" : ""} class="h-5 w-5 flex-shrink-0 rounded border-gray-300 text-brand-600 focus:ring-brand-500" />
-        <label for="check-${item.id}" class="text-sm text-gray-800">${item.label}</label>
+        <input type="checkbox" id="check-${item.id}" data-checklist-item="${item.id}" ${checked.has(item.id) ? "checked" : ""} class="h-5 w-5 flex-shrink-0 rounded border-ink-400/30 text-brand-600 focus:ring-brand-500" />
+        <label for="check-${item.id}" class="text-sm text-ink-700">${item.label}</label>
       </li>`).join("");
 
     container.querySelectorAll<HTMLInputElement>("[data-checklist-item]").forEach((input) => {
