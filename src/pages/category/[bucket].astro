@@ -46,17 +46,17 @@ const sortedPosts = posts.sort(
         <a href="/play" class="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 hover:text-brand-900">Play the Mini World Cup →</a>
       </p>
     )}
-    <p class="text-sm font-medium uppercase tracking-wide text-brand-600">Category</p>
-    <h1 class="mt-1 text-3xl font-bold text-gray-900">{label}</h1>
+    <p class="text-sm font-medium uppercase tracking-wide text-brand-700">Category</p>
+    <h1 class="mt-1 font-display text-3xl font-semibold text-ink sm:text-4xl">{label}</h1>
 
     {sortedPosts.length > 0 ? (
       <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {sortedPosts.map((post) => <PostCard post={post} />)}
       </div>
     ) : (
-      <p class="mt-8 text-gray-500">
+      <p class="mt-8 text-ink-400">
         No posts here yet — check back soon, or browse
-        {" "}<a href="/blog" class="text-brand-600 underline">all posts</a> instead.
+        {" "}<a href="/blog" class="text-brand-700 underline">all posts</a> instead.
       </p>
     )}
   </section>
