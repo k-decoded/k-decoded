@@ -8,6 +8,7 @@ import "../styles/global.css";
 import SEO from "../components/SEO.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import CookieConsent from "../components/CookieConsent.astro";
 
 interface Props {
   title: string;
@@ -24,18 +25,6 @@ const { title, description, image } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <!-- Google Analytics (GA4). is:inline tells Astro to leave these
-         scripts exactly as-is instead of bundling/hashing them — required
-         for third-party snippets like this that rely on a specific
-         global (gtag) and load order. -->
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-5ECJ9D8LDN"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag("js", new Date());
-      gtag("config", "G-5ECJ9D8LDN");
-    </script>
 
     <!-- Google Fonts: Fredoka (headings), Work Sans (body), Noto Sans KR
          (Korean text), Fraunces (editorial display serif — used
@@ -58,5 +47,6 @@ const { title, description, image } = Astro.props;
       <slot />
     </main>
     <Footer />
+    <CookieConsent />
   </body>
 </html>
