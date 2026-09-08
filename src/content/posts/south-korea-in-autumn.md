@@ -51,8 +51,6 @@ Hiking in Korea is closer to a national pastime than a niche hobby, and autumn i
 
 [AUTHOR NOTE OPPORTUNITY: an observation about who you actually see on the trail in Korea in autumn — the full range of ages and hiking gear is part of the story.]
 
-<img src="/images/posts/south-korea-in-autumn-seoul-forest-walk.jpg" alt="People walking a tree-lined path through Seoul Forest surrounded by autumn foliage" class="not-prose my-8 w-full rounded-xl object-cover" />
-
 ## Palaces Look Completely Different in Autumn
 
 Korea's palaces are worth visiting in any season, but autumn changes them. Gyeongbokgung, Changdeokgung, and Deoksugung are all built around courtyards, ponds, and old trees — and that architecture reads differently against red and gold than against the flat green of summer. It might be the single easiest sell in this whole article: the same buildings you've seen in a hundred photos simply look better for a few weeks each year.
@@ -83,17 +81,11 @@ Autumn is also when Korea's festival calendar gets busy: traditional harvest fes
 
 Beyond the foliage, autumn is just when Seoul is easiest to live in for a few days. Neighborhoods like Seongsu, Ikseondong, Hongdae, and Yeonnam are built for walking and sitting outside, and summer heat cuts that short. Autumn gives it back: a coffee at an outdoor table, a longer loop through the palace districts, an actual walk along the Han River instead of a quick look and a retreat indoors. It's less about any single sight and more about how much of the day you can spend outside without planning around the heat.
 
-<img src="/images/posts/south-korea-in-autumn-seongsu-cafe.jpg" alt="People sitting at an outdoor café table on a tree-lined street in Seongsu, Seoul, during autumn" class="not-prose my-8 w-full rounded-xl object-cover" />
-
 [AUTHOR NOTE OPPORTUNITY: a specific café, street, or moment in Seoul that captures how different the city feels once the heat lifts.]
 
 ## Autumn Is Perfect for Exploring Beyond Seoul
 
 The same weather that makes Seoul easier makes the rest of the country worth the trip. Gyeongju pairs its historic sites with the same seasonal colour found in Seoul's palaces, spread across an entire old capital. Busan adds coastal scenery, and its foliage generally turns later, which can stretch your window. Seoraksan remains the single most famous autumn landscape in Korea. And Jeonju offers a slower pace built around traditional architecture and food rather than a checklist of sights. Each deserves its own guide rather than a paragraph here — they'll get one later in this series.
-
-<img src="/images/posts/south-korea-in-autumn-gyeongju.jpg" alt="Traditional Korean architecture in Gyeongju surrounded by autumn-coloured trees" class="not-prose my-8 w-full rounded-xl object-cover" />
-
-<img src="/images/posts/south-korea-in-autumn-busan-coast.jpg" alt="Mountains meeting the coastline in Busan during late autumn" class="not-prose my-8 w-full rounded-xl object-cover" />
 
 ## So, Is Autumn the Best Time to Visit Korea?
 
