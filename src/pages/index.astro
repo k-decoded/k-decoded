@@ -39,17 +39,15 @@ const seasons = [
 ];
 const season = seasons[Math.floor(new Date().getMonth() / 3)];
 
-// "What are you here for?" — five real destinations, five real photos.
-// `focal` is a per-image object-position: each photo was shot for a
-// different (mostly landscape) crop, so cover-fitting them into the same
-// narrow aspect-[3/4] tile needs its own anchor point to keep the actual
-// subject in frame instead of an arbitrary center-crop.
+// "What are you here for?" — five illustrated tiles, cropped from one
+// commissioned composite (see category-*.png). Each crop already bakes
+// in its own label + underline, so the tile just displays the art.
 const tiles = [
-  { label: "Plan Korea", href: "/tags/travel", photo: "/images/posts/first-timer-seoul-itinerary-hero.png", focal: "72% 45%" },
-  { label: "K-Beauty", href: "/category/beauty", photo: "/images/posts/glass-skin-101-hero.png", focal: "62% 35%" },
-  { label: "Eat Korea", href: "/category/food", photo: "/images/posts/korea-food-trends-tanghulu.jpg", focal: "50% 30%" },
-  { label: "Learn Korean", href: "/vocab", photo: "/images/posts/korean-shopping-flatlay.webp", focal: "42% 45%" },
-  { label: "Seoul Life", href: "/category/culture", photo: "/images/posts/ihwa-mural-village-seoul.png", focal: "50% 35%" },
+  { label: "Plan Korea", href: "/tags/travel", photo: "/images/posts/category-plan-korea.png" },
+  { label: "K-Beauty", href: "/category/beauty", photo: "/images/posts/category-k-beauty.png" },
+  { label: "Eat Korea", href: "/category/food", photo: "/images/posts/category-eat-korea.png" },
+  { label: "Learn Korean", href: "/vocab", photo: "/images/posts/category-learn-korean.png" },
+  { label: "Seoul Life", href: "/category/culture", photo: "/images/posts/category-seoul-life.png" },
 ];
 
 // "Plan Your Korea Trip" — links to real posts only. "Where to stay"
@@ -109,15 +107,12 @@ const seoulListPreview = ["Beauty", "Food", "Cafés", "Shopping", "Places"];
       <h2 class="font-display text-3xl font-semibold text-ink sm:text-4xl">What are you here for?</h2>
       <div class="mt-8 grid grid-cols-2 gap-px overflow-hidden bg-line sm:grid-cols-5">
         {tiles.map((tile, index) => (
-          <a href={tile.href} class:list={["group relative flex aspect-[3/4] items-end overflow-hidden bg-cream", index === tiles.length - 1 && "col-span-2 sm:col-span-1"]}>
+          <a href={tile.href} class:list={["group relative block aspect-[304/555] overflow-hidden bg-cream", index === tiles.length - 1 && "col-span-2 sm:col-span-1"]}>
             <img
               src={tile.photo}
-              alt=""
-              style={{ objectPosition: tile.focal }}
+              alt={tile.label}
               class="tile-photo absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/0 to-transparent"></div>
-            <span class="relative z-10 p-4 text-xs font-semibold uppercase tracking-[0.14em] text-cream-50">{tile.label}</span>
           </a>
         ))}
       </div>
