@@ -1,10 +1,11 @@
 ---
 // CookieConsent.astro
-// Gates Google Analytics behind an explicit accept/decline choice — GA
-// is not loaded at all until the visitor accepts, so no analytics
-// cookies are set pre-consent. Choice persists in localStorage using
-// the same "k-decoded:" key convention as myKorea.client.ts. Rendered
-// once, site-wide, from BaseLayout.
+// Shows the accept/decline banner and drives Google Consent Mode v2:
+// gtag.js itself always loads (see BaseLayout.astro), this component only
+// pushes gtag("consent", "update", ...) once the visitor makes a choice,
+// so no analytics/ad cookies are set until "Accept". Choice persists in
+// localStorage using the same "k-decoded:" key convention as
+// myKorea.client.ts. Rendered once, site-wide, from BaseLayout.
 ---
 
 <div
@@ -39,27 +40,23 @@
 
 <script>
   const CONSENT_KEY = "k-decoded:cookie-consent";
-  const GA_ID = "G-5ECJ9D8LDN";
 
   const banner = document.getElementById("cookie-consent");
   const acceptButton = document.getElementById("cookie-accept");
   const declineButton = document.getElementById("cookie-decline");
 
-  function loadAnalytics(): void {
-    if (document.getElementById("ga-script")) return;
-
-    const script = document.createElement("script");
-    script.id = "ga-script";
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-    document.head.appendChild(script);
-
+  function updateConsent(granted: boolean): void {
     window.dataLayer = window.dataLayer || [];
     function gtag(...args: unknown[]) {
       window.dataLayer!.push(args);
     }
-    gtag("js", new Date());
-    gtag("config", GA_ID);
+    const state = granted ? "granted" : "denied";
+    gtag("consent", "update", {
+      ad_storage: state,
+      ad_user_data: state,
+      ad_personalization: state,
+      analytics_storage: state,
+    });
   }
 
   function showBanner(): void {
@@ -71,21 +68,20 @@
   }
 
   const consent = localStorage.getItem(CONSENT_KEY);
-  if (consent === "accepted") {
-    loadAnalytics();
-  } else if (consent !== "declined") {
+  if (consent !== "accepted" && consent !== "declined") {
     showBanner();
   }
 
   acceptButton?.addEventListener("click", () => {
     localStorage.setItem(CONSENT_KEY, "accepted");
     hideBanner();
-    loadAnalytics();
+    updateConsent(true);
   });
 
   declineButton?.addEventListener("click", () => {
     localStorage.setItem(CONSENT_KEY, "declined");
     hideBanner();
+    updateConsent(false);
   });
 
   // "Cookie Preferences" link (in the footer) re-opens this banner so a
