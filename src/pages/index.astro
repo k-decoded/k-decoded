@@ -32,12 +32,15 @@ const wordOfTheDay = quizWords.length ? quizWords[dayOfYear % quizWords.length] 
 // seasonal-phrase rotator, just computed server-side so the right
 // season is in the initial HTML (no client-side flash of the wrong one).
 const seasons = [
-  { name: "Winter", photo: "/images/posts/gyeongbokgung-palace.png" },
-  { name: "Spring", photo: "/images/posts/gamcheon-village-busan-mural-cherry-blossom-window.jpg" },
-  { name: "Summer", photo: "/images/posts/haeundae-beach-busan.png" },
-  { name: "Autumn", photo: "/images/posts/bukchon-hanok-village-alley.png" },
+  { name: "Winter", photo: "/images/posts/gyeongbokgung-palace.png", href: "/tags/travel" },
+  { name: "Spring", photo: "/images/posts/gamcheon-village-busan-mural-cherry-blossom-window.jpg", href: "/tags/travel" },
+  { name: "Summer", photo: "/images/posts/haeundae-beach-busan.png", href: "/tags/travel" },
+  { name: "Autumn", photo: "/images/posts/south-korea-in-autumn-ginkgo-street.png", href: "/blog/south-korea-in-autumn" },
 ];
-const season = seasons[Math.floor(new Date().getMonth() / 3)];
+// Meteorological seasons (Winter: Dec-Feb, Spring: Mar-May, Summer: Jun-Aug,
+// Autumn: Sep-Nov) — the old `month / 3` version was off by one, so it kept
+// showing "Summer" through all of September.
+const season = seasons[Math.floor((new Date().getMonth() + 1) / 3) % 4];
 
 // "What are you here for?" — five illustrated tiles, cropped from one
 // commissioned composite (see category-*.png). Each crop already bakes
@@ -248,7 +251,7 @@ const seoulListPreview = ["Beauty", "Food", "Cafés", "Shopping", "Places"];
         <div class="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-4 pb-12 sm:px-6 sm:pb-16">
           <p class="text-xs font-semibold uppercase tracking-[0.2em] text-cream-100">Korea in {season.name.toLowerCase()}</p>
           <h2 class="mt-2 font-display text-4xl font-light text-cream-50 sm:text-5xl">Korea in {season.name}</h2>
-          <a href="/tags/travel" class="mt-5 inline-block text-xs font-semibold uppercase tracking-[0.16em] text-cream-50 underline decoration-brand-300 underline-offset-8">
+          <a href={season.href} class="mt-5 inline-block text-xs font-semibold uppercase tracking-[0.16em] text-cream-50 underline decoration-brand-300 underline-offset-8">
             See travel guides →
           </a>
         </div>
