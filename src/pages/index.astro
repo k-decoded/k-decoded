@@ -81,19 +81,23 @@ const seoulListPreview = ["Beauty", "Food", "Cafés", "Shopping", "Places"];
   description="K-Decoded is a Korea travel and lifestyle guide — practical, editorial guides to Seoul neighbourhoods, Korean beauty, food, and the language behind them."
 >
   <div class="bg-cream">
-    <!-- Hero — line-art skyline illustration. `aspect-[2/1]` matches the
-         source image's native ratio, so object-contain never has to crop
-         it. `max-h` stops that ratio from ballooning the section past what
-         the text needs on wide screens (was hitting ~960px); on screens
-         wide enough to hit the cap, contain pillarboxes onto the matching
-         cream bg instead of cropping the art. -->
+    <!-- Hero — line-art skyline illustration. Fixed (not aspect-driven)
+         height keeps the section short at any width. object-cover fills
+         edge-to-edge; object-position is biased toward the skyline (right
+         side of the source art) so cropping only ever eats into the empty
+         gradient on the left, never the illustration itself. -->
     <section class="relative">
-      <div class="relative aspect-[2/1] max-h-[560px] min-h-[520px] w-full overflow-hidden bg-cream">
+      <div class="relative h-[400px] w-full overflow-hidden bg-cream sm:h-[460px]">
         <img
           src="/images/posts/seoul-skyline-line-art-hero.png"
           alt="Illustrated gold line-art of the Seoul skyline — N Seoul Tower, a palace gate, and city buildings — on a soft pink-to-teal gradient"
-          class="h-full w-full object-contain"
+          class="h-full w-full object-cover [object-position:92%_55%] sm:[object-position:78%_50%]"
         />
+        <!-- At narrow widths the cover-cropped art scales up enough that
+             the skyline can drift under the text no matter how it's
+             positioned — this scrim guarantees the text stays legible
+             without having to chase an exact crop per breakpoint. -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#f8f4ef_0%,#f8f4ef_65%,transparent_100%)] sm:hidden"></div>
         <div class="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-4 pb-12 sm:px-6 sm:pb-16">
           <p class="text-xs font-semibold uppercase tracking-[0.22em] text-ink-700">Korea • Travel • Beauty • Culture</p>
           <h1 class="mt-3 font-display text-5xl font-light leading-[1.05] text-ink sm:text-7xl">Korea,<br />decoded.</h1>
