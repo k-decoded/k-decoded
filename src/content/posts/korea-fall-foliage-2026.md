@@ -61,16 +61,12 @@ Seoraksan is Korea's most famous foliage destination, and its position at the co
 **Best for:** Dramatic mountain scenery
 **Typical position in season:** Earlier
 
-**Coming soon → Seoraksan in Autumn: Complete Guide**
-
 ### 2. Seoul
 
 You don't have to leave Seoul to see real foliage. Seoul Forest, Namsan, Changdeokgung, Deoksugung, Olympic Park, Bukhansan, and the paths around Seokchon Lake all turn in autumn, several within a short subway ride of each other. Seoul's colour generally lands mid-season, after the mountains and before the south — a convenient base if foliage is only part of your trip rather than the whole point of it.
 
 **Best for:** First-time visitors and easy foliage sightseeing
 **Typical position in season:** Middle
-
-**Coming soon → Seoul in Autumn: Best Places to See Fall Colours**
 
 <img src="/images/posts/korea-fall-foliage-2026-seoul-ginkgo-street.png" alt="A Seoul street lined with golden ginkgo trees, N Seoul Tower visible on the hill behind, pedestrians walking underneath" class="not-prose my-8 w-full rounded-xl object-cover" />
 
@@ -80,8 +76,6 @@ Nami Island's tree-lined, golden ginkgo avenues are some of the most recognisabl
 
 **Best for:** Easy day trip and classic ginkgo scenery
 **Typical position in season:** Early-to-mid season, depending on annual conditions
-
-[AUTHOR NOTE OPPORTUNITY: an honest note about how crowded Nami Island actually gets during peak ginkgo season, and whether it's worth the trip anyway.]
 
 <img src="/images/posts/korea-fall-foliage-2026-nami-island.png" alt="The tree-lined ginkgo avenue on Nami Island with fallen golden leaves covering the path" class="not-prose my-8 w-full rounded-xl object-cover" />
 
@@ -111,8 +105,6 @@ Jirisan is Korea's southern mainland mountain range, and one of its largest. Bec
 Busan generally sees autumn later than anywhere else on this list, making it a genuinely useful option for travellers arriving toward the back end of the season. Geumjeongsan, the mountain rising behind the city, along with the parks and temple areas around it, turns well after Seoul has finished. What makes Busan worth calling out is the combination: coast, mountains, and late autumn colour together, at a point when much of the rest of the country has already gone bare.
 
 **Best for:** Travellers visiting Korea later in the season
-
-**Coming soon → Busan in Autumn**
 
 ## When Should You Visit Korea for Fall Foliage?
 
@@ -168,9 +160,6 @@ Yes. Foliage is a major part of Korea's autumn appeal, but it isn't the only one
 
 - [← Korea in Autumn: September vs October vs November](/blog/korea-autumn-september-october-november)
 - **Next →** Seoul in Autumn: Best Places to See Fall Colours
-- **Coming soon →** What to Wear in Korea During Autumn
-- **Coming soon →** Best Autumn Day Trips From Seoul
-- **Coming soon →** Seoraksan in Autumn
 
 ## FAQ
 
