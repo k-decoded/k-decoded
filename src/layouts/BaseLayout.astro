@@ -8,7 +8,6 @@ import "../styles/global.css";
 import SEO from "../components/SEO.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
-import CookieConsent from "../components/CookieConsent.astro";
 
 interface Props {
   title: string;
@@ -26,26 +25,14 @@ const { title, description, image } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Google Analytics (GA4) with Consent Mode v2. gtag.js always loads
-         so GA can perform consent-mode/cookieless measurement, but
-         analytics/ad storage default to "denied" until the visitor
-         accepts via the cookie-consent banner (CookieConsent.astro),
-         which reads/writes the same "k-decoded:cookie-consent" localStorage
-         key and calls gtag("consent", "update", ...) on each choice. is:inline
-         tells Astro to leave these scripts exactly as-is instead of
-         bundling/hashing them — required for third-party snippets like
-         this that rely on a specific global (gtag) and load order. -->
+    <!-- Google Analytics (GA4). is:inline tells Astro to leave these
+         scripts exactly as-is instead of bundling/hashing them — required
+         for third-party snippets like this that rely on a specific
+         global (gtag) and load order. -->
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-5ECJ9D8LDN"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() { dataLayer.push(arguments); }
-      const consented = localStorage.getItem("k-decoded:cookie-consent") === "accepted";
-      gtag("consent", "default", {
-        ad_storage: consented ? "granted" : "denied",
-        ad_user_data: consented ? "granted" : "denied",
-        ad_personalization: consented ? "granted" : "denied",
-        analytics_storage: consented ? "granted" : "denied",
-      });
       gtag("js", new Date());
       gtag("config", "G-5ECJ9D8LDN");
     </script>
@@ -71,6 +58,5 @@ const { title, description, image } = Astro.props;
       <slot />
     </main>
     <Footer />
-    <CookieConsent />
   </body>
 </html>
