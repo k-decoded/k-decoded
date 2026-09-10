@@ -103,13 +103,13 @@ One thing worth understanding before you lock in dates: Korea's foliage doesn't 
 
 We're covering the timing and regional spread properly in the next post.
 
-**Next → Korea Fall Foliage 2026: When & Where to See Autumn Leaves**
+**Next → [Korea Fall Foliage 2026: When & Where to See Autumn Leaves](/blog/korea-fall-foliage-2026)**
 
 <img src="/images/posts/korea-autumn-travel-planning.png" alt="A traveller checking a phone on a Korean train platform, autumn light coming through the windows" class="not-prose my-8 w-full rounded-xl object-cover" />
 
 ## Continue the Autumn in Korea Series 🍂
 
 - [← Why Autumn Is One of the Best Times to Visit South Korea](/blog/south-korea-in-autumn)
-- **Next →** Korea Fall Foliage 2026: When & Where to Go
+- **Next →** [Korea Fall Foliage 2026: When & Where to See Autumn Leaves](/blog/korea-fall-foliage-2026)
 - **Coming soon →** Seoul in Autumn: Best Places to See Fall Colours
 - **Coming soon →** What to Wear in Korea During Autumn
