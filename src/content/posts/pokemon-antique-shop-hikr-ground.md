@@ -1,7 +1,7 @@
 ---
 title: "Pokémon's Antique Shop Pop-Up Just Revealed Its Second Merch Drop"
 description: "Pokémon Korea's Antique Shop pop-up opens at HiKR Ground September 18 — hanbok Pikachu, a premium leather goods line, and a three-week second wave of celadon-style, Pokémon Center, and full-Eeveelution merchandise."
-date: 2026-09-15
+date: 2026-09-16
 tags: ["travel", "media"]
 heroImage: "/images/posts/pokemon-antique-shop-2026-key-visual.jpg"
 draft: false
