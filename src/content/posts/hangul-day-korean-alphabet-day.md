@@ -1,5 +1,5 @@
 ---
-title: "Hangul Day (October 9): The Holiday Korea Throws for Its Alphabet"
+title: "Hangul Day: Celebrating the Alphabet Made for Everyone"
 description: "Korea has a national holiday for its writing system. Here's the story behind Hangul Day, why the alphabet is so easy to learn, and where to celebrate it in Seoul — including the long weekend it creates in 2026."
 date: 2026-09-23
 tags: ["culture", "language", "travel"]
