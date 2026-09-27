@@ -1,7 +1,7 @@
 ---
 title: "Pokémon Pokopia's First Concept Store Closes in Seongsu This Week"
 description: "Musinsa turned the ground floor of its Seongsu megastore into the town from Pokémon Pokopia: giant Ditto, a capsule-toy wall, and Pale Pikachu merch you can't buy anywhere else. It ends September 29. Here's what's there and how to get in."
-date: 2026-09-27
+date: 2026-09-27T18:00:00+09:00
 tags: ["travel", "media"]
 heroImage: "/images/posts/pokopia-concept-store-musinsa-interior.jpg"
 draft: false
