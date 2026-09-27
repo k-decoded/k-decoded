@@ -8,13 +8,12 @@
 // pattern already used for the vocab glossary's search box.
 
 import { getCollection } from "astro:content";
+import { sortPostsNewestFirst } from "../lib/sortPosts";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getTagColor } from "../lib/tagColors";
 
 const posts = await getCollection("posts", ({ data }) => data.draft !== true);
-const sortedPosts = posts.sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const sortedPosts = sortPostsNewestFirst(posts);
 ---
 
 <BaseLayout

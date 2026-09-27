@@ -9,11 +9,11 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import LearningSheetsWaitlist from "../components/LearningSheetsWaitlist.astro";
 import { getCollection } from "astro:content";
+import { sortPostsNewestFirst } from "../lib/sortPosts";
 
 const allPosts = await getCollection("posts", ({ data }) => data.draft !== true);
 
-const featuredPosts = allPosts
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+const featuredPosts = sortPostsNewestFirst(allPosts)
   .slice(0, 10);
 
 const heroPost = featuredPosts[0];

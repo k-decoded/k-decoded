@@ -5,11 +5,10 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PostCard from "../../components/PostCard.astro";
 import { getCollection } from "astro:content";
+import { sortPostsNewestFirst } from "../../lib/sortPosts";
 
 const allPosts = await getCollection("posts", ({ data }) => data.draft !== true);
-const sortedPosts = allPosts.sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const sortedPosts = sortPostsNewestFirst(allPosts);
 ---
 
 <BaseLayout

@@ -7,6 +7,7 @@
 // a tag array instead of checking a single tag.
 
 import { getCollection } from "astro:content";
+import { sortPostsNewestFirst } from "../../lib/sortPosts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PostCard from "../../components/PostCard.astro";
 import { CATEGORY_BUCKETS } from "../../lib/categoryBuckets";
@@ -31,9 +32,7 @@ export async function getStaticPaths() {
 
 const { bucket, posts } = Astro.props;
 const label = BUCKET_LABELS[bucket] ?? bucket;
-const sortedPosts = posts.sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const sortedPosts = sortPostsNewestFirst(posts);
 ---
 
 <BaseLayout

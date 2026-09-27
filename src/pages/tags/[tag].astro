@@ -3,6 +3,7 @@
 // One page per tag (e.g. /tags/skincare), listing every post that uses it.
 
 import { getCollection } from "astro:content";
+import { sortPostsNewestFirst } from "../../lib/sortPosts";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PostCard from "../../components/PostCard.astro";
 import { CATEGORIES } from "../../lib/categories";
@@ -29,9 +30,7 @@ export async function getStaticPaths() {
 }
 
 const { tag, posts } = Astro.props;
-const sortedPosts = posts.sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const sortedPosts = sortPostsNewestFirst(posts);
 ---
 
 <BaseLayout
